@@ -258,5 +258,11 @@ All diagrams stored in `docs/` — created with **Visual Paradigm Community**.
 > in phpMyAdmin to access the admin panel.
 
 ---
+<div align="center">
 
+**CS251 Software Engineering 1 — Spring 2026**
+
+Capital University · Faculty of Computing & Artificial Intelligence · Computer Science Department
+
+</div>
 
