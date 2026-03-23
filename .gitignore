@@ -1,0 +1,6 @@
+/vendor/
+/.idea/
+/.vscode/settings.json
+/.env
+/public/assets/build/
+
