@@ -27,16 +27,74 @@
 ## 📂 Project Structure
 
 ```text
-Subscription-Box/
-├── app/
-│   ├── Controllers/
-│   ├── Models/
-│   └── Views/
-├── config/
-├── core/
-├── docs/
-├── database/migrations/
+subscription-box-portal/
+│
 ├── public/
-├── routes/
+│ ├── index.php
+│ ├── .htaccess
+│ ├── css/
+│ │ └── style.css
+│ └── assets/
+│
+├── app/
+│ ├── Config/
+│ │ └── config.php
+│ ├── Core/
+│ │ ├── DatabaseManager.php
+│ │ ├── Controller.php
+│ │ └── Model.php
+│ ├── Controllers/
+│ │ ├── HomeController.php
+│ │ ├── AuthController.php
+│ │ ├── SubscriptionController.php
+│ │ ├── UserController.php
+│ │ └── AdminController.php
+│ ├── Models/
+│ │ ├── User.php
+│ │ ├── Subscription.php
+│ │ ├── Box.php
+│ │ └── Order.php
+│ ├── Views/
+│ │ ├── layouts/
+│ │ │ ├── header.php
+│ │ │ ├── footer.php
+│ │ │ ├── navbar.php
+│ │ │ └── sidebar.php
+│ │ ├── auth/
+│ │ │ ├── login.php
+│ │ │ └── register.php
+│ │ ├── home/
+│ │ │ └── index.php
+│ │ ├── subscriptions/
+│ │ │ ├── browse.php
+│ │ │ ├── detail.php
+│ │ │ └── checkout.php
+│ │ ├── user/
+│ │ │ ├── dashboard.php
+│ │ │ └── orders.php
+│ │ └── admin/
+│ │ ├── dashboard.php
+│ │ ├── users.php
+│ │ ├── boxes.php
+│ │ └── orders.php
+│ ├── Helpers/
+│ │ ├── AuthHelper.php
+│ │ ├── ValidationHelper.php
+│ │ └── Utils.php
+│
+├── database/
+│ ├── schema.sql
+│ └── seeders.sql
+│
+├── docs/
+│ ├── ER_Diagram.vpp
+│ ├── Use_Case.vpp
+│ ├── Class_Diagram.vpp
+│ ├── Sequence_Diagram.vpp
+│ └── README.md
+│
+├── composer.json
+├── tailwind.config.js
 └── README.md
-🚀 How To Run On XAMPPPut the project folder inside htdocs.Start Apache and MySQL from the XAMPP control panel.Create the database by importing:👉 database/migrations/001_create_users_table.sqlUpdate config/database.php if your local MySQL settings differ.Update config/app.php if your project folder name is changed.Open your browser and navigate to:👉 http://localhost/Subscription-Box/public🧩 Ready Modules🏠 Home page🔐 Authentication: Register / Login / Logout📊 Dashboard: For authenticated users⚙️ Admin Panel: Restricted access page👥 Team Workflow SuggestionMemberAssigned ResponsibilityMember 1Auth and session flowMember 2Subscription plans and boxesMember 3Orders and customer dashboardMember 4Admin panel and reports📚 DocumentationStore Visual Paradigm diagrams inside docs/README.md and the docs/diagrams folder to ensure technical documentation remains synchronized with the repository codebase.⚠️ Important NoteThe registration page creates users with the role customer by default.To test administrative privileges, manually update a user's role to admin directly via phpMyAdmin.
+
+
