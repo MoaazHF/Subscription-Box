@@ -169,91 +169,7 @@ A **Subscription-as-a-Service (SaaS)** web platform where users subscribe to mon
                            └──────────────────┘
 ```
 
-### ⭐ Singleton — `app/Core/DatabaseManager.php`
 
-```php
-class DatabaseManager {
-    private static ?DatabaseManager $instance = null;
-    private PDO $connection;
-
-    private function __construct() {
-        $cfg = require __DIR__ . '/../Config/config.php';
-        $this->connection = new PDO(
-            "mysql:host={$cfg['host']};dbname={$cfg['dbname']};charset=utf8",
-            $cfg['user'], $cfg['pass']
-        );
-        $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    }
-
-    public static function getInstance(): DatabaseManager {
-        if (self::$instance === null) {
-            self::$instance = new DatabaseManager();
-        }
-        return self::$instance;
-    }
-
-    public function getConnection(): PDO {
-        return $this->connection;
-    }
-}
-```
-
-### 🔐 Auth — `app/Helpers/AuthHelper.php`
-
-```php
-// Start session
-session_start();
-
-// After login
-$_SESSION['user_id']   = $user['id'];
-$_SESSION['user_role'] = $user['role'];
-
-// Role guard (inside any controller)
-if ($_SESSION['user_role'] !== 'admin') {
-    header('Location: /403'); exit;
-}
-
-// Password handling
-password_hash($password, PASSWORD_BCRYPT);
-password_verify($inputPassword, $storedHash);
-```
-
-### 🗄️ Manual CRUD — `app/Models/Subscription.php`
-
-```php
-class Subscription extends Model {
-
-    public function create(array $data): bool {
-        $db   = DatabaseManager::getInstance()->getConnection();
-        $stmt = $db->prepare("
-            INSERT INTO subscriptions (user_id, tier, status, billing_date)
-            VALUES (:user_id, :tier, :status, :billing_date)
-        ");
-        return $stmt->execute($data);
-    }
-
-    public function findById(int $id): array|false {
-        $db   = DatabaseManager::getInstance()->getConnection();
-        $stmt = $db->prepare("SELECT * FROM subscriptions WHERE id = :id");
-        $stmt->execute(['id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function update(int $id, array $data): bool {
-        $db   = DatabaseManager::getInstance()->getConnection();
-        $stmt = $db->prepare("
-            UPDATE subscriptions SET status = :status WHERE id = :id
-        ");
-        $data['id'] = $id;
-        return $stmt->execute($data);
-    }
-
-    public function delete(int $id): bool {
-        $db   = DatabaseManager::getInstance()->getConnection();
-        $stmt = $db->prepare("DELETE FROM subscriptions WHERE id = :id");
-        return $stmt->execute(['id' => $id]);
-    }
-}
 ```
 
 ---
@@ -337,31 +253,10 @@ All diagrams stored in `docs/` — created with **Visual Paradigm Community**.
 
 ---
 
-## ⚠️ Important Notes
-
-```
-✅ DO    Use PDO for all database connections
-✅ DO    Write raw SQL for every CRUD operation
-✅ DO    Implement Singleton manually in Core/DatabaseManager.php
-✅ DO    Use $_SESSION directly for auth state
-✅ DO    Use password_hash() and password_verify()
-✅ DO    Keep all SQL queries inside Model classes only
-
-❌ DON'T Use any ORM or query builder
-❌ DON'T Use ready-made frontend templates
-❌ DON'T Write SQL queries inside Controllers
-❌ DON'T Use framework authentication helpers
-```
 
 > 🔑 **Admin Account:** After registering, manually set `role = 'admin'`
 > in phpMyAdmin to access the admin panel.
 
 ---
 
-<div align="center">
 
-**CS251 Software Engineering 1 — Spring 2026**
-
-Capital University · Faculty of Computing & Artificial Intelligence · Computer Science Department
-
-</div>
