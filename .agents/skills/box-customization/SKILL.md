@@ -83,6 +83,18 @@ IMPLEMENTATION ORDER (do this one milestone at a time — stop and show me the o
 •	Comment every service method with a one-line description of which function it implements
 •	When unsure about existing DB state, run DB::select("SELECT column_name FROM information_schema.columns WHERE table_name='boxes'") in tinker to inspect actual columns
 
+═══ GIT COMMIT & PUSH AFTER EVERY MILESTONE ═══
+
+After completing every milestone (M1, M2, M3, M4), immediately stage all changes, create a descriptive commit, and push to the current branch.
+
+- Stage all changes: git add -A
+- Commit with a message that follows the pattern: "Milestone <number>: <brief description> (Mostafa)"
+  Example: "Milestone 2: BoxCustomisation model + migration completed"
+- Push: git push origin team2-box-customization
+- Always run these commands inside the WSL terminal.
+- Do NOT force-push (no --force).
+
+
 ═══ ROLLBACK GUIDANCE ═══
 •	Before running any migration: php artisan migrate --pretend to see the SQL
 •	If a migration fails: php artisan migrate:rollback --step=1
