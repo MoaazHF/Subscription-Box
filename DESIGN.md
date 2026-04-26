@@ -192,7 +192,7 @@ Airbnb Cereal VF is proprietary. The closest open-source substitute is **Circula
 **Top Nav (Desktop)**
 - Height: ~80px
 - Background: `#ffffff`
-- Left: Airbnb wordmark+logo lockup in Rausch (102×32px)
+- Left: Subscription Box wordmark+logo lockup in Rausch (102×32px)
 - Center: tri-tab category picker (Homes / Experiences / Services) with 36–48px 3D icons stacked above 16px 500 labels; active tab has a 2px Ink Black underline
 - Right: "Become a host" text link, then 32px circular globe (language), then 36px hamburger avatar menu
 - Border-bottom: 1px solid Hairline Gray `#dddddd`

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -72,8 +73,19 @@ class DatabaseSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'test@example.com'],
             [
-                'role_id' => DB::table('roles')->where('name', 'subscriber')->value('id') ?? 1,
+                'role_id' => DB::table('roles')->where('name', Role::SUBSCRIBER)->value('id') ?? 1,
                 'name' => 'Test User',
+                'phone' => null,
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'role_id' => DB::table('roles')->where('name', Role::ADMIN)->value('id') ?? 4,
+                'name' => 'Admin User',
                 'phone' => null,
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),

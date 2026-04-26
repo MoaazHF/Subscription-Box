@@ -3,19 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Box;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class BoxController extends Controller
 {
     /**
      * Display a listing of the subscriber's boxes.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
-        $boxes = Box::whereHas('subscription', function ($query) use ($request) {
-            // Using optional() or ?? to prevent errors if we test without full auth setup initially
-            $query->where('user_id', $request->user()?->id);
-        })->orderBy('period_year', 'desc')
+        $boxes = Box::query()
+            ->with('subscription')
+            ->whereHas('subscription', function ($query) use ($request): void {
+                $query->where('user_id', $request->user()->id);
+            })->orderBy('period_year', 'desc')
             ->orderBy('period_month', 'desc')
             ->get();
 
@@ -25,10 +28,11 @@ class BoxController extends Controller
     /**
      * Display the specified box with items.
      */
-    public function show(Box $box)
+    public function show(Request $request, Box $box): View
     {
-        // Eager load items for the view
-        $box->load('items');
+        $box->load(['items', 'subscription']);
+
+        abort_unless($request->user()->isAdmin() || $box->ownedBy($request->user()), Response::HTTP_FORBIDDEN);
 
         return view('boxes.show', compact('box'));
     }
