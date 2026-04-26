@@ -146,7 +146,7 @@
                             <div class="mt-4 rounded-md bg-orange-50 p-4 ring-1 ring-orange-200">
                                 <div class="flex">
                                     <div class="ml-3">
-                                        <h3 class="text-sm font-medium text-orange-800">Allergen Warning</h3>
+                                        <h3 class="text-sm font-medium text-orange-800">Warning</h3>
                                         <div class="mt-2 text-sm text-orange-700">
                                             <p>{{ session('swap_warning.message') }}</p>
                                         </div>
@@ -158,7 +158,12 @@
                                 @csrf
                                 <input type="hidden" name="remove_box_item_id" value="{{ session('swap_warning.remove_box_item_id') }}">
                                 <input type="hidden" name="new_item_id" value="{{ session('swap_warning.new_item_id') }}">
-                                <input type="hidden" name="confirm_allergen" value="1">
+                                
+                                @if(session('swap_warning.type') === 'rotation')
+                                    <input type="hidden" name="confirm_rotation" value="1">
+                                @else
+                                    <input type="hidden" name="confirm_allergen" value="1">
+                                @endif
                                 
                                 <button type="submit" class="inline-flex w-full justify-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 sm:col-start-2">Confirm Swap Anyway</button>
                                 <button type="button" @click="swapModalOpen = false" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0">Cancel</button>

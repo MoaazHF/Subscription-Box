@@ -46,6 +46,7 @@ class BoxCustomizationController extends Controller
 
             if ($result['status'] === 'warning') {
                 return back()->with('swap_warning', [
+                    'type' => $result['type'],
                     'message' => $result['message'],
                     'remove_box_item_id' => $outItem->id,
                     'new_item_id' => $newItem->id,

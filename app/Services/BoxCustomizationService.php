@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\DB;
 
 class BoxCustomizationService
 {
-    public function __construct(private WeightService $weightService) {}
+    public function __construct(
+        private WeightService $weightService,
+        private ThemeRotationService $themeRotationService
+    ) {}
 
     /**
      * Swap an item in the box with a new item, adhering to weight and lock rules.
@@ -32,8 +35,18 @@ class BoxCustomizationService
             throw new Exception('Swapping this item would exceed the 3000g maximum weight limit.');
         }
 
-        // 3. Allergen conflict check
+        // 3a. Theme rotation check (F22)
         $request = request();
+        $confirmRotation = $request->boolean('confirm_rotation');
+        if ($this->themeRotationService->wasInPreviousBox($box, $newItem->id) && ! $confirmRotation) {
+            return [
+                'status' => 'warning',
+                'type' => 'rotation',
+                'message' => 'You received this item as a surprise in your previous box. Are you sure you want it again?',
+            ];
+        }
+
+        // 3b. Allergen conflict check
         $confirmAllergen = $request->boolean('confirm_allergen');
 
         $hasConflict = DB::table('user_allergens')
@@ -45,6 +58,7 @@ class BoxCustomizationService
         if ($hasConflict && ! $confirmAllergen) {
             return [
                 'status' => 'warning',
+                'type' => 'allergen',
                 'message' => 'This item contains allergens that conflict with your profile.',
             ];
         }
