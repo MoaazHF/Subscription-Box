@@ -3,7 +3,7 @@ services:
     image: postgres:17-alpine
     container_name: subscription-box-postgres
     ports:
-      - '${FORWARD_DB_PORT:-5432}:5432'
+      - '5435:5432'
     environment:
       POSTGRES_DB: '${DB_DATABASE:-subscription_box}'
       POSTGRES_USER: '${DB_USERNAME:-subscription_box}'
