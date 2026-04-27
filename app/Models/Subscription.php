@@ -51,4 +51,6 @@ class Subscription extends BaseModel
     {
         return $this->hasMany(Box::class);
     }
+
+    
 }
