@@ -17,3 +17,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/boxes/{box}/swap', [BoxCustomizationController::class, 'swap'])->name('boxes.swap');
     Route::delete('/boxes/{box}/items/{boxItem}', [BoxCustomizationController::class, 'remove'])->name('boxes.remove');
 });
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+
+Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
+
+
+Route::get('/subscribe/{plan}', [SubscriptionController::class, 'create'])->name('subscribe');

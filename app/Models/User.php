@@ -2,37 +2,53 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['role_id', 'name', 'phone', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, HasUuids, Notifiable;
+    use HasFactory, Notifiable;
 
-    public $incrementing = false;
-
+    
     protected $keyType = 'string';
+    public $incrementing = false;
+    protected $primaryKey = 'id';
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $fillable = [
+        'role_id',
+        'email',
+        'password',
+        'full_name',
+        'phone',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    // Tell Laravel your password column is named 'password_hash'
+    public function getAuthPassword()
     {
-        return [
-            'role_id' => 'integer',
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->password_hash;
+    }
+
+    //  A user belongs to one role
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    //  A user has many subscriptions
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    //  A user has many addresses
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
     }
 }

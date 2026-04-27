@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class BoxCustomisation extends Model
+class BoxCustomisation extends BaseModel
 {
     use HasFactory, HasUuids;
 
