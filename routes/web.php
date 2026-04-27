@@ -2,12 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\PlanController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\BoxController;
+use App\Http\Controllers\BoxCustomizationController;
 
 // PUBLIC
-Route::get('/plans', [PlanController::class, 'index']);
+Route::get('/plans', [SubscriptionController::class, 'index']);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -38,6 +39,13 @@ Route::middleware('auth')->group(function () {
     
     // Address
     Route::post('/addresses', [AddressController::class, 'store']);
+    
+    // Boxes
+    Route::get('/boxes', [BoxController::class, 'index']);
+    Route::get('/boxes/{box}', [BoxController::class, 'show']);
+    Route::get('/boxes/{box}/customize', [BoxCustomizationController::class, 'show']);
+    Route::post('/boxes/{box}/swap', [BoxCustomizationController::class, 'swap']);
+    Route::delete('/boxes/{box}/items/{boxItem}', [BoxCustomizationController::class, 'remove']);
     
     // ADMIN ONLY (F40 + F41)
     Route::middleware('role:admin')->group(function () {

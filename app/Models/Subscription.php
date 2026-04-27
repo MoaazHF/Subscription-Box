@@ -47,10 +47,23 @@ class Subscription extends BaseModel
         return $this->belongsTo(User::class);
     }
 
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(SubscriptionPlan::class, 'plan_id');
+    }
+
+    public function address(): BelongsTo
+    {
+        return $this->belongsTo(Address::class, 'address_id');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     public function boxes(): HasMany
     {
         return $this->hasMany(Box::class);
     }
-
-    
 }
