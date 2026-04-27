@@ -1,18 +1,13 @@
 <?php
 
-<<<<<<< Updated upstream
-=======
 use App\Http\Controllers\BoxController;
 use App\Http\Controllers\BoxCustomizationController;
 use App\Http\Controllers\DeliveryController;
->>>>>>> Stashed changes
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
-<<<<<<< Updated upstream
-=======
 
 Route::middleware('auth')->group(function () {
     Route::get('/boxes', [BoxController::class, 'index'])->name('boxes.index');
@@ -27,4 +22,3 @@ Route::middleware('auth')->group(function () {
     Route::get('/deliveries', [DeliveryController::class, 'index'])->name('deliveries.index');
     Route::get('/deliveries/{delivery}', [DeliveryController::class, 'show'])->name('deliveries.show');
 });
->>>>>>> Stashed changes
