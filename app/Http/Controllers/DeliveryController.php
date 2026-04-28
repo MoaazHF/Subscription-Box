@@ -2,40 +2,71 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateDeliveryStatusRequest;
 use App\Models\Delivery;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class DeliveryController extends Controller
 {
-    /**
-     * Display a listing of the deliveries for the subscriber.
-     */
-    public function index()
+    public function index(Request $request): View
     {
-        // Get deliveries belonging to the authenticated user through their addresses
-        $deliveries = Delivery::whereHas('address', function ($query) {
-            $query->where('user_id', Auth::id());
-        })
-        ->with('address') // Eager load address
-        ->orderBy('created_at', 'desc')
-        ->get();
+        $deliveries = Delivery::query()
+            ->with(['address', 'box.subscription.user'])
+            ->when(
+                ! $request->user()->isAdmin(),
+                fn ($query) => $query->whereHas('address', fn ($addressQuery) => $addressQuery->whereBelongsTo($request->user()))
+            )
+            ->latest()
+            ->get();
 
-        return view('deliveries.index', compact('deliveries'));
+        return view('deliveries.index', [
+            'deliveries' => $deliveries,
+            'isAdminView' => $request->user()->isAdmin(),
+        ]);
     }
 
-    /**
-     * Display the specified delivery.
-     */
-    public function show(Delivery $delivery)
+    public function show(Request $request, Delivery $delivery): View
     {
-        // Ensure the delivery belongs to the authenticated user
-        if ($delivery->address->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+        $this->ensureAccess($request, $delivery);
+
+        $delivery->load(['box.subscription.user', 'address']);
+
+        return view('deliveries.show', [
+            'delivery' => $delivery,
+        ]);
+    }
+
+    public function updateStatus(UpdateDeliveryStatusRequest $request, Delivery $delivery): RedirectResponse
+    {
+        abort_unless($request->user()->isAdmin(), Response::HTTP_FORBIDDEN);
+
+        $payload = $request->validated();
+        $status = $payload['status'];
+
+        $delivery->update([
+            'status' => $status,
+            'tracking_number' => $payload['tracking_number'] ?? $delivery->tracking_number,
+            'estimated_delivery' => $payload['estimated_delivery'] ?? $delivery->estimated_delivery,
+            'delivery_instructions' => $payload['delivery_instructions'] ?? $delivery->delivery_instructions,
+            'eco_dispatch' => (bool) ($payload['eco_dispatch'] ?? $delivery->eco_dispatch),
+            'stops_remaining' => Delivery::STOPS_BY_STATUS[$status],
+            'actual_delivery' => $status === Delivery::DELIVERED ? now() : null,
+        ]);
+
+        return redirect()
+            ->route('deliveries.show', $delivery)
+            ->with('status', 'Delivery status updated.');
+    }
+
+    private function ensureAccess(Request $request, Delivery $delivery): void
+    {
+        if ($request->user()->isAdmin()) {
+            return;
         }
 
-        $delivery->load(['box', 'address', 'claims']);
-
-        return view('deliveries.show', compact('delivery'));
+        abort_unless($delivery->belongsToUser($request->user()), Response::HTTP_FORBIDDEN);
     }
 }

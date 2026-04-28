@@ -1,103 +1,104 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Delivery Details') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Status Information</h3>
-                    <div class="border-t border-gray-200 py-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Current Status</p>
-                            <p class="mt-1">
-                                <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full 
-                                    @if($delivery->status === 'delivered') bg-green-100 text-green-800 
-                                    @elseif(in_array($delivery->status, ['shipped', 'out_for_delivery'])) bg-blue-100 text-blue-800 
-                                    @elseif($delivery->status === 'undeliverable') bg-red-100 text-red-800
-                                    @else bg-yellow-100 text-yellow-800 @endif">
-                                    {{ ucfirst(str_replace('_', ' ', $delivery->status)) }}
-                                </span>
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Tracking Number</p>
-                            <p class="mt-1 text-sm text-gray-900">{{ $delivery->tracking_number ?? 'Not assigned yet' }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Estimated Delivery Date</p>
-                            <p class="mt-1 text-sm text-gray-900">{{ $delivery->estimated_delivery ? $delivery->estimated_delivery->format('F d, Y') : 'TBD' }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Actual Delivery Date</p>
-                            <p class="mt-1 text-sm text-gray-900">{{ $delivery->actual_delivery ? $delivery->actual_delivery->format('F d, Y h:i A') : '--' }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Eco-Friendly Dispatch</p>
-                            <p class="mt-1 text-sm text-gray-900">{{ $delivery->eco_dispatch ? 'Yes' : 'No' }}</p>
-                        </div>
-                    </div>
-                </div>
+@section('content')
+    <section class="space-y-8">
+        <div class="flex items-center justify-between gap-4">
+            <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">Delivery detail</p>
+                <h1 class="mt-2 text-3xl font-black text-stone-900">{{ $delivery->tracking_number ?? 'Delivery record' }}</h1>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Delivery Address</h3>
-                        <div class="border-t border-gray-200 py-4">
-                            @if($delivery->address)
-                                <address class="not-italic text-sm text-gray-600">
-                                    {{ $delivery->address->street }}<br>
-                                    {{ $delivery->address->city }}, {{ $delivery->address->region ?? '' }} {{ $delivery->address->postal_code }}<br>
-                                    {{ $delivery->address->country }}
-                                </address>
-                            @else
-                                <p class="text-sm text-gray-500">Address information not available.</p>
-                            @endif
-                        </div>
-
-                        <h4 class="text-md font-medium text-gray-900 mt-4 mb-2">Delivery Instructions</h4>
-                        <p class="text-sm text-gray-600 border-t border-gray-200 pt-2">
-                            {{ $delivery->delivery_instructions ?? 'None provided.' }}
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Box Information</h3>
-                        <div class="border-t border-gray-200 py-4">
-                            @if($delivery->box)
-                                <p class="text-sm text-gray-600"><span class="font-medium text-gray-900">Box ID:</span> {{ $delivery->box->id }}</p>
-                                <p class="text-sm text-gray-600 mt-2"><span class="font-medium text-gray-900">Theme:</span> {{ $delivery->box->theme ?? 'Standard' }}</p>
-                                <p class="text-sm text-gray-600 mt-2"><span class="font-medium text-gray-900">Period:</span> {{ $delivery->box->period_month }}/{{ $delivery->box->period_year }}</p>
-                            @else
-                                <p class="text-sm text-gray-500">Box details not available.</p>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Claims Section -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 flex justify-between items-center">
-                    <div>
-                        <h3 class="text-lg font-medium leading-6 text-gray-900">Have an issue with this delivery?</h3>
-                        <p class="text-sm text-gray-500 mt-1">Report missing items or damages using our claims system.</p>
-                    </div>
-                    <div>
-                        <!-- Placeholder claims button - Route to be implemented in another scope -->
-                        <button type="button" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150" onclick="alert('Claims module not yet implemented!')">
-                            File a Claim
-                        </button>
-                    </div>
-                </div>
-            </div>
-
+            <a href="{{ route('deliveries.index') }}" class="rounded-2xl border border-stone-300 px-4 py-3 text-sm font-semibold text-stone-800 transition hover:bg-stone-100">Back to deliveries</a>
         </div>
-    </div>
-</x-app-layout>
+
+        <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            <section class="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-sm">
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">Status</p>
+                <h2 class="mt-3 text-2xl font-black text-stone-900">{{ ucfirst(str_replace('_', ' ', $delivery->status)) }}</h2>
+
+                <div class="mt-6 grid gap-4 sm:grid-cols-2">
+                    <div class="rounded-2xl bg-stone-100 p-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Estimated</p>
+                        <p class="mt-2 text-sm font-semibold text-stone-900">{{ $delivery->estimated_delivery?->format('M d, Y') ?? 'TBD' }}</p>
+                    </div>
+                    <div class="rounded-2xl bg-stone-100 p-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Delivered At</p>
+                        <p class="mt-2 text-sm font-semibold text-stone-900">{{ $delivery->actual_delivery?->format('M d, Y H:i') ?? '--' }}</p>
+                    </div>
+                    <div class="rounded-2xl bg-stone-100 p-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Stops Remaining</p>
+                        <p class="mt-2 text-sm font-semibold text-stone-900">{{ $delivery->stops_remaining ?? 'Not set' }}</p>
+                    </div>
+                    <div class="rounded-2xl bg-stone-100 p-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Eco Dispatch</p>
+                        <p class="mt-2 text-sm font-semibold text-stone-900">{{ $delivery->eco_dispatch ? 'Enabled' : 'Disabled' }}</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-sm">
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">Address and box</p>
+                <div class="mt-6 space-y-4 text-sm text-stone-600">
+                    <div>
+                        <p class="font-semibold text-stone-900">Delivery address</p>
+                        <p class="mt-1">{{ $delivery->address?->street ?? 'No street assigned' }}</p>
+                        <p>{{ $delivery->address?->city ?? '' }} {{ $delivery->address?->country ?? '' }}</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-stone-900">Box</p>
+                        <p class="mt-1">{{ $delivery->box?->theme ?? 'Standard box' }}</p>
+                        <p>Period: {{ $delivery->box?->period_month }}/{{ $delivery->box?->period_year }}</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-stone-900">Instructions</p>
+                        <p class="mt-1">{{ $delivery->delivery_instructions ?? 'None provided.' }}</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        @if (auth()->user()->isAdmin())
+            <section class="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-sm">
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">Admin update</p>
+                <h2 class="mt-3 text-2xl font-black text-stone-900">Basic status update</h2>
+
+                <form method="POST" action="{{ route('deliveries.update-status', $delivery) }}" class="mt-6 grid gap-4 lg:grid-cols-2">
+                    @csrf
+                    @method('PATCH')
+
+                    <div class="space-y-2">
+                        <label for="status" class="text-sm font-semibold text-stone-800">Status</label>
+                        <select id="status" name="status" class="w-full rounded-2xl border border-stone-300 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-amber-500 focus:bg-white">
+                            @foreach (\App\Models\Delivery::STATUSES as $status)
+                                <option value="{{ $status }}" @selected(old('status', $delivery->status) === $status)>{{ ucfirst(str_replace('_', ' ', $status)) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="tracking_number" class="text-sm font-semibold text-stone-800">Tracking number</label>
+                        <input id="tracking_number" name="tracking_number" type="text" value="{{ old('tracking_number', $delivery->tracking_number) }}" class="w-full rounded-2xl border border-stone-300 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-amber-500 focus:bg-white">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="estimated_delivery" class="text-sm font-semibold text-stone-800">Estimated delivery</label>
+                        <input id="estimated_delivery" name="estimated_delivery" type="date" value="{{ old('estimated_delivery', $delivery->estimated_delivery?->toDateString()) }}" class="w-full rounded-2xl border border-stone-300 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-amber-500 focus:bg-white">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="delivery_instructions" class="text-sm font-semibold text-stone-800">Instructions</label>
+                        <input id="delivery_instructions" name="delivery_instructions" type="text" value="{{ old('delivery_instructions', $delivery->delivery_instructions) }}" class="w-full rounded-2xl border border-stone-300 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-amber-500 focus:bg-white">
+                    </div>
+
+                    <label class="inline-flex items-center gap-3 text-sm font-medium text-stone-700">
+                        <input type="checkbox" name="eco_dispatch" value="1" class="h-4 w-4 rounded border-stone-300 text-amber-600 focus:ring-amber-500" @checked(old('eco_dispatch', $delivery->eco_dispatch))>
+                        Eco dispatch
+                    </label>
+
+                    <div>
+                        <button type="submit" class="rounded-2xl bg-stone-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-stone-700">Save delivery update</button>
+                    </div>
+                </form>
+            </section>
+        @endif
+    </section>
+@endsection

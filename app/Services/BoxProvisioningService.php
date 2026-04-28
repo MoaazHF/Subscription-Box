@@ -11,7 +11,8 @@ use Illuminate\Support\Str;
 class BoxProvisioningService
 {
     public function __construct(
-        private WeightService $weightService
+        private WeightService $weightService,
+        private DeliveryProvisioningService $deliveryProvisioningService
     ) {}
 
     public function provisionCurrentBox(Subscription $subscription): void
@@ -34,6 +35,8 @@ class BoxProvisioningService
                 'shipping_tier' => 'standard',
             ]
         );
+
+        $this->deliveryProvisioningService->provisionForBox($box, $subscription);
 
         if ($box->items()->exists()) {
             return;

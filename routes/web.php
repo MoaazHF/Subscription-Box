@@ -56,4 +56,7 @@ Route::middleware('auth')->group(function () {
     // Team 3: Delivery tracking workflow.
     Route::get('/deliveries', [DeliveryController::class, 'index'])->name('deliveries.index');
     Route::get('/deliveries/{delivery}', [DeliveryController::class, 'show'])->name('deliveries.show');
+    Route::patch('/deliveries/{delivery}/status', [DeliveryController::class, 'updateStatus'])
+        ->middleware('role:admin')
+        ->name('deliveries.update-status');
 });
