@@ -3,13 +3,19 @@
 use App\Http\Controllers\BoxController;
 use App\Http\Controllers\BoxCustomizationController;
 use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\test;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+
+Route::get('/test', [test::class, 'index']);
 });
 
 Route::middleware('auth')->group(function () {
+    // Delivery routes
+    Route::get('/deliveries', [DeliveryController::class, 'index'])->name('deliveries.index');
+    Route::get('/deliveries/{delivery}', [DeliveryController::class, 'show'])->name('deliveries.show');
     Route::get('/boxes', [BoxController::class, 'index'])->name('boxes.index');
     Route::get('/boxes/{box}', [BoxController::class, 'show'])->name('boxes.show');
 
