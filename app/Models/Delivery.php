@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Delivery extends Model
@@ -13,7 +16,9 @@ class Delivery extends Model
     protected $table = 'deliveries';
 
     protected $primaryKey = 'id';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = [
@@ -29,44 +34,94 @@ class Delivery extends Model
         'eco_dispatch',
     ];
 
-    protected $casts = [
-        'estimated_delivery' => 'date',
-        'actual_delivery' => 'datetime',
-        'eco_dispatch' => 'boolean',
-        'stops_remaining' => 'integer',
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'estimated_delivery' => 'date',
+            'actual_delivery' => 'datetime',
+            'eco_dispatch' => 'boolean',
+            'stops_remaining' => 'integer',
+        ];
+    }
+
+    /**
+     * Valid status transitions for the delivery state machine.
+     *
+     * @var array<string, string[]>
+     */
+    public const STATUS_TRANSITIONS = [
+        'pending' => ['picking'],
+        'picking' => ['packed'],
+        'packed' => ['shipped'],
+        'shipped' => ['out_for_delivery'],
+        'out_for_delivery' => ['delivered', 'undeliverable'],
+        'delivered' => [],
+        'undeliverable' => [],
     ];
 
-    protected static function boot()
+    public const ALL_STATUSES = [
+        'pending',
+        'picking',
+        'packed',
+        'shipped',
+        'out_for_delivery',
+        'delivered',
+        'undeliverable',
+    ];
+
+    protected static function boot(): void
     {
         parent::boot();
 
-        static::creating(function ($model) {
+        static::creating(function (Delivery $model): void {
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
         });
     }
 
-    public function box()
+    /**
+     * Determine if this delivery can transition to the given status.
+     */
+    public function canTransitionTo(string $status): bool
+    {
+        return in_array($status, self::STATUS_TRANSITIONS[$this->status] ?? [], true);
+    }
+
+    /**
+     * Scope deliveries to those belonging to the given user via their address.
+     *
+     * @param  Builder<Delivery>  $query
+     */
+    public function scopeForUser(Builder $query, int|string $userId): Builder
+    {
+        return $query->whereHas('address', fn (Builder $q) => $q->where('user_id', $userId));
+    }
+
+    /** @return BelongsTo<Box, Delivery> */
+    public function box(): BelongsTo
     {
         return $this->belongsTo(Box::class, 'box_id');
     }
 
-    public function driver()
+    /** @return BelongsTo<Driver, Delivery> */
+    public function driver(): BelongsTo
     {
-        // Assuming Driver model exists or will exist in Mohy's scope
         return $this->belongsTo(Driver::class, 'driver_id');
     }
 
-    public function address()
+    /** @return BelongsTo<Address, Delivery> */
+    public function address(): BelongsTo
     {
-        // Assuming Address model exists
         return $this->belongsTo(Address::class, 'address_id');
     }
 
-    public function claims()
+    /** @return HasMany<Claim> */
+    public function claims(): HasMany
     {
-        // Assuming Claim model exists
         return $this->hasMany(Claim::class, 'delivery_id');
     }
 }
