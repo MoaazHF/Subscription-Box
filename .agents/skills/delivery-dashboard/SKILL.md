@@ -102,7 +102,6 @@ IMPLEMENTATION ORDER (do this one milestone at a time — stop and show output a
 ═══ GIT COMMIT & PUSH AFTER EVERY MILESTONE ═══
 
 After completing every milestone, immediately stage all changes, create a descriptive commit, and push to the current branch.
-
 - Stage all changes: git add -A
 - Commit with a message that follows the pattern: "Milestone <number>: <brief description> (Hazem)"
   Example: "Milestone 2: DeliveryService + status machine completed"
