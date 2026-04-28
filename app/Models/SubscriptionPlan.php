@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class SubscriptionPlan extends Model
+class SubscriptionPlan extends BaseModel
 {
     use HasFactory;
+
+    protected $keyType = 'int';
+    public $incrementing = true;
 
     protected $fillable = [
         'name',
@@ -16,21 +18,16 @@ class SubscriptionPlan extends Model
         'max_items',
         'max_weight_g',
         'features',
-        'is_active',
+        'is_active'
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'price_monthly' => 'decimal:2',
-            'max_items' => 'integer',
-            'max_weight_g' => 'integer',
-            'features' => 'array',
-            'is_active' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'features' => 'array',
+        'is_active' => 'boolean',
+    ];
 
-    public function subscriptions(): HasMany
+    // Relationship: A plan has many subscriptions
+    public function subscriptions()
     {
         return $this->hasMany(Subscription::class, 'plan_id');
     }

@@ -2,18 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Payment extends Model
+class Payment extends BaseModel
 {
-    use HasFactory, HasUuids;
-
-    public $incrementing = false;
+    use HasFactory;
 
     protected $keyType = 'string';
+    public $incrementing = false;
 
     protected $fillable = [
         'subscription_id',
@@ -27,17 +24,14 @@ class Payment extends Model
         'next_retry_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'amount' => 'decimal:2',
-            'tax_amount' => 'decimal:2',
-            'retry_count' => 'integer',
-            'next_retry_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'amount' => 'decimal:2',
+        'tax_amount' => 'decimal:2',
+        'retry_count' => 'integer',
+        'next_retry_at' => 'datetime',
+    ];
 
-    public function subscription(): BelongsTo
+    public function subscription()
     {
         return $this->belongsTo(Subscription::class);
     }

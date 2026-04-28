@@ -9,12 +9,6 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Artisan::command('subscriptions:renew', function (SubscriptionService $subscriptionService) {
-    $processed = $subscriptionService->renewDueSubscriptions();
+use Illuminate\Support\Facades\Schedule;
 
-    $this->info("Processed {$processed} subscription renewal(s).");
-})->purpose('Process due subscription renewals');
-
-Schedule::command('subscriptions:renew')
-    ->dailyAt('01:00')
-    ->withoutOverlapping();
+Schedule::command('subscriptions:renew')->daily();

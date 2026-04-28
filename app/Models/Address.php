@@ -2,19 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Address extends Model
+class Address extends BaseModel
 {
-    use HasFactory, HasUuids;
-
-    public $incrementing = false;
+    use HasFactory;
 
     protected $keyType = 'string';
+
+    public $incrementing = false;
 
     protected $fillable = [
         'user_id',
@@ -27,20 +23,16 @@ class Address extends Model
         'is_default',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'delivery_zone_id' => 'integer',
-            'is_default' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'is_default' => 'boolean',
+    ];
 
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function subscriptions(): HasMany
+    public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
     }

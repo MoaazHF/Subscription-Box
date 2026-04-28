@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class AuditLog extends Model
+class AuditLog extends BaseModel
 {
     use HasFactory;
 
-    public $timestamps = false;
+    protected $keyType = 'int';
+    public $incrementing = true;
 
     protected $fillable = [
         'user_id',
@@ -19,18 +19,14 @@ class AuditLog extends Model
         'entity_id',
         'ip_address',
         'metadata',
-        'created_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'metadata' => 'array',
-            'created_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'metadata' => 'array',
+        'created_at' => 'datetime',
+    ];
 
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

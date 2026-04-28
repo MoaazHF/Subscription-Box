@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Item extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory;
 
     public $incrementing = false;
 
@@ -27,21 +28,41 @@ class Item extends Model
         'supplier',
         'origin_country',
         'sourcing_notes',
+        'is_addon',
     ];
 
     protected function casts(): array
     {
         return [
-            'weight_g' => 'integer',
+            'is_limited_edition' => 'boolean',
+            'is_addon' => 'boolean',
             'unit_price' => 'decimal:2',
             'stock_qty' => 'integer',
-            'is_limited_edition' => 'boolean',
+            'weight_g' => 'integer',
             'limited_stock' => 'integer',
         ];
     }
 
-    public function boxes(): BelongsToMany
+    protected static function boot(): void
     {
-        return $this->belongsToMany(Box::class, 'box_items');
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = (string) Str::uuid();
+            }
+        });
+    }
+
+    /** @return BelongsToMany<AllergenTag> */
+    public function allergenTags(): BelongsToMany
+    {
+        return $this->belongsToMany(AllergenTag::class, 'item_allergens', 'item_id', 'allergen_id');
+    }
+
+    /** @return HasMany<BoxItem> */
+    public function boxItems(): HasMany
+    {
+        return $this->hasMany(BoxItem::class);
     }
 }

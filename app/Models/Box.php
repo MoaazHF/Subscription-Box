@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Support\Str;
 
 class Box extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory;
 
     public $incrementing = false;
 
@@ -38,6 +38,17 @@ class Box extends Model
         ];
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+        });
+    }
+
     public function subscription(): BelongsTo
     {
         return $this->belongsTo(Subscription::class);
@@ -51,10 +62,5 @@ class Box extends Model
     public function customisation(): HasOne
     {
         return $this->hasOne(BoxCustomisation::class);
-    }
-
-    public function ownedBy(User $user): bool
-    {
-        return $this->subscription?->user_id === $user->id;
     }
 }
