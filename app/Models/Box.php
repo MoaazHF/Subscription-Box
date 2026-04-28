@@ -56,11 +56,27 @@ class Box extends Model
 
     public function items(): BelongsToMany
     {
-        return $this->belongsToMany(Item::class, 'box_items');
+        return $this->belongsToMany(Item::class, 'box_items')
+            ->withPivot([
+                'id',
+                'quantity',
+                'is_addon',
+                'is_swapped',
+                'is_surprise',
+                'added_at',
+            ])
+            ->withTimestamps();
     }
 
     public function customisation(): HasOne
     {
         return $this->hasOne(BoxCustomisation::class);
+    }
+
+    public function ownedBy(User $user): bool
+    {
+        $this->loadMissing('subscription');
+
+        return $this->subscription?->user_id === $user->id;
     }
 }

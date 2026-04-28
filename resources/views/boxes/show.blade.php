@@ -32,9 +32,9 @@
                 </div>
             </div>
             @if($box->status !== 'locked')
-            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 shadow-sm transition-colors">
+            <a href="{{ route('boxes.customize', $box) }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 shadow-sm transition-colors">
                 Customize
-            </button>
+            </a>
             @endif
         </div>
 

@@ -13,12 +13,12 @@ class SubscriptionService
 {
     public function __construct(
         private BillingService $billingService,
+        private BoxProvisioningService $boxProvisioningService,
         private AuditLogService $auditLogService
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array{address_id:string,start_date:string,auto_renew?:bool,eco_shipping?:bool} $payload
+     * @param  array{address_id:string,start_date:string,auto_renew?:bool,eco_shipping?:bool}  $payload
      */
     public function createForUser(User $user, SubscriptionPlan $plan, array $payload, ?string $ipAddress = null): Subscription
     {
@@ -39,6 +39,8 @@ class SubscriptionService
                 'eco_shipping' => (bool) ($payload['eco_shipping'] ?? false),
                 'loyalty_points' => 0,
             ]);
+
+            $this->boxProvisioningService->provisionCurrentBox($subscription);
 
             $payment = $this->billingService->charge($subscription, 'subscription_started');
 
