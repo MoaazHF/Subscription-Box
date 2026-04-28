@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminDeliveryController;
 use App\Http\Controllers\BoxController;
 use App\Http\Controllers\BoxCustomizationController;
 use App\Http\Controllers\ClaimController;
@@ -35,3 +36,11 @@ Route::middleware('auth')->group(function () {
 Route::get('/driver/deliveries', [DriverController::class, 'index'])->name('driver.index');
 Route::get('/driver/deliveries/{delivery}', [DriverController::class, 'show'])->name('driver.show');
 Route::patch('/driver/deliveries/{delivery}', [DriverController::class, 'update'])->name('driver.update');
+
+// Admin routes (protect with admin middleware when auth roles are implemented by Team 1)
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/deliveries', [AdminDeliveryController::class, 'index'])->name('deliveries.index');
+    Route::get('/deliveries/{delivery}', [AdminDeliveryController::class, 'show'])->name('deliveries.show');
+    Route::patch('/deliveries/{delivery}', [AdminDeliveryController::class, 'update'])->name('deliveries.update');
+    Route::patch('/claims/{claim}', [AdminDeliveryController::class, 'updateClaim'])->name('claims.update');
+});

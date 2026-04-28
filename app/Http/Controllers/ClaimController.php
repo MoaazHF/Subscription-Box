@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreClaimRequest;
 use App\Models\Claim;
 use App\Models\Delivery;
+use App\Models\InventoryLog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -26,7 +27,7 @@ class ClaimController extends Controller
     }
 
     /**
-     * Store a newly created claim.
+     * Store a newly created claim and log the event.
      */
     public function store(StoreClaimRequest $request, Delivery $delivery): RedirectResponse
     {
@@ -42,6 +43,8 @@ class ClaimController extends Controller
             'photo_path' => $photoPath,
             'status' => 'open',
         ]);
+
+        InventoryLog::logClaimFiled($delivery, $claim->type, Auth::id());
 
         return redirect()
             ->route('claims.show', $claim)

@@ -124,4 +124,10 @@ class Delivery extends Model
     {
         return $this->hasMany(Claim::class, 'delivery_id');
     }
+
+    /** @return HasMany<InventoryLog> */
+    public function inventoryLogs(): HasMany
+    {
+        return $this->hasMany(InventoryLog::class, 'delivery_id')->orderBy('created_at', 'asc');
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DeliveryStatusUpdateRequest;
 use App\Models\Delivery;
+use App\Models\InventoryLog;
 use App\Notifications\DeliveryStatusChanged;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +36,7 @@ class DeliveryController extends Controller
             'Unauthorized action.'
         );
 
-        $delivery->load(['box', 'address', 'driver', 'claims']);
+        $delivery->load(['box', 'address', 'driver', 'claims', 'inventoryLogs']);
 
         return view('deliveries.show', compact('delivery'));
     }
@@ -48,16 +49,20 @@ class DeliveryController extends Controller
         $previousStatus = $delivery->status;
 
         $delivery->fill($request->validated());
+        $delivery->save();
 
-        if ($request->has('status') && $delivery->isDirty('status')) {
-            $delivery->save();
+        if ($delivery->wasChanged('status')) {
+            InventoryLog::logStatusChange(
+                $delivery,
+                $previousStatus,
+                $delivery->status,
+                Auth::id(),
+                'user'
+            );
 
-            // Notify the subscriber via the database channel
             $delivery->address?->user?->notify(
                 new DeliveryStatusChanged($delivery, $previousStatus)
             );
-        } else {
-            $delivery->save();
         }
 
         return redirect()
