@@ -3,12 +3,6 @@
 @extends('layouts.app')
 
 @section('content')
-    @php
-        $isLocked = $box->status === 'locked' || ($box->lock_date && $box->lock_date->isPast());
-        $hoursUntilLock = $box->lock_date ? now()->diffInHours($box->lock_date, false) : 999;
-        $weightPercent = min(100, ($box->total_weight_g / 3000) * 100);
-        $weightBarClass = $weightPercent > 90 ? 'bg-danger' : ($weightPercent > 70 ? 'bg-plus' : 'bg-rausch');
-    @endphp
 
     <section class="space-y-8" data-swap-root>
         <div class="flex flex-wrap items-center justify-between gap-3">
@@ -123,10 +117,44 @@
                             <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Replacement pool</p>
                             <p class="mt-2 text-sm font-semibold text-ink">{{ $availableItems->count() }} in-stock item{{ $availableItems->count() === 1 ? '' : 's' }}</p>
                         </div>
+                        <div class="air-stat">
+                            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Add-ons</p>
+                            <form action="{{ route('boxes.add', $box->id) }}" method="POST" class="mt-3">
+                                @csrf
+                                <select name="new_item_id" class="air-select mb-3 text-xs py-2 px-3" @disabled($isLocked)>
+                                    @foreach ($availableItems as $availableItem)
+                                        <option value="{{ $availableItem->id }}">{{ $availableItem->name }} (+${{ number_format($availableItem->unit_price, 2) }})</option>
+                                    @endforeach
+                                </select>
+                                <button type="submit" class="air-button-secondary w-full text-xs py-2" @disabled($isLocked)>Add as extra</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </aside>
         </section>
+
+        @if (session('add_warning'))
+        <div class="fixed inset-0 z-50 flex items-center justify-center px-4" data-add-warning-modal>
+            <div class="absolute inset-0 bg-ink/45" onclick="this.parentElement.remove()"></div>
+            <div class="relative z-10 w-full max-w-2xl">
+                <div class="air-panel">
+                    <p class="air-kicker">Add Extra Item</p>
+                    <h3 class="mt-3 text-2xl font-semibold tracking-[-0.02em] text-ink">Warning</h3>
+                    <div class="mt-6 rounded-[24px] border border-plus/20 bg-plus/5 p-5 text-sm text-focus">
+                        <p class="mt-2 leading-7">{{ session('add_warning.message') }}</p>
+                    </div>
+                    <form action="{{ route('boxes.add', $box->id) }}" method="POST" class="mt-6 flex flex-wrap gap-3">
+                        @csrf
+                        <input type="hidden" name="new_item_id" value="{{ session('add_warning.new_item_id') }}">
+                        <input type="hidden" name="confirm_allergen" value="1">
+                        <button type="submit" class="air-button-primary">Confirm add anyway</button>
+                        <button type="button" class="air-button-secondary" onclick="this.closest('[data-add-warning-modal]').remove()">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endif
 
         <div class="fixed inset-0 z-50 hidden items-center justify-center px-4" data-swap-modal data-start-open="{{ session('swap_warning') ? 'true' : 'false' }}">
             <div class="absolute inset-0 bg-ink/45" data-modal-overlay></div>

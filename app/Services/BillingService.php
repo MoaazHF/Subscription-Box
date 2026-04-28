@@ -10,8 +10,7 @@ class BillingService
 {
     public function __construct(
         private TaxService $taxService
-    ) {
-    }
+    ) {}
 
     public function charge(Subscription $subscription, string $reason): Payment
     {

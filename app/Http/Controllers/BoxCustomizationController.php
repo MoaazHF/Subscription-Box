@@ -31,7 +31,12 @@ class BoxCustomizationController extends Controller
 
         $availableItems = Item::where('stock_qty', '>', 0)->get();
 
-        return view('boxes.customize', compact('box', 'availableItems'));
+        $isLocked = $box->status === 'locked' || ($box->lock_date && $box->lock_date->isPast());
+        $hoursUntilLock = $box->lock_date ? now()->diffInHours($box->lock_date, false) : 999;
+        $weightPercent = min(100, ($box->total_weight_g / 3000) * 100);
+        $weightBarClass = $weightPercent > 90 ? 'bg-danger' : ($weightPercent > 70 ? 'bg-plus' : 'bg-rausch');
+
+        return view('boxes.customize', compact('box', 'availableItems', 'isLocked', 'hoursUntilLock', 'weightPercent', 'weightBarClass'));
     }
 
     /**
@@ -85,5 +90,34 @@ class BoxCustomizationController extends Controller
         $this->weightService->recalculate($box);
 
         return back()->with('success', 'Item removed successfully.');
+    }
+
+    /**
+     * Handle adding an item as an add-on.
+     */
+    public function add(Request $request, Box $box): RedirectResponse
+    {
+        $box->load('subscription');
+        abort_unless($request->user()->isAdmin() || $box->ownedBy($request->user()), Response::HTTP_FORBIDDEN);
+
+        $request->validate(['new_item_id' => 'required|uuid|exists:items,id']);
+        $newItem = Item::findOrFail($request->new_item_id);
+
+        try {
+            $result = $this->customizationService->add($box, $newItem, $request->user());
+
+            if ($result['status'] === 'warning') {
+                return back()->with('add_warning', [
+                    'type' => $result['type'],
+                    'message' => $result['message'],
+                    'new_item_id' => $newItem->id,
+                    'new_item_name' => $newItem->name,
+                ]);
+            }
+
+            return back()->with('success', $result['message']);
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 }

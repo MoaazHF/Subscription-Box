@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class AuditLogService
 {
     /**
-     * @param array<string, mixed> $metadata
+     * @param  array<string, mixed>  $metadata
      */
     public function record(
         ?User $user,

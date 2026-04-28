@@ -32,7 +32,7 @@ class DeliveryController extends Controller
     {
         $this->ensureAccess($request, $delivery);
 
-        $delivery->load(['box.subscription.user', 'address']);
+        $delivery->load(['box.subscription.user', 'address', 'claims']);
 
         return view('deliveries.show', [
             'delivery' => $delivery,

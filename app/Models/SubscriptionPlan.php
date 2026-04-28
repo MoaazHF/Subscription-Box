@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class SubscriptionPlan extends BaseModel
 {
     use HasFactory;
 
     protected $keyType = 'int';
+
     public $incrementing = true;
 
     protected $fillable = [
@@ -18,7 +18,7 @@ class SubscriptionPlan extends BaseModel
         'max_items',
         'max_weight_g',
         'features',
-        'is_active'
+        'is_active',
     ];
 
     protected $casts = [

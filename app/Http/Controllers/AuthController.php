@@ -17,8 +17,7 @@ class AuthController extends Controller
 {
     public function __construct(
         private AuditLogService $auditLogService
-    ) {
-    }
+    ) {}
 
     public function showLogin(): View
     {

@@ -5,8 +5,10 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoxController;
 use App\Http\Controllers\BoxCustomizationController;
+use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\DriverController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SubscriptionController;
@@ -51,12 +53,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/boxes/{box}', [BoxController::class, 'show'])->name('boxes.show');
     Route::get('/boxes/{box}/customize', [BoxCustomizationController::class, 'show'])->name('boxes.customize');
     Route::post('/boxes/{box}/swap', [BoxCustomizationController::class, 'swap'])->name('boxes.swap');
+    Route::post('/boxes/{box}/add', [BoxCustomizationController::class, 'add'])->name('boxes.add');
     Route::delete('/boxes/{box}/items/{boxItem}', [BoxCustomizationController::class, 'remove'])->name('boxes.remove');
 
     // Team 3: Delivery tracking workflow.
     Route::get('/deliveries', [DeliveryController::class, 'index'])->name('deliveries.index');
     Route::get('/deliveries/{delivery}', [DeliveryController::class, 'show'])->name('deliveries.show');
+    Route::post('/deliveries/{delivery}/claims', [ClaimController::class, 'store'])->name('deliveries.claims.store');
     Route::patch('/deliveries/{delivery}/status', [DeliveryController::class, 'updateStatus'])
         ->middleware('role:admin')
         ->name('deliveries.update-status');
+
+    // Driver workflow
+    Route::get('/driver', [DriverController::class, 'index'])->name('driver.index');
+    Route::patch('/driver/deliveries/{delivery}/status', [DriverController::class, 'updateStatus'])->name('driver.deliveries.status');
 });

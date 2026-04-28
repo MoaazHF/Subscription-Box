@@ -70,6 +70,59 @@
                         </div>
                     </div>
                 </div>
+                </div>
+
+                @if($delivery->claims->isNotEmpty())
+                    <div class="air-panel mt-6">
+                        <p class="air-kicker">History</p>
+                        <h2 class="air-title">Submitted Claims</h2>
+                        <div class="mt-6 space-y-4">
+                            @foreach($delivery->claims as $claim)
+                                <div class="rounded-[24px] border border-hairline p-5">
+                                    <div class="flex flex-wrap items-center gap-3 mb-3">
+                                        <span class="air-chip font-semibold">{{ ucfirst($claim->type) }}</span>
+                                        <span class="air-chip-dark {{ $claim->status === 'resolved' ? '!bg-plus/10 !text-plus !border-plus/20' : '!bg-warning/10 !text-warning !border-warning/20' }}">
+                                            {{ ucfirst($claim->status) }}
+                                        </span>
+                                        <span class="text-xs text-ash ml-auto">{{ $claim->submitted_at->format('M d, Y g:i A') }}</span>
+                                    </div>
+                                    <p class="text-sm text-ink leading-7">{{ $claim->description }}</p>
+                                    @if($claim->photo_url)
+                                        <div class="mt-4">
+                                            <a href="{{ $claim->photo_url }}" target="_blank" class="text-sm text-rausch hover:underline font-semibold">View Photo Evidence &rarr;</a>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                <div class="air-panel mt-6">
+                    <p class="air-kicker">Support</p>
+                    <h2 class="air-title">File a Claim.</h2>
+                    <form action="{{ route('deliveries.claims.store', $delivery->id) }}" method="POST" enctype="multipart/form-data" class="mt-6 space-y-4">
+                        @csrf
+                        <div class="grid gap-4 sm:grid-cols-2">
+                            <div class="space-y-2">
+                                <label for="type" class="text-sm font-semibold text-ink">Issue Type</label>
+                                <select id="type" name="type" class="air-select">
+                                    <option value="damage">Damage</option>
+                                    <option value="missing">Missing Box/Item</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label for="photo" class="text-sm font-semibold text-ink">Photo Evidence (Optional)</label>
+                                <input id="photo" name="photo" type="file" class="air-input" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="description" class="text-sm font-semibold text-ink">Description</label>
+                            <textarea id="description" name="description" class="air-textarea" required></textarea>
+                        </div>
+                        <button type="submit" class="air-button-primary">Submit Claim</button>
+                    </form>
+                </div>
             </div>
 
             @if (auth()->user()->isAdmin())

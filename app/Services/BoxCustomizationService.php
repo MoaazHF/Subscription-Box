@@ -26,6 +26,12 @@ class BoxCustomizationService
             throw new Exception('This box is locked and cannot be customized.');
         }
 
+        // 1b. Duplicate check (F23)
+        $box->loadMissing('items');
+        if ($box->items->where('id', '!=', $outItem->item_id)->contains('id', $newItem->id)) {
+            throw new Exception('This item is already in your box. Duplicates are not allowed.');
+        }
+
         // 2. F13 Weight check
         $removingItem = DB::table('items')->where('id', $outItem->item_id)->first();
         // Since we need an Item model for wouldExceedLimit:
@@ -81,6 +87,62 @@ class BoxCustomizationService
         return [
             'status' => 'success',
             'message' => 'Item swapped successfully!',
+        ];
+    }
+
+    /**
+     * Add an item to the box as an add-on.
+     */
+    public function add(Box $box, Item $newItem, User $user): array
+    {
+        // 1. F15 Lock check
+        if ($box->status === 'locked' || ($box->lock_date && $box->lock_date->isPast())) {
+            throw new Exception('This box is locked and cannot be customized.');
+        }
+
+        // 1b. Duplicate check
+        $box->loadMissing('items');
+        if ($box->items->contains('id', $newItem->id)) {
+            throw new Exception('This item is already in your box. Duplicates are not allowed.');
+        }
+
+        // 2. Weight check
+        if ($this->weightService->wouldExceedLimit($box, $newItem)) {
+            throw new Exception('Adding this item would exceed the 3000g maximum weight limit.');
+        }
+
+        // 3. Allergen conflict check
+        $confirmAllergen = request()->boolean('confirm_allergen');
+        $hasConflict = DB::table('user_allergens')
+            ->join('item_allergens', 'user_allergens.allergen_tag_id', '=', 'item_allergens.allergen_tag_id')
+            ->where('user_allergens.user_id', $user->id)
+            ->where('item_allergens.item_id', $newItem->id)
+            ->exists();
+
+        if ($hasConflict && ! $confirmAllergen) {
+            return [
+                'status' => 'warning',
+                'type' => 'allergen',
+                'message' => 'This item contains allergens that conflict with your profile.',
+            ];
+        }
+
+        // 4. DB Transaction
+        DB::transaction(function () use ($newItem, $box) {
+            BoxItem::create([
+                'box_id' => $box->id,
+                'item_id' => $newItem->id,
+                'is_addon' => true,
+                'added_at' => now(),
+            ]);
+
+            $box->load('items');
+            $this->weightService->recalculate($box);
+        });
+
+        return [
+            'status' => 'success',
+            'message' => 'Add-on item added successfully!',
         ];
     }
 }
