@@ -4,10 +4,10 @@
     <section class="space-y-8">
         <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
             <div class="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-sm">
-                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">Dashboard</p>
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">Platform dashboard</p>
                 <h1 class="mt-3 text-3xl font-black text-stone-900">Hello, {{ $user->name }}</h1>
                 <p class="mt-2 max-w-2xl text-sm leading-7 text-stone-600">
-                    This is the Team 1 control surface: identity, subscriptions, billing basics, and the address book that the rest of the platform builds on.
+                    This page is the shared entry point for Team 1 subscriptions, Team 2 boxes, and Team 3 deliveries.
                 </p>
 
                 <div class="mt-8 grid gap-4 sm:grid-cols-3">
@@ -58,6 +58,8 @@
                     <a href="{{ route('addresses.index') }}" class="rounded-2xl bg-stone-100 px-4 py-4 text-sm font-semibold text-stone-900 transition hover:bg-stone-200/80">Manage addresses</a>
                     <a href="{{ route('plans.index') }}" class="rounded-2xl bg-stone-100 px-4 py-4 text-sm font-semibold text-stone-900 transition hover:bg-stone-200/80">Review active plans</a>
                     <a href="{{ route('subscriptions.index') }}" class="rounded-2xl bg-stone-100 px-4 py-4 text-sm font-semibold text-stone-900 transition hover:bg-stone-200/80">Manage subscriptions</a>
+                    <a href="{{ route('boxes.index') }}" class="rounded-2xl bg-stone-100 px-4 py-4 text-sm font-semibold text-stone-900 transition hover:bg-stone-200/80">Open current boxes</a>
+                    <a href="{{ route('deliveries.index') }}" class="rounded-2xl bg-stone-100 px-4 py-4 text-sm font-semibold text-stone-900 transition hover:bg-stone-200/80">Track deliveries</a>
                     <a href="{{ route('payments.index') }}" class="rounded-2xl bg-stone-100 px-4 py-4 text-sm font-semibold text-stone-900 transition hover:bg-stone-200/80">See billing history</a>
                 </div>
             </section>

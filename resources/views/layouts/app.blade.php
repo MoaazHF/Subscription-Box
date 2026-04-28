@@ -13,20 +13,35 @@
                 <a href="{{ route('home') }}" class="flex items-center gap-3">
                     <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-600 text-sm font-black uppercase tracking-[0.2em] text-white">SB</span>
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">Team 1 Core</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">Platform MVP</p>
                         <p class="text-sm font-semibold text-stone-900">Subscription Box Platform</p>
                     </div>
                 </a>
 
                 <nav class="flex flex-wrap items-center gap-2 text-sm font-medium text-stone-600">
                     @auth
-                        <a href="{{ route('dashboard') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('dashboard') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Dashboard</a>
-                        <a href="{{ route('plans.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('plans.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Plans</a>
-                        <a href="{{ route('subscriptions.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('subscriptions.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Subscriptions</a>
-                        <a href="{{ route('addresses.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('addresses.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Addresses</a>
-                        <a href="{{ route('payments.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('payments.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Payments</a>
-                        <a href="{{ route('boxes.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('boxes.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Boxes</a>
-                        @if (auth()->user()->isAdmin())
+                        @if (Route::has('dashboard'))
+                            <a href="{{ route('dashboard') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('dashboard') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Dashboard</a>
+                        @endif
+                        @if (Route::has('plans.index'))
+                            <a href="{{ route('plans.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('plans.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Plans</a>
+                        @endif
+                        @if (Route::has('subscriptions.index'))
+                            <a href="{{ route('subscriptions.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('subscriptions.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Subscriptions</a>
+                        @endif
+                        @if (Route::has('addresses.index'))
+                            <a href="{{ route('addresses.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('addresses.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Addresses</a>
+                        @endif
+                        @if (Route::has('payments.index'))
+                            <a href="{{ route('payments.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('payments.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Payments</a>
+                        @endif
+                        @if (Route::has('boxes.index'))
+                            <a href="{{ route('boxes.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('boxes.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Boxes</a>
+                        @endif
+                        @if (Route::has('deliveries.index'))
+                            <a href="{{ route('deliveries.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('deliveries.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Deliveries</a>
+                        @endif
+                        @if (Route::has('audit-logs.index') && method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())
                             <a href="{{ route('audit-logs.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('audit-logs.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Audit Logs</a>
                         @endif
                         <form method="POST" action="{{ route('logout') }}">
