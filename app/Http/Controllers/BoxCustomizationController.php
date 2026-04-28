@@ -8,7 +8,11 @@ use App\Models\BoxItem;
 use App\Models\Item;
 use App\Services\BoxCustomizationService;
 use App\Services\WeightService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 class BoxCustomizationController extends Controller
 {
@@ -20,11 +24,11 @@ class BoxCustomizationController extends Controller
     /**
      * Render the customize view for a given box.
      */
-    public function show(Box $box)
+    public function show(Request $request, Box $box): View
     {
-        $box->load('items');
+        $box->load(['items', 'subscription']);
+        abort_unless($request->user()->isAdmin() || $box->ownedBy($request->user()), Response::HTTP_FORBIDDEN);
 
-        // Items available to swap in
         $availableItems = Item::where('stock_qty', '>', 0)->get();
 
         return view('boxes.customize', compact('box', 'availableItems'));
@@ -33,16 +37,18 @@ class BoxCustomizationController extends Controller
     /**
      * Handle the swapping of items.
      */
-    public function swap(SwapItemRequest $request, Box $box)
+    public function swap(SwapItemRequest $request, Box $box): RedirectResponse
     {
+        $box->load('subscription');
+        abort_unless($request->user()->isAdmin() || $box->ownedBy($request->user()), Response::HTTP_FORBIDDEN);
+
         $outItem = BoxItem::findOrFail($request->validated('remove_box_item_id'));
         $newItem = Item::findOrFail($request->validated('new_item_id'));
 
-        // Provide the authenticated user (mock fallback if needed in this phase)
-        $user = $request->user();
+        abort_unless($outItem->box_id === $box->id, Response::HTTP_FORBIDDEN);
 
         try {
-            $result = $this->customizationService->swap($box, $outItem, $newItem, $user);
+            $result = $this->customizationService->swap($box, $outItem, $newItem, $request->user());
 
             if ($result['status'] === 'warning') {
                 return back()->with('swap_warning', [
@@ -63,8 +69,12 @@ class BoxCustomizationController extends Controller
     /**
      * Remove an item from the box.
      */
-    public function remove(Box $box, BoxItem $boxItem)
+    public function remove(Request $request, Box $box, BoxItem $boxItem): RedirectResponse
     {
+        $box->load('subscription');
+        abort_unless($request->user()->isAdmin() || $box->ownedBy($request->user()), Response::HTTP_FORBIDDEN);
+        abort_unless($boxItem->box_id === $box->id, Response::HTTP_FORBIDDEN);
+
         if ($box->status === 'locked' || ($box->lock_date && $box->lock_date->isPast())) {
             return back()->with('error', 'Box is locked and cannot be modified.');
         }

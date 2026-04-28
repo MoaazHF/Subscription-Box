@@ -52,4 +52,9 @@ class Box extends Model
     {
         return $this->hasOne(BoxCustomisation::class);
     }
+
+    public function ownedBy(User $user): bool
+    {
+        return $this->subscription?->user_id === $user->id;
+    }
 }
