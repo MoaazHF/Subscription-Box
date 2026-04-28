@@ -4,67 +4,91 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title ?? config('app.name', 'Subscription Box') }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('AppIcon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('AppIcon.png') }}">
+    <meta name="theme-color" content="#ff385c">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('head')
 </head>
-<body class="min-h-screen bg-stone-100 text-stone-900 antialiased">
-    <div class="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(217,119,6,0.12),_transparent_36%),linear-gradient(180deg,_#fafaf9,_#f5f5f4)]">
-        <header class="border-b border-stone-200/80 bg-white/80 backdrop-blur">
-            <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-                <a href="{{ route('home') }}" class="flex items-center gap-3">
-                    <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-600 text-sm font-black uppercase tracking-[0.2em] text-white">SB</span>
-                    <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">Platform MVP</p>
-                        <p class="text-sm font-semibold text-stone-900">Subscription Box Platform</p>
-                    </div>
-                </a>
+<body class="min-h-screen">
+    <div class="min-h-screen">
+        <header class="sticky top-0 z-50 border-b border-hairline/90 bg-canvas/95 backdrop-blur">
+            <div class="air-shell flex flex-col gap-4 py-4">
+                <div class="flex items-center justify-between gap-4">
+                    <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-3">
+                        <img src="{{ asset('AppIcon.png') }}" alt="Subscription Box icon" class="h-12 w-12 rounded-2xl object-cover shadow-sm ring-1 ring-hairline">
+                        <div class="min-w-0">
+                            <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Platform MVP</p>
+                            <p class="truncate text-sm font-semibold text-ink">Subscription Box Platform</p>
+                        </div>
+                    </a>
 
-                <nav class="flex flex-wrap items-center gap-2 text-sm font-medium text-stone-600">
-                    @auth
-                        @if (Route::has('dashboard'))
-                            <a href="{{ route('dashboard') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('dashboard') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Dashboard</a>
-                        @endif
-                        @if (Route::has('plans.index'))
-                            <a href="{{ route('plans.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('plans.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Plans</a>
-                        @endif
-                        @if (Route::has('subscriptions.index'))
-                            <a href="{{ route('subscriptions.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('subscriptions.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Subscriptions</a>
-                        @endif
-                        @if (Route::has('addresses.index'))
-                            <a href="{{ route('addresses.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('addresses.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Addresses</a>
-                        @endif
-                        @if (Route::has('payments.index'))
-                            <a href="{{ route('payments.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('payments.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Payments</a>
-                        @endif
-                        @if (Route::has('boxes.index'))
-                            <a href="{{ route('boxes.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('boxes.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Boxes</a>
-                        @endif
-                        @if (Route::has('deliveries.index'))
-                            <a href="{{ route('deliveries.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('deliveries.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Deliveries</a>
-                        @endif
-                        @if (Route::has('audit-logs.index') && method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())
-                            <a href="{{ route('audit-logs.index') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70 {{ request()->routeIs('audit-logs.*') ? 'bg-stone-900 text-white hover:bg-stone-900' : '' }}">Audit Logs</a>
-                        @endif
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="rounded-full bg-amber-600 px-4 py-2 text-white transition hover:bg-amber-700">Logout</button>
-                        </form>
-                    @else
-                        <a href="{{ route('login') }}" class="rounded-full px-3 py-2 hover:bg-stone-200/70">Login</a>
-                        <a href="{{ route('register') }}" class="rounded-full bg-stone-900 px-4 py-2 text-white transition hover:bg-stone-700">Create Account</a>
-                    @endauth
-                </nav>
+                    <div class="hidden items-center justify-center gap-8 lg:flex">
+                        <a href="{{ route('subscriptions.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('subscriptions.*') ? '' : 'opacity-70 hover:opacity-100' }}">
+                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg">⌂</span>
+                            <span class="border-b-2 pb-1 {{ request()->routeIs('subscriptions.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Subscriptions</span>
+                        </a>
+                        <a href="{{ route('boxes.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('boxes.*') ? '' : 'opacity-70 hover:opacity-100' }}">
+                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg">◫</span>
+                            <span class="border-b-2 pb-1 {{ request()->routeIs('boxes.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Boxes</span>
+                        </a>
+                        <a href="{{ route('deliveries.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('deliveries.*') ? '' : 'opacity-70 hover:opacity-100' }}">
+                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg">◌</span>
+                            <span class="border-b-2 pb-1 {{ request()->routeIs('deliveries.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Deliveries</span>
+                        </a>
+                    </div>
+
+                    <nav class="flex flex-wrap items-center justify-end gap-2 text-sm font-medium text-ash">
+                        @auth
+                            <span class="hidden rounded-full border border-hairline bg-canvas px-4 py-2 text-ink md:inline-flex">{{ auth()->user()->name }}</span>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="inline-flex items-center justify-center rounded-full border border-hairline bg-canvas px-4 py-2 text-sm font-semibold text-ink transition hover:border-ink/30 hover:bg-cloud">Logout</button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}" class="inline-flex items-center justify-center rounded-full border border-transparent px-4 py-2 text-sm font-semibold text-ink transition hover:bg-cloud">Login</a>
+                            <a href="{{ route('register') }}" class="inline-flex items-center justify-center rounded-full bg-rausch px-4 py-2 text-sm font-semibold text-white transition hover:bg-rausch-deep">Create account</a>
+                        @endauth
+                    </nav>
+                </div>
+
+                @auth
+                    <div class="overflow-x-auto">
+                        <div class="flex min-w-max items-center gap-2 pb-1">
+                            <a href="{{ route('dashboard') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('dashboard') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Dashboard</a>
+                            <a href="{{ route('plans.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('plans.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Plans</a>
+                            <a href="{{ route('addresses.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('addresses.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Addresses</a>
+                            <a href="{{ route('payments.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('payments.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Payments</a>
+                            @if (Route::has('audit-logs.index') && method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())
+                                <a href="{{ route('audit-logs.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('audit-logs.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Audit logs</a>
+                            @endif
+                        </div>
+                    </div>
+                @endif
             </div>
         </header>
 
-        <main class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <main class="air-shell py-8 sm:py-10 lg:py-12">
             @if (session('status'))
-                <div class="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+                <div class="air-float mb-6 rounded-[20px] border border-emerald-200 bg-canvas px-4 py-3 text-sm font-medium text-emerald-700">
                     {{ session('status') }}
                 </div>
             @endif
 
+            @if (session('success'))
+                <div class="air-float mb-6 rounded-[20px] border border-emerald-200 bg-canvas px-4 py-3 text-sm font-medium text-emerald-700">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="air-float mb-6 rounded-[20px] border border-danger/20 bg-canvas px-4 py-3 text-sm font-medium text-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             @if ($errors->any())
-                <div class="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+                <div class="air-float mb-6 rounded-[20px] border border-danger/20 bg-canvas px-4 py-3 text-sm text-danger">
                     <ul class="space-y-1">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -75,6 +99,24 @@
 
             @yield('content')
         </main>
+
+        <footer class="mt-10 border-t border-hairline bg-canvas/90">
+            <div class="air-shell grid gap-8 py-8 text-sm text-ash md:grid-cols-3">
+                <div class="space-y-3">
+                    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Support</p>
+                    <p>Clear flows for subscribers, admins, and the rest of the team.</p>
+                </div>
+                <div class="space-y-3">
+                    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Platform</p>
+                    <p>Team 1 starts the subscription, Team 2 provisions the box, Team 3 tracks the delivery.</p>
+                </div>
+                <div class="space-y-3">
+                    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Build State</p>
+                    <p>Frontend aligned to the design system and backed by the same readable MVP workflow.</p>
+                </div>
+            </div>
+        </footer>
     </div>
+    @stack('scripts')
 </body>
 </html>

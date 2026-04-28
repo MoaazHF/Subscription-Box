@@ -1,44 +1,66 @@
+@php($title = 'Payments')
+
 @extends('layouts.app')
 
 @section('content')
-    <section class="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-sm">
-        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">Billing basics</p>
-        <h1 class="mt-3 text-3xl font-black text-stone-900">Payment history</h1>
-        <p class="mt-2 text-sm leading-7 text-stone-600">Payments are simulated, but the records are real. Each subscription creation, plan switch, and renewal writes a row here.</p>
+    <section class="space-y-8">
+        <div class="air-panel">
+            <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+                <div>
+                    <p class="air-kicker">Billing basics</p>
+                    <h1 class="air-title">Payment history with readable reasons.</h1>
+                    <p class="air-copy">Every subscription start, plan change, and renewal writes a record here. The gateway is simulated, but the internal billing history remains explicit.</p>
+                </div>
+                <div class="grid gap-3 sm:grid-cols-2">
+                    <div class="air-stat">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Visible records</p>
+                        <p class="mt-2 text-2xl font-semibold tracking-[-0.02em] text-ink">{{ $payments->count() }}</p>
+                    </div>
+                    <div class="air-stat">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Total records</p>
+                        <p class="mt-2 text-2xl font-semibold tracking-[-0.02em] text-ink">{{ $payments->total() }}</p>
+                    </div>
+                </div>
+            </div>
 
-        <div class="mt-8 overflow-hidden rounded-[1.5rem] border border-stone-200">
-            <table class="min-w-full divide-y divide-stone-200">
-                <thead class="bg-stone-100">
-                    <tr>
-                        <th class="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">Plan</th>
-                        <th class="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">Reason</th>
-                        <th class="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">Tax</th>
-                        <th class="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">Amount</th>
-                        <th class="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">Status</th>
-                        <th class="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">Date</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-stone-200 bg-white">
-                    @forelse ($payments as $payment)
-                        <tr>
-                            <td class="px-4 py-4 text-sm font-semibold text-stone-900">{{ ucfirst($payment->subscription->plan?->name ?? 'Plan') }}</td>
-                            <td class="px-4 py-4 text-sm text-stone-600">{{ ucwords(str_replace('_', ' ', $payment->gateway_reason_code)) }}</td>
-                            <td class="px-4 py-4 text-sm text-stone-600">${{ number_format((float) $payment->tax_amount, 2) }}</td>
-                            <td class="px-4 py-4 text-sm font-semibold text-stone-900">${{ number_format((float) $payment->amount, 2) }}</td>
-                            <td class="px-4 py-4 text-sm text-stone-600">{{ ucfirst($payment->status) }}</td>
-                            <td class="px-4 py-4 text-sm text-stone-600">{{ $payment->created_at?->format('M d, Y') }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="px-4 py-6 text-sm text-stone-600">No payment records yet.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+            <div class="mt-8 grid gap-4">
+                @forelse ($payments as $payment)
+                    <article class="air-grid-card">
+                        <div class="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+                            <div class="space-y-3">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <p class="text-lg font-semibold tracking-[-0.01em] text-ink">{{ ucfirst($payment->subscription->plan?->name ?? 'Plan') }}</p>
+                                    <span class="air-chip">{{ ucfirst($payment->status) }}</span>
+                                </div>
+                                <p class="text-sm leading-7 text-ash">{{ ucwords(str_replace('_', ' ', $payment->gateway_reason_code)) }}</p>
+                            </div>
 
-        <div class="mt-6">
-            {{ $payments->links() }}
+                            <div class="grid gap-3 sm:grid-cols-3">
+                                <div class="air-stat">
+                                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Tax</p>
+                                    <p class="mt-2 text-sm font-semibold text-ink">${{ number_format((float) $payment->tax_amount, 2) }}</p>
+                                </div>
+                                <div class="air-stat">
+                                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Amount</p>
+                                    <p class="mt-2 text-sm font-semibold text-ink">${{ number_format((float) $payment->amount, 2) }}</p>
+                                </div>
+                                <div class="air-stat">
+                                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Date</p>
+                                    <p class="mt-2 text-sm font-semibold text-ink">{{ $payment->created_at?->format('M d, Y') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                @empty
+                    <div class="air-panel-soft">
+                        <p class="text-sm text-ash">No payment records yet.</p>
+                    </div>
+                @endforelse
+            </div>
+
+            <div class="mt-6">
+                {{ $payments->links() }}
+            </div>
         </div>
     </section>
 @endsection

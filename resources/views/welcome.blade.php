@@ -1,123 +1,190 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-        <div class="space-y-6">
-            <p class="text-sm font-semibold uppercase tracking-[0.28em] text-amber-700">Teams 1, 2, And 3</p>
+    <section class="grid gap-8 xl:grid-cols-[1.1fr_0.9fr] xl:items-center">
+        <div class="space-y-8">
             <div class="space-y-4">
-                <h1 class="max-w-3xl text-4xl font-black leading-tight text-stone-900 sm:text-5xl">
-                    One readable MVP flow across subscription, box, and delivery.
+                <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Platform Journey</p>
+                <h1 class="max-w-4xl text-5xl font-bold tracking-[-0.05em] text-ink sm:text-6xl">
+                    Subscription, box, and delivery flow in one magazine-style surface.
                 </h1>
-                <p class="max-w-2xl text-lg leading-8 text-stone-600">
-                    Team 1 owns authentication and subscriptions. Team 2 starts once a subscription creates the current box.
-                    Team 3 starts once that same box creates a delivery record. The modules are chained on purpose.
+                <p class="max-w-2xl text-base leading-8 text-ash">
+                    Team 1 starts the customer lifecycle. Team 2 turns that subscription into a current box.
+                    Team 3 turns that box into a live delivery record. The frontend now shows the chain instead of hiding it.
                 </p>
             </div>
-            <div class="flex flex-wrap gap-3">
-                @auth
-                    <a href="{{ route('dashboard') }}" class="rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-stone-700">Open dashboard</a>
-                @else
-                    <a href="{{ route('register') }}" class="rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-stone-700">Start with an account</a>
-                    <a href="{{ route('login') }}" class="rounded-full border border-stone-300 px-6 py-3 text-sm font-semibold text-stone-800 transition hover:bg-stone-200/70">Sign in</a>
-                @endauth
+
+            <div class="air-float overflow-hidden rounded-[32px] border border-hairline bg-canvas">
+                <div class="grid gap-4 p-3 md:grid-cols-[1fr_1fr_1fr_auto]">
+                    <div class="rounded-[24px] bg-cloud px-5 py-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Where</p>
+                        <p class="mt-2 text-sm font-semibold text-ink">Team 1 subscription setup</p>
+                    </div>
+                    <div class="rounded-[24px] bg-cloud px-5 py-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">When</p>
+                        <p class="mt-2 text-sm font-semibold text-ink">Current month box provision</p>
+                    </div>
+                    <div class="rounded-[24px] bg-cloud px-5 py-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Who</p>
+                        <p class="mt-2 text-sm font-semibold text-ink">Delivery board and admin updates</p>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        @auth
+                            <a href="{{ route('dashboard') }}" class="flex h-16 w-16 items-center justify-center rounded-full bg-rausch text-xl font-bold text-white transition hover:bg-rausch-deep">→</a>
+                        @else
+                            <a href="{{ route('register') }}" class="flex h-16 w-16 items-center justify-center rounded-full bg-rausch text-xl font-bold text-white transition hover:bg-rausch-deep">→</a>
+                        @endauth
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-3">
+                <div class="rounded-[24px] border border-hairline bg-canvas p-5">
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-rausch">Team 1</p>
+                    <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-ink">Core system</h2>
+                    <p class="mt-3 text-sm leading-7 text-ash">Roles, addresses, subscriptions, payments, and audit logs.</p>
+                </div>
+                <div class="rounded-[24px] border border-hairline bg-canvas p-5">
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-rausch">Team 2</p>
+                    <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-ink">Current box</h2>
+                    <p class="mt-3 text-sm leading-7 text-ash">Starter items, box detail, and customization entry points.</p>
+                </div>
+                <div class="rounded-[24px] border border-hairline bg-canvas p-5">
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-rausch">Team 3</p>
+                    <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-ink">Delivery record</h2>
+                    <p class="mt-3 text-sm leading-7 text-ash">Tracking board, delivery detail, and admin status changes.</p>
+                </div>
             </div>
         </div>
 
-        <div class="rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm">
-            <div class="flex items-center justify-between gap-4">
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">System snapshot</p>
-                    <h2 class="mt-2 text-2xl font-black text-stone-900">Platform baseline</h2>
-                </div>
-                <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-amber-800">MVP</span>
-            </div>
+        <div class="air-float overflow-hidden rounded-[32px] border border-hairline bg-canvas">
+            <div class="aspect-[4/3] bg-[linear-gradient(145deg,#fff1f4_0%,#ffffff_36%,#f7f7f7_100%)] p-8">
+                <div class="flex h-full flex-col justify-between">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Magazine panel</p>
+                            <h2 class="mt-3 max-w-sm text-3xl font-bold tracking-[-0.04em] text-ink">Readable by the whole team, not only Team 1.</h2>
+                        </div>
+                        <img src="{{ asset('AppIcon.png') }}" alt="Subscription Box app icon" class="h-24 w-24 rounded-[28px] object-cover ring-1 ring-white/80 shadow-[0_24px_60px_rgba(255,56,92,0.18)]">
+                    </div>
 
-            <div class="mt-6 grid gap-4 sm:grid-cols-2">
-                <div class="rounded-2xl bg-stone-100 p-4">
-                    <p class="text-sm font-semibold text-stone-900">Team 1: Core system</p>
-                    <p class="mt-1 text-sm text-stone-600">Auth, roles, subscriptions, billing basics, addresses, and audit logs.</p>
-                </div>
-                <div class="rounded-2xl bg-stone-100 p-4">
-                    <p class="text-sm font-semibold text-stone-900">Team 2: Box workflow</p>
-                    <p class="mt-1 text-sm text-stone-600">A new subscription auto-creates the current box with starter items.</p>
-                </div>
-                <div class="rounded-2xl bg-stone-100 p-4">
-                    <p class="text-sm font-semibold text-stone-900">Team 3: Delivery workflow</p>
-                    <p class="mt-1 text-sm text-stone-600">That box auto-creates a delivery record with status tracking.</p>
-                </div>
-                <div class="rounded-2xl bg-stone-100 p-4">
-                    <p class="text-sm font-semibold text-stone-900">How to see them</p>
-                    <p class="mt-1 text-sm text-stone-600">Seed data, log in, add an address, create a subscription, then open boxes and deliveries.</p>
+                    <div class="grid gap-3 sm:grid-cols-3">
+                        <div class="rounded-[24px] bg-canvas/90 p-4 backdrop-blur">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Flow</p>
+                            <p class="mt-2 text-sm font-semibold text-ink">Address → Subscription</p>
+                        </div>
+                        <div class="rounded-[24px] bg-canvas/90 p-4 backdrop-blur">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Auto-create</p>
+                            <p class="mt-2 text-sm font-semibold text-ink">Box → Delivery</p>
+                        </div>
+                        <div class="rounded-[24px] bg-canvas/90 p-4 backdrop-blur">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Views</p>
+                            <p class="mt-2 text-sm font-semibold text-ink">Subscriber + Admin</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="mt-12 grid gap-6 lg:grid-cols-3">
-        <article class="rounded-[1.75rem] border border-stone-200 bg-white p-6 shadow-sm">
-            <p class="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700">Team 1</p>
-            <h2 class="mt-3 text-2xl font-black text-stone-900">Subscription entry</h2>
-            <p class="mt-3 text-sm leading-7 text-stone-600">Register, log in, manage addresses, and start the subscription lifecycle from one place.</p>
-            <div class="mt-5 flex flex-wrap gap-3">
-                <a href="{{ route('plans.index') }}" class="rounded-full border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-800 transition hover:bg-stone-100">Plans</a>
-                @auth
-                    <a href="{{ route('subscriptions.index') }}" class="rounded-full border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-800 transition hover:bg-stone-100">Subscriptions</a>
-                @endif
+    <section class="mt-14">
+        <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+                <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Built Surfaces</p>
+                <h2 class="mt-3 text-[2rem] font-bold tracking-[-0.04em] text-ink">Open the product by module</h2>
             </div>
-        </article>
+        </div>
 
-        <article class="rounded-[1.75rem] border border-stone-200 bg-white p-6 shadow-sm">
-            <p class="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700">Team 2</p>
-            <h2 class="mt-3 text-2xl font-black text-stone-900">Current box</h2>
-            <p class="mt-3 text-sm leading-7 text-stone-600">Once a subscription exists, the app provisions the current box and exposes the box and customization pages.</p>
-            <div class="mt-5 flex flex-wrap gap-3">
-                @auth
-                    <a href="{{ route('boxes.index') }}" class="rounded-full border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-800 transition hover:bg-stone-100">Boxes</a>
-                @else
-                    <span class="rounded-full border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-500">Login required</span>
-                @endauth
-            </div>
-        </article>
+        <div class="mt-6 grid gap-6 lg:grid-cols-3">
+            <article class="overflow-hidden rounded-[28px] border border-hairline bg-canvas">
+                <div class="aspect-[4/3] bg-[linear-gradient(160deg,#fff1f4_0%,#ffffff_55%,#f7f7f7_100%)] p-6">
+                    <div class="flex h-full flex-col justify-between">
+                        <span class="inline-flex w-fit rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold text-ink">Team 1</span>
+                        <div>
+                            <h3 class="text-[1.35rem] font-bold tracking-[-0.03em] text-ink">Subscription entry</h3>
+                            <p class="mt-2 text-sm leading-7 text-ash">Register, sign in, manage addresses, and start the lifecycle from one place.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-3 p-6">
+                    <a href="{{ route('plans.index') }}" class="inline-flex items-center rounded-full border border-hairline bg-canvas px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-cloud">Review plans</a>
+                    @auth
+                        <a href="{{ route('subscriptions.index') }}" class="ml-2 inline-flex items-center rounded-full bg-rausch px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-rausch-deep">Manage subscriptions</a>
+                    @endif
+                </div>
+            </article>
 
-        <article class="rounded-[1.75rem] border border-stone-200 bg-white p-6 shadow-sm">
-            <p class="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700">Team 3</p>
-            <h2 class="mt-3 text-2xl font-black text-stone-900">Delivery tracking</h2>
-            <p class="mt-3 text-sm leading-7 text-stone-600">The delivery record is created from the same subscription-to-box flow and is visible from the delivery board.</p>
-            <div class="mt-5 flex flex-wrap gap-3">
-                @auth
-                    <a href="{{ route('deliveries.index') }}" class="rounded-full border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-800 transition hover:bg-stone-100">Deliveries</a>
-                @else
-                    <span class="rounded-full border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-500">Login required</span>
-                @endauth
-            </div>
-        </article>
+            <article class="overflow-hidden rounded-[28px] border border-hairline bg-canvas">
+                <div class="aspect-[4/3] bg-[linear-gradient(160deg,#ffffff_0%,#f7f7f7_52%,#edf3ff_100%)] p-6">
+                    <div class="flex h-full flex-col justify-between">
+                        <span class="inline-flex w-fit rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold text-ink">Team 2</span>
+                        <div>
+                            <h3 class="text-[1.35rem] font-bold tracking-[-0.03em] text-ink">Current box</h3>
+                            <p class="mt-2 text-sm leading-7 text-ash">Once a subscription exists, the app provisions the current box and starter items automatically.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-3 p-6">
+                    @auth
+                        <a href="{{ route('boxes.index') }}" class="inline-flex items-center rounded-full bg-rausch px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-rausch-deep">Open boxes</a>
+                    @else
+                        <span class="inline-flex items-center rounded-full border border-hairline bg-canvas px-4 py-2.5 text-sm font-semibold text-mute">Login required</span>
+                    @endauth
+                </div>
+            </article>
+
+            <article class="overflow-hidden rounded-[28px] border border-hairline bg-canvas">
+                <div class="aspect-[4/3] bg-[linear-gradient(160deg,#ffffff_0%,#f7f7f7_48%,#fff4f7_100%)] p-6">
+                    <div class="flex h-full flex-col justify-between">
+                        <span class="inline-flex w-fit rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold text-ink">Team 3</span>
+                        <div>
+                            <h3 class="text-[1.35rem] font-bold tracking-[-0.03em] text-ink">Delivery tracking</h3>
+                            <p class="mt-2 text-sm leading-7 text-ash">The same flow also creates a delivery record, subscriber tracking page, and admin update path.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-3 p-6">
+                    @auth
+                        <a href="{{ route('deliveries.index') }}" class="inline-flex items-center rounded-full bg-rausch px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-rausch-deep">Track deliveries</a>
+                    @else
+                        <span class="inline-flex items-center rounded-full border border-hairline bg-canvas px-4 py-2.5 text-sm font-semibold text-mute">Login required</span>
+                    @endauth
+                </div>
+            </article>
+        </div>
     </section>
 
-    <section class="mt-12">
+    <section class="mt-14">
         <div class="flex items-center justify-between gap-4">
             <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">Plans</p>
-                <h2 class="mt-2 text-3xl font-black text-stone-900">Seeded subscription tiers</h2>
+                <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Plans</p>
+                <h2 class="mt-3 text-[2rem] font-bold tracking-[-0.04em] text-ink">Seeded subscription tiers</h2>
             </div>
-            <a href="{{ route('plans.index') }}" class="rounded-full border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-800 transition hover:bg-stone-200/70">See details</a>
+            <a href="{{ route('plans.index') }}" class="inline-flex items-center rounded-full border border-hairline bg-canvas px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-cloud">See all details</a>
         </div>
 
         <div class="mt-6 grid gap-6 md:grid-cols-3">
             @foreach ($plans as $plan)
-                <article class="rounded-[1.75rem] border border-stone-200 bg-white p-6 shadow-sm">
-                    <p class="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700">{{ $plan->name }}</p>
-                    <p class="mt-4 text-4xl font-black text-stone-900">${{ number_format((float) $plan->price_monthly, 2) }}</p>
-                    <p class="mt-1 text-sm text-stone-500">per month</p>
-                    <dl class="mt-6 space-y-3 text-sm text-stone-600">
-                        <div class="flex items-center justify-between">
-                            <dt>Max items</dt>
-                            <dd class="font-semibold text-stone-900">{{ $plan->max_items }}</dd>
+                <article class="overflow-hidden rounded-[28px] border border-hairline bg-canvas">
+                    <div class="aspect-[4/3] p-6 {{ $loop->first ? 'bg-[linear-gradient(160deg,#fff4f7_0%,#ffffff_60%,#f7f7f7_100%)]' : ($loop->last ? 'bg-[linear-gradient(160deg,#f7efff_0%,#ffffff_58%,#f7f7f7_100%)]' : 'bg-[linear-gradient(160deg,#fff8f3_0%,#ffffff_58%,#f7f7f7_100%)]') }}">
+                        <div class="flex h-full flex-col justify-between">
+                            <span class="inline-flex w-fit rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-ink">{{ $plan->name }}</span>
+                            <div>
+                                <p class="text-4xl font-bold tracking-[-0.05em] text-ink">${{ number_format((float) $plan->price_monthly, 2) }}</p>
+                                <p class="mt-1 text-sm text-ash">per month</p>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <dt>Weight cap</dt>
-                            <dd class="font-semibold text-stone-900">{{ number_format($plan->max_weight_g) }} g</dd>
+                    </div>
+                    <div class="space-y-4 p-6">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-ash">Max items</span>
+                            <span class="font-semibold text-ink">{{ $plan->max_items }}</span>
                         </div>
-                    </dl>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-ash">Weight cap</span>
+                            <span class="font-semibold text-ink">{{ number_format($plan->max_weight_g) }} g</span>
+                        </div>
+                    </div>
                 </article>
             @endforeach
         </div>

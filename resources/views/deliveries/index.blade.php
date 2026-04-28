@@ -1,33 +1,66 @@
+@php($title = 'Deliveries')
+
 @extends('layouts.app')
 
 @section('content')
-    <section class="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-sm">
-        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">{{ $isAdminView ? 'Admin delivery board' : 'Delivery tracking' }}</p>
-        <h1 class="mt-3 text-3xl font-black text-stone-900">{{ $isAdminView ? 'All deliveries' : 'My deliveries' }}</h1>
-        <p class="mt-2 text-sm leading-7 text-stone-600">Phase 1 keeps this simple: a shared list of deliveries, clear statuses, and direct links into each record.</p>
-
-        <div class="mt-8 space-y-4">
-            @forelse ($deliveries as $delivery)
-                <article class="rounded-[1.5rem] bg-stone-100 p-5">
-                    <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                        <div class="space-y-1">
-                            <p class="text-sm font-semibold text-stone-900">{{ $delivery->tracking_number ?? 'Tracking pending' }}</p>
-                            <p class="text-sm text-stone-600">Status: {{ ucfirst(str_replace('_', ' ', $delivery->status)) }}</p>
-                            <p class="text-sm text-stone-600">Estimated delivery: {{ $delivery->estimated_delivery?->format('M d, Y') ?? 'TBD' }}</p>
-                            <p class="text-sm text-stone-600">Address: {{ $delivery->address?->street ?? 'No address assigned' }}</p>
-                            @if ($isAdminView)
-                                <p class="text-sm text-stone-600">Subscriber: {{ $delivery->box?->subscription?->user?->email ?? 'Unknown' }}</p>
-                            @endif
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="rounded-full bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-stone-700 shadow-sm">{{ $delivery->box?->theme ?? 'Delivery' }}</span>
-                            <a href="{{ route('deliveries.show', $delivery) }}" class="rounded-2xl bg-stone-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-stone-700">View details</a>
-                        </div>
+    <section class="space-y-8">
+        <div class="air-panel">
+            <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+                <div>
+                    <p class="air-kicker">{{ $isAdminView ? 'Admin delivery board' : 'Delivery tracking' }}</p>
+                    <h1 class="air-title">{{ $isAdminView ? 'All deliveries across subscribers.' : 'My active delivery records.' }}</h1>
+                    <p class="air-copy">Phase 1 keeps the delivery workflow direct: status, address, estimated date, and a clear path into the full record for updates or review.</p>
+                </div>
+                <div class="grid gap-3 sm:grid-cols-2">
+                    <div class="air-stat">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Records</p>
+                        <p class="mt-2 text-2xl font-semibold tracking-[-0.02em] text-ink">{{ $deliveries->count() }}</p>
                     </div>
-                </article>
-            @empty
-                <p class="rounded-2xl bg-stone-100 px-4 py-4 text-sm text-stone-600">No deliveries available yet.</p>
-            @endforelse
+                    <div class="air-stat">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">With tracking</p>
+                        <p class="mt-2 text-2xl font-semibold tracking-[-0.02em] text-ink">{{ $deliveries->whereNotNull('tracking_number')->count() }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 space-y-4">
+                @forelse ($deliveries as $delivery)
+                    <article class="air-grid-card">
+                        <div class="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+                            <div class="space-y-3">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <p class="text-lg font-semibold tracking-[-0.01em] text-ink">{{ $delivery->tracking_number ?? 'Tracking pending' }}</p>
+                                    <span class="air-chip">{{ ucfirst(str_replace('_', ' ', $delivery->status)) }}</span>
+                                    <span class="air-chip">{{ $delivery->box?->theme ?? 'Delivery' }}</span>
+                                </div>
+
+                                <div class="grid gap-3 sm:grid-cols-2">
+                                    <div>
+                                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Estimated delivery</p>
+                                        <p class="mt-2 text-sm font-semibold text-ink">{{ $delivery->estimated_delivery?->format('M d, Y') ?? 'TBD' }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Address</p>
+                                        <p class="mt-2 text-sm font-semibold text-ink">{{ $delivery->address?->street ?? 'No address assigned' }}</p>
+                                    </div>
+                                </div>
+
+                                @if ($isAdminView)
+                                    <p class="text-sm text-ash">Subscriber: {{ $delivery->box?->subscription?->user?->email ?? 'Unknown' }}</p>
+                                @endif
+                            </div>
+
+                            <div class="flex items-center justify-start lg:justify-end">
+                                <a href="{{ route('deliveries.show', $delivery) }}" class="air-button-primary">View delivery</a>
+                            </div>
+                        </div>
+                    </article>
+                @empty
+                    <div class="air-panel-soft">
+                        <p class="text-sm text-ash">No deliveries available yet.</p>
+                    </div>
+                @endforelse
+            </div>
         </div>
     </section>
 @endsection

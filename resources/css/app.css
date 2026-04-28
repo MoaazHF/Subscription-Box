@@ -6,6 +6,121 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Airbnb Cereal VF', Circular, 'SF Pro Display', Manrope, Inter, ui-sans-serif, system-ui, sans-serif;
+    --color-rausch: #ff385c;
+    --color-rausch-deep: #e00b41;
+    --color-plus: #92174d;
+    --color-luxe: #460479;
+    --color-ink: #222222;
+    --color-focus: #3f3f3f;
+    --color-ash: #6a6a6a;
+    --color-mute: #929292;
+    --color-stone: #c1c1c1;
+    --color-hairline: #dddddd;
+    --color-cloud: #f7f7f7;
+    --color-canvas: #ffffff;
+    --color-danger: #c13515;
+    --color-info: #428bff;
+}
+
+@layer base {
+    :root {
+        color-scheme: light;
+    }
+
+    body {
+        @apply bg-canvas text-ink antialiased;
+        background-image:
+            radial-gradient(circle at top, rgba(255, 56, 92, 0.08), transparent 26%),
+            linear-gradient(180deg, #ffffff 0%, #fbfbfb 52%, #f7f7f7 100%);
+    }
+
+    ::selection {
+        background: rgba(255, 56, 92, 0.16);
+    }
+}
+
+@layer components {
+    .air-shell {
+        @apply mx-auto w-full max-w-[1760px] px-4 sm:px-6 lg:px-8;
+    }
+
+    .air-float {
+        box-shadow:
+            rgba(0, 0, 0, 0.02) 0 0 0 1px,
+            rgba(0, 0, 0, 0.04) 0 2px 6px 0,
+            rgba(0, 0, 0, 0.1) 0 4px 8px 0;
+    }
+
+    .air-panel {
+        @apply rounded-[28px] border border-hairline bg-canvas p-6 sm:p-8;
+        box-shadow:
+            rgba(0, 0, 0, 0.02) 0 0 0 1px,
+            rgba(0, 0, 0, 0.04) 0 2px 6px 0,
+            rgba(0, 0, 0, 0.1) 0 4px 8px 0;
+    }
+
+    .air-panel-soft {
+        @apply rounded-[28px] border border-hairline bg-cloud p-6 sm:p-8;
+    }
+
+    .air-kicker {
+        @apply text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch;
+    }
+
+    .air-title {
+        @apply mt-3 text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-[2.25rem];
+    }
+
+    .air-copy {
+        @apply mt-2 text-sm leading-7 text-ash;
+    }
+
+    .air-chip {
+        @apply inline-flex items-center rounded-full border border-hairline bg-canvas px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-ash;
+    }
+
+    .air-chip-dark {
+        @apply inline-flex items-center rounded-full bg-ink px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white;
+    }
+
+    .air-stat {
+        @apply rounded-[24px] border border-hairline bg-cloud p-4;
+    }
+
+    .air-input {
+        @apply w-full rounded-2xl border border-hairline bg-canvas px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:ring-2 focus:ring-ink/5;
+    }
+
+    .air-textarea {
+        @apply min-h-28 w-full resize-y rounded-2xl border border-hairline bg-canvas px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:ring-2 focus:ring-ink/5;
+    }
+
+    .air-select {
+        @apply air-input appearance-none;
+    }
+
+    .air-button-primary {
+        @apply inline-flex items-center justify-center rounded-full bg-rausch px-5 py-3 text-sm font-semibold text-white transition hover:bg-rausch-deep;
+    }
+
+    .air-button-secondary {
+        @apply inline-flex items-center justify-center rounded-full border border-hairline bg-canvas px-5 py-3 text-sm font-semibold text-ink transition hover:bg-cloud;
+    }
+
+    .air-button-danger {
+        @apply inline-flex items-center justify-center rounded-full border border-danger/20 bg-canvas px-5 py-3 text-sm font-semibold text-danger transition hover:bg-danger/5;
+    }
+
+    .air-icon-disc {
+        @apply flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-base text-ink;
+    }
+
+    .air-photo {
+        @apply overflow-hidden rounded-[24px] border border-hairline bg-cloud;
+    }
+
+    .air-grid-card {
+        @apply rounded-[24px] border border-hairline bg-canvas p-5 transition hover:-translate-y-0.5 hover:border-ink/10;
+    }
 }

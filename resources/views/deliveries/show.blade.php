@@ -1,104 +1,121 @@
+@php($title = 'Delivery Details')
+
 @extends('layouts.app')
 
 @section('content')
     <section class="space-y-8">
-        <div class="flex items-center justify-between gap-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">Delivery detail</p>
-                <h1 class="mt-2 text-3xl font-black text-stone-900">{{ $delivery->tracking_number ?? 'Delivery record' }}</h1>
+                <p class="air-kicker">Delivery detail</p>
+                <h1 class="air-title">{{ $delivery->tracking_number ?? 'Delivery record' }}</h1>
             </div>
-            <a href="{{ route('deliveries.index') }}" class="rounded-2xl border border-stone-300 px-4 py-3 text-sm font-semibold text-stone-800 transition hover:bg-stone-100">Back to deliveries</a>
+            <a href="{{ route('deliveries.index') }}" class="air-button-secondary">Back to deliveries</a>
         </div>
 
-        <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-            <section class="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-sm">
-                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">Status</p>
-                <h2 class="mt-3 text-2xl font-black text-stone-900">{{ ucfirst(str_replace('_', ' ', $delivery->status)) }}</h2>
+        <section class="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+            <div class="space-y-6">
+                <div class="air-panel">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="air-chip-dark">{{ ucfirst(str_replace('_', ' ', $delivery->status)) }}</span>
+                        <span class="air-chip">{{ $delivery->box?->theme ?? 'Standard box' }}</span>
+                    </div>
 
-                <div class="mt-6 grid gap-4 sm:grid-cols-2">
-                    <div class="rounded-2xl bg-stone-100 p-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Estimated</p>
-                        <p class="mt-2 text-sm font-semibold text-stone-900">{{ $delivery->estimated_delivery?->format('M d, Y') ?? 'TBD' }}</p>
-                    </div>
-                    <div class="rounded-2xl bg-stone-100 p-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Delivered At</p>
-                        <p class="mt-2 text-sm font-semibold text-stone-900">{{ $delivery->actual_delivery?->format('M d, Y H:i') ?? '--' }}</p>
-                    </div>
-                    <div class="rounded-2xl bg-stone-100 p-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Stops Remaining</p>
-                        <p class="mt-2 text-sm font-semibold text-stone-900">{{ $delivery->stops_remaining ?? 'Not set' }}</p>
-                    </div>
-                    <div class="rounded-2xl bg-stone-100 p-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Eco Dispatch</p>
-                        <p class="mt-2 text-sm font-semibold text-stone-900">{{ $delivery->eco_dispatch ? 'Enabled' : 'Disabled' }}</p>
+                    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+                        <div class="air-stat">
+                            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Estimated</p>
+                            <p class="mt-2 text-sm font-semibold text-ink">{{ $delivery->estimated_delivery?->format('M d, Y') ?? 'TBD' }}</p>
+                        </div>
+                        <div class="air-stat">
+                            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Delivered at</p>
+                            <p class="mt-2 text-sm font-semibold text-ink">{{ $delivery->actual_delivery?->format('M d, Y H:i') ?? '--' }}</p>
+                        </div>
+                        <div class="air-stat">
+                            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Stops remaining</p>
+                            <p class="mt-2 text-sm font-semibold text-ink">{{ $delivery->stops_remaining ?? 'Not set' }}</p>
+                        </div>
+                        <div class="air-stat">
+                            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Eco dispatch</p>
+                            <p class="mt-2 text-sm font-semibold text-ink">{{ $delivery->eco_dispatch ? 'Enabled' : 'Disabled' }}</p>
+                        </div>
                     </div>
                 </div>
-            </section>
 
-            <section class="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-sm">
-                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">Address and box</p>
-                <div class="mt-6 space-y-4 text-sm text-stone-600">
-                    <div>
-                        <p class="font-semibold text-stone-900">Delivery address</p>
-                        <p class="mt-1">{{ $delivery->address?->street ?? 'No street assigned' }}</p>
-                        <p>{{ $delivery->address?->city ?? '' }} {{ $delivery->address?->country ?? '' }}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-stone-900">Box</p>
-                        <p class="mt-1">{{ $delivery->box?->theme ?? 'Standard box' }}</p>
-                        <p>Period: {{ $delivery->box?->period_month }}/{{ $delivery->box?->period_year }}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-stone-900">Instructions</p>
-                        <p class="mt-1">{{ $delivery->delivery_instructions ?? 'None provided.' }}</p>
+                <div class="air-panel">
+                    <div class="grid gap-6 lg:grid-cols-2">
+                        <div>
+                            <p class="air-kicker">Address</p>
+                            <h2 class="air-title">Destination and instructions.</h2>
+                            <div class="mt-6 space-y-4 text-sm text-ash">
+                                <div>
+                                    <p class="font-semibold text-ink">Delivery address</p>
+                                    <p class="mt-2">{{ $delivery->address?->street ?? 'No street assigned' }}</p>
+                                    <p>{{ $delivery->address?->city ?? '' }} {{ $delivery->address?->country ?? '' }}</p>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-ink">Instructions</p>
+                                    <p class="mt-2">{{ $delivery->delivery_instructions ?? 'None provided.' }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="air-photo flex min-h-[240px] flex-col justify-between bg-[radial-gradient(circle_at_top_right,_rgba(255,56,92,0.18),_transparent_34%),linear-gradient(180deg,_#ffffff_0%,_#f7f7f7_100%)] p-6">
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="air-chip">Box context</span>
+                                <span class="air-chip">{{ $delivery->box?->period_month }}/{{ $delivery->box?->period_year }}</span>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-semibold tracking-[-0.02em] text-ink">{{ $delivery->box?->theme ?? 'Standard box' }}</p>
+                                <p class="mt-3 text-sm leading-7 text-ash">Delivery and box records stay linked, so the operations team can trace shipping progress back to the exact subscription box period.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
 
-        @if (auth()->user()->isAdmin())
-            <section class="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-sm">
-                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-amber-700">Admin update</p>
-                <h2 class="mt-3 text-2xl font-black text-stone-900">Basic status update</h2>
+            @if (auth()->user()->isAdmin())
+                <aside class="space-y-6 xl:sticky xl:top-32 xl:self-start">
+                    <div class="air-panel">
+                        <p class="air-kicker">Admin update</p>
+                        <h2 class="air-title">Basic status update.</h2>
 
-                <form method="POST" action="{{ route('deliveries.update-status', $delivery) }}" class="mt-6 grid gap-4 lg:grid-cols-2">
-                    @csrf
-                    @method('PATCH')
+                        <form method="POST" action="{{ route('deliveries.update-status', $delivery) }}" class="mt-6 space-y-4">
+                            @csrf
+                            @method('PATCH')
 
-                    <div class="space-y-2">
-                        <label for="status" class="text-sm font-semibold text-stone-800">Status</label>
-                        <select id="status" name="status" class="w-full rounded-2xl border border-stone-300 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-amber-500 focus:bg-white">
-                            @foreach (\App\Models\Delivery::STATUSES as $status)
-                                <option value="{{ $status }}" @selected(old('status', $delivery->status) === $status)>{{ ucfirst(str_replace('_', ' ', $status)) }}</option>
-                            @endforeach
-                        </select>
+                            <div class="space-y-2">
+                                <label for="status" class="text-sm font-semibold text-ink">Status</label>
+                                <select id="status" name="status" class="air-select">
+                                    @foreach (\App\Models\Delivery::STATUSES as $status)
+                                        <option value="{{ $status }}" @selected(old('status', $delivery->status) === $status)>{{ ucfirst(str_replace('_', ' ', $status)) }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="tracking_number" class="text-sm font-semibold text-ink">Tracking number</label>
+                                <input id="tracking_number" name="tracking_number" type="text" value="{{ old('tracking_number', $delivery->tracking_number) }}" class="air-input">
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="estimated_delivery" class="text-sm font-semibold text-ink">Estimated delivery</label>
+                                <input id="estimated_delivery" name="estimated_delivery" type="date" value="{{ old('estimated_delivery', $delivery->estimated_delivery?->toDateString()) }}" class="air-input">
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="delivery_instructions" class="text-sm font-semibold text-ink">Instructions</label>
+                                <input id="delivery_instructions" name="delivery_instructions" type="text" value="{{ old('delivery_instructions', $delivery->delivery_instructions) }}" class="air-input">
+                            </div>
+
+                            <label class="inline-flex items-center gap-3 text-sm font-medium text-ink">
+                                <input type="checkbox" name="eco_dispatch" value="1" class="h-4 w-4 rounded border-hairline text-rausch focus:ring-rausch" @checked(old('eco_dispatch', $delivery->eco_dispatch))>
+                                Eco dispatch
+                            </label>
+
+                            <button type="submit" class="air-button-primary w-full">Save delivery update</button>
+                        </form>
                     </div>
-
-                    <div class="space-y-2">
-                        <label for="tracking_number" class="text-sm font-semibold text-stone-800">Tracking number</label>
-                        <input id="tracking_number" name="tracking_number" type="text" value="{{ old('tracking_number', $delivery->tracking_number) }}" class="w-full rounded-2xl border border-stone-300 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-amber-500 focus:bg-white">
-                    </div>
-
-                    <div class="space-y-2">
-                        <label for="estimated_delivery" class="text-sm font-semibold text-stone-800">Estimated delivery</label>
-                        <input id="estimated_delivery" name="estimated_delivery" type="date" value="{{ old('estimated_delivery', $delivery->estimated_delivery?->toDateString()) }}" class="w-full rounded-2xl border border-stone-300 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-amber-500 focus:bg-white">
-                    </div>
-
-                    <div class="space-y-2">
-                        <label for="delivery_instructions" class="text-sm font-semibold text-stone-800">Instructions</label>
-                        <input id="delivery_instructions" name="delivery_instructions" type="text" value="{{ old('delivery_instructions', $delivery->delivery_instructions) }}" class="w-full rounded-2xl border border-stone-300 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-amber-500 focus:bg-white">
-                    </div>
-
-                    <label class="inline-flex items-center gap-3 text-sm font-medium text-stone-700">
-                        <input type="checkbox" name="eco_dispatch" value="1" class="h-4 w-4 rounded border-stone-300 text-amber-600 focus:ring-amber-500" @checked(old('eco_dispatch', $delivery->eco_dispatch))>
-                        Eco dispatch
-                    </label>
-
-                    <div>
-                        <button type="submit" class="rounded-2xl bg-stone-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-stone-700">Save delivery update</button>
-                    </div>
-                </form>
-            </section>
-        @endif
+                </aside>
+            @endif
+        </section>
     </section>
 @endsection
