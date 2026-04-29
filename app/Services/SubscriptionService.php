@@ -80,11 +80,15 @@ class SubscriptionService
             return;
         }
 
-        $nextBillingDate = $subscription->next_billing_date ? Carbon::parse($subscription->next_billing_date) : now();
+        $today = now()->startOfDay();
+        $nextBillingDate = $subscription->next_billing_date
+            ? Carbon::parse($subscription->next_billing_date)->startOfDay()
+            : $today;
+        $remainingDays = max((int) $today->diffInDays($nextBillingDate, false), 0);
 
         $subscription->update([
             'status' => 'paused',
-            'remaining_billing_days' => max(now()->diffInDays($nextBillingDate, false), 0),
+            'remaining_billing_days' => $remainingDays,
         ]);
 
         $this->auditLogService->record($user, 'subscription.paused', $subscription, [], $ipAddress);
