@@ -6,7 +6,7 @@ use App\Http\Requests\StoreDeliveryZoneRequest;
 use App\Models\DeliveryZone;
 use App\Services\AuditLogService;
 use App\Services\OperationsManagementService;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
 class DeliveryZoneController extends Controller
@@ -16,9 +16,9 @@ class DeliveryZoneController extends Controller
         private AuditLogService $auditLogService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(): View
     {
-        return response()->json([
+        return view('ops.delivery-zones.index', [
             'zones' => DeliveryZone::query()->orderBy('name')->get(),
         ]);
     }

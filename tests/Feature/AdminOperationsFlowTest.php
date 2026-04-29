@@ -36,6 +36,16 @@ class AdminOperationsFlowTest extends TestCase
             'is_active' => true,
         ])->assertSessionHas('status');
 
+        $this->actingAs($admin)
+            ->get(route('warehouse-staff.index'))
+            ->assertOk()
+            ->assertSee('Warehouse Staff Control Panel');
+
+        $this->actingAs($admin)
+            ->get(route('delivery-zones.index'))
+            ->assertOk()
+            ->assertSee('Delivery Zones Control Panel');
+
         $driverId = (string) \DB::table('drivers')->where('user_id', $driverUser->id)->value('id');
 
         $this->actingAs($admin)->patch(route('drivers.toggle', $driverId))->assertSessionHas('status');

@@ -6,6 +6,7 @@ use App\Models\Driver;
 use App\Models\Item;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\WarehouseStaff;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -121,6 +122,56 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
         $driverProfile->save();
+
+        $warehouseUser = User::updateOrCreate(
+            ['email' => 'warehouse@example.com'],
+            [
+                'role_id' => DB::table('roles')->where('name', Role::WAREHOUSE_STAFF)->value('id') ?? 2,
+                'name' => 'Warehouse User',
+                'phone' => null,
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+            ]
+        );
+
+        $warehouseProfile = WarehouseStaff::query()->firstOrNew([
+            'user_id' => $warehouseUser->id,
+        ]);
+
+        if (! $warehouseProfile->exists) {
+            $warehouseProfile->id = (string) Str::uuid();
+        }
+
+        $warehouseProfile->fill([
+            'warehouse_location' => 'Main Distribution Center',
+        ]);
+        $warehouseProfile->save();
+
+        foreach ([
+            [
+                'name' => 'Cairo Core',
+                'region' => 'Cairo',
+                'country' => 'EG',
+                'is_serviceable' => true,
+            ],
+            [
+                'name' => 'Giza West',
+                'region' => 'Giza',
+                'country' => 'EG',
+                'is_serviceable' => true,
+            ],
+            [
+                'name' => 'Alexandria North',
+                'region' => 'Alexandria',
+                'country' => 'EG',
+                'is_serviceable' => false,
+            ],
+        ] as $zone) {
+            DB::table('delivery_zones')->updateOrInsert(
+                ['name' => $zone['name'], 'country' => $zone['country']],
+                ['region' => $zone['region'], 'is_serviceable' => $zone['is_serviceable']]
+            );
+        }
     }
 
     private function seedItems(): void

@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\WarehouseStaff;
 use App\Services\AuditLogService;
 use App\Services\OperationsManagementService;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
 class WarehouseStaffController extends Controller
@@ -18,10 +18,21 @@ class WarehouseStaffController extends Controller
         private AuditLogService $auditLogService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(): View
     {
-        return response()->json([
-            'warehouse_staff' => WarehouseStaff::query()->with('user')->latest()->get(),
+        $warehouseStaff = WarehouseStaff::query()
+            ->with('user')
+            ->latest('updated_at')
+            ->get();
+
+        $warehouseUsers = User::query()
+            ->where('role_id', Role::query()->where('name', Role::WAREHOUSE_STAFF)->value('id'))
+            ->orderBy('name')
+            ->get(['id', 'name', 'email']);
+
+        return view('ops.warehouse-staff.index', [
+            'warehouseStaff' => $warehouseStaff,
+            'warehouseUsers' => $warehouseUsers,
         ]);
     }
 
