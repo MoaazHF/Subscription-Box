@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Delivery;
 use App\Models\DeliveryZone;
 use App\Models\Driver;
 use App\Models\User;
@@ -21,6 +22,23 @@ class OperationsManagementService
         );
 
         return $driver->fresh();
+    }
+
+    public function assignDelivery(Driver $driver, Delivery $delivery): Delivery
+    {
+        if (! $driver->is_active) {
+            abort(422, 'Selected driver is not active.');
+        }
+
+        if (in_array($delivery->status, [Delivery::DELIVERED, Delivery::UNDELIVERABLE], true)) {
+            abort(422, 'Only active deliveries can be assigned to a driver.');
+        }
+
+        $delivery->update([
+            'driver_id' => $driver->id,
+        ]);
+
+        return $delivery->fresh(['driver', 'address', 'box.subscription.user']);
     }
 
     /** @param array{user_id:string,warehouse_location?:string} $payload */

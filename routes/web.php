@@ -111,6 +111,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/ops/drivers', [DriverManagementController::class, 'index'])->name('drivers.index');
         Route::post('/ops/drivers', [DriverManagementController::class, 'store'])->name('drivers.store');
         Route::patch('/ops/drivers/{driver}/toggle', [DriverManagementController::class, 'toggle'])->name('drivers.toggle');
+        Route::patch('/ops/drivers/{driver}/assign-delivery', [DriverManagementController::class, 'assignDelivery'])->name('drivers.assign-delivery');
 
         Route::get('/ops/warehouse-staff', [WarehouseStaffController::class, 'index'])->name('warehouse-staff.index');
         Route::post('/ops/warehouse-staff', [WarehouseStaffController::class, 'store'])->name('warehouse-staff.store');

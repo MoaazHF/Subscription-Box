@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AssignDriverDeliveryRequest;
 use App\Http\Requests\StoreDriverRequest;
+use App\Models\Delivery;
 use App\Models\Driver;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\AuditLogService;
 use App\Services\OperationsManagementService;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
 class DriverManagementController extends Controller
@@ -18,10 +20,34 @@ class DriverManagementController extends Controller
         private AuditLogService $auditLogService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(): View
     {
-        return response()->json([
-            'drivers' => Driver::query()->with('user')->latest()->get(),
+        $drivers = Driver::query()
+            ->with(['user', 'deliveries' => fn ($query) => $query->latest('updated_at')])
+            ->withCount([
+                'deliveries as deliveries_total_count',
+                'deliveries as deliveries_pending_count' => fn ($query) => $query->where('status', Delivery::PENDING),
+                'deliveries as deliveries_out_count' => fn ($query) => $query->where('status', Delivery::OUT_FOR_DELIVERY),
+                'deliveries as deliveries_delivered_count' => fn ($query) => $query->where('status', Delivery::DELIVERED),
+            ])
+            ->latest('updated_at')
+            ->get();
+
+        $driverUsers = User::query()
+            ->where('role_id', Role::query()->where('name', Role::DRIVER)->value('id'))
+            ->orderBy('name')
+            ->get(['id', 'name', 'email']);
+
+        $assignableDeliveries = Delivery::query()
+            ->with(['address', 'box.subscription.user'])
+            ->whereNotIn('status', [Delivery::DELIVERED, Delivery::UNDELIVERABLE])
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('ops.drivers.index', [
+            'drivers' => $drivers,
+            'driverUsers' => $driverUsers,
+            'assignableDeliveries' => $assignableDeliveries,
         ]);
     }
 
@@ -41,6 +67,23 @@ class DriverManagementController extends Controller
     {
         $driver->update(['is_active' => ! $driver->is_active]);
 
+        $this->auditLogService->record(request()->user(), 'driver.toggled_active', $driver, [
+            'is_active' => $driver->is_active,
+        ], request()->ip());
+
         return back()->with('status', 'Driver active state updated.');
+    }
+
+    public function assignDelivery(AssignDriverDeliveryRequest $request, Driver $driver): RedirectResponse
+    {
+        $delivery = Delivery::query()->findOrFail($request->validated('delivery_id'));
+
+        $assignedDelivery = $this->operationsManagementService->assignDelivery($driver, $delivery);
+
+        $this->auditLogService->record(request()->user(), 'delivery.assigned_driver', $assignedDelivery, [
+            'driver_id' => $driver->id,
+        ], request()->ip());
+
+        return back()->with('status', 'Delivery assigned to driver successfully.');
     }
 }

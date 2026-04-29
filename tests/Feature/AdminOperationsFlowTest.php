@@ -2,7 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Address;
+use App\Models\Delivery;
 use App\Models\Role;
+use App\Models\SubscriptionPlan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Tests\TestCase;
@@ -98,5 +101,56 @@ class AdminOperationsFlowTest extends TestCase
         $this->actingAs($driver)
             ->get(route('drivers.index'))
             ->assertForbidden();
+    }
+
+    public function test_admin_can_assign_delivery_to_driver_from_control_panel(): void
+    {
+        $this->seed();
+
+        $admin = User::query()->where('email', 'admin@example.com')->firstOrFail();
+        $subscriber = User::query()->where('email', 'test@example.com')->firstOrFail();
+        $driver = User::query()->where('email', 'driver@example.com')->firstOrFail();
+        $plan = SubscriptionPlan::query()->where('name', 'standard')->firstOrFail();
+
+        $address = Address::create([
+            'user_id' => $subscriber->id,
+            'street' => '220 Driver Board Street',
+            'city' => 'Cairo',
+            'region' => 'Cairo',
+            'country' => 'EG',
+            'postal_code' => '11444',
+            'is_default' => true,
+        ]);
+
+        $this->actingAs($subscriber)->post(route('subscriptions.store'), [
+            'plan_id' => $plan->id,
+            'address_id' => $address->id,
+            'start_date' => now()->toDateString(),
+            'auto_renew' => 1,
+            'eco_shipping' => 0,
+        ])->assertRedirect(route('subscriptions.index'));
+
+        $delivery = Delivery::query()
+            ->where('address_id', $address->id)
+            ->whereNull('driver_id')
+            ->firstOrFail();
+
+        $driverProfile = $driver->driver()->firstOrFail();
+
+        $this->actingAs($admin)
+            ->get(route('drivers.index'))
+            ->assertOk()
+            ->assertSee('Driver Operations Control Panel');
+
+        $this->actingAs($admin)
+            ->patch(route('drivers.assign-delivery', $driverProfile), [
+                'delivery_id' => $delivery->id,
+            ])
+            ->assertSessionHas('status');
+
+        $this->assertDatabaseHas('deliveries', [
+            'id' => $delivery->id,
+            'driver_id' => $driverProfile->id,
+        ]);
     }
 }
