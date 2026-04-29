@@ -236,6 +236,8 @@
 @endsection
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/card-validator@10.0.3/dist/card-validator.min.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('subscription-form');
@@ -257,6 +259,23 @@
 
             if (!form || !openButton || !modal) {
                 return;
+            }
+
+            if (window.Cleave) {
+                new window.Cleave(cardNumber, {
+                    creditCard: true,
+                });
+
+                new window.Cleave(expiry, {
+                    date: true,
+                    datePattern: ['m', 'y'],
+                });
+
+                new window.Cleave(cvv, {
+                    numeral: true,
+                    blocks: [4],
+                    numericOnly: true,
+                });
             }
 
             const updatePlanTotal = function () {
@@ -282,8 +301,49 @@
 
             const validateGatewayInputs = function () {
                 const digitsOnly = cardNumber.value.replace(/\D/g, '');
+                const trimmedCardholder = cardholder.value.trim();
+                const trimmedExpiry = expiry.value.trim();
+                const trimmedCvv = cvv.value.replace(/\D/g, '');
 
-                if (!cardholder.value.trim() || digitsOnly.length < 12 || !expiry.value.trim() || cvv.value.replace(/\D/g, '').length < 3) {
+                if (!trimmedCardholder) {
+                    alert('Cardholder name is required.');
+                    return null;
+                }
+
+                if (!window.cardValidator) {
+                    if (digitsOnly.length < 12 || !trimmedExpiry || trimmedCvv.length < 3) {
+                        alert('Complete card number, expiry, and CVV to continue.');
+                        return null;
+                    }
+
+                    return digitsOnly;
+                }
+
+                const cardCheck = window.cardValidator.number(digitsOnly);
+                const expiryCheck = window.cardValidator.expirationDate(trimmedExpiry);
+                const cvvCheck = window.cardValidator.cvv(trimmedCvv);
+
+                if (!cardCheck.isValid) {
+                    alert('Card number is invalid.');
+                    return null;
+                }
+
+                if (!expiryCheck.isValid) {
+                    alert('Expiry date is invalid.');
+                    return null;
+                }
+
+                if (!cvvCheck.isValid) {
+                    alert('CVV is invalid.');
+                    return null;
+                }
+
+                if (cardCheck.card && cardCheck.card.code && trimmedCvv.length !== cardCheck.card.code.size) {
+                    alert('CVV length does not match card type.');
+                    return null;
+                }
+
+                if (digitsOnly.length < 12) {
                     alert('Complete cardholder, card number, expiry, and CVV to continue.');
                     return null;
                 }
