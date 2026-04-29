@@ -32,7 +32,7 @@
                             </div>
                         </div>
 
-                        <form method="POST" action="{{ route('subscriptions.store') }}" class="mt-8 space-y-5">
+                        <form method="POST" action="{{ route('subscriptions.store') }}" id="subscription-form" class="mt-8 space-y-5">
                             @csrf
 
                             @if ($addresses->isEmpty())
@@ -46,7 +46,7 @@
                                     <label for="plan_id" class="text-sm font-semibold text-ink">Plan</label>
                                     <select id="plan_id" name="plan_id" class="air-select">
                                         @foreach ($plans as $plan)
-                                            <option value="{{ $plan->id }}">{{ ucfirst($plan->name) }} · ${{ number_format((float) $plan->price_monthly, 2) }}/month</option>
+                                            <option value="{{ $plan->id }}" data-price="{{ number_format((float) $plan->price_monthly, 2, '.', '') }}">{{ ucfirst($plan->name) }} · ${{ number_format((float) $plan->price_monthly, 2) }}/month</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -84,10 +84,62 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="air-button-primary w-full disabled:cursor-not-allowed disabled:bg-mute" @disabled($addresses->isEmpty())>
+                            <input type="hidden" id="payment_gateway_status" name="payment_gateway_status" value="{{ old('payment_gateway_status') }}">
+                            <input type="hidden" id="payment_gateway_ref" name="payment_gateway_ref" value="{{ old('payment_gateway_ref') }}">
+                            <input type="hidden" id="payment_card_last4" name="payment_card_last4" value="{{ old('payment_card_last4') }}">
+                            <input type="hidden" id="payment_gateway_reason" name="payment_gateway_reason" value="{{ old('payment_gateway_reason') }}">
+
+                            <button type="button" id="start-subscription-button" class="air-button-primary w-full disabled:cursor-not-allowed disabled:bg-mute" @disabled($addresses->isEmpty())>
                                 Start subscription
                             </button>
                         </form>
+
+                        <div id="gateway-modal" class="fixed inset-0 z-50 hidden">
+                            <div class="absolute inset-0 bg-ink/50"></div>
+                            <div class="absolute inset-0 flex items-center justify-center p-4">
+                                <div class="w-full max-w-xl rounded-[28px] border border-hairline bg-canvas p-6 shadow-[0_24px_60px_rgba(15,23,42,0.24)]">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div>
+                                            <p class="air-kicker">Simulated payment gateway</p>
+                                            <h3 class="text-2xl font-semibold tracking-[-0.02em] text-ink">Authorize monthly payment</h3>
+                                            <p class="mt-2 text-sm text-ash">Use this simulation to approve or decline the transaction. Every attempt is saved in payment records.</p>
+                                        </div>
+                                        <button type="button" id="gateway-close" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-hairline text-ink">×</button>
+                                    </div>
+
+                                    <div class="mt-6 rounded-[20px] border border-hairline bg-cloud px-4 py-3">
+                                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Transaction</p>
+                                        <p class="mt-2 text-sm font-semibold text-ink">Plan total: <span id="gateway-plan-total">$0.00</span></p>
+                                    </div>
+
+                                    <div class="mt-5 grid gap-4">
+                                        <div class="space-y-2">
+                                            <label for="gateway_cardholder" class="text-sm font-semibold text-ink">Cardholder name</label>
+                                            <input id="gateway_cardholder" type="text" class="air-input" placeholder="Name on card">
+                                        </div>
+                                        <div class="space-y-2">
+                                            <label for="gateway_card_number" class="text-sm font-semibold text-ink">Card number</label>
+                                            <input id="gateway_card_number" type="text" inputmode="numeric" class="air-input" placeholder="4242 4242 4242 4242">
+                                        </div>
+                                        <div class="grid gap-4 sm:grid-cols-2">
+                                            <div class="space-y-2">
+                                                <label for="gateway_expiry" class="text-sm font-semibold text-ink">Expiry (MM/YY)</label>
+                                                <input id="gateway_expiry" type="text" class="air-input" placeholder="12/30">
+                                            </div>
+                                            <div class="space-y-2">
+                                                <label for="gateway_cvv" class="text-sm font-semibold text-ink">CVV</label>
+                                                <input id="gateway_cvv" type="text" inputmode="numeric" class="air-input" placeholder="123">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-6 flex flex-wrap gap-3">
+                                        <button type="button" id="gateway-approve" class="air-button-primary flex-1">Approve payment</button>
+                                        <button type="button" id="gateway-decline" class="air-button-danger flex-1">Decline payment</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="air-photo flex min-h-[340px] flex-col justify-between bg-[radial-gradient(circle_at_top_right,_rgba(255,56,92,0.20),_transparent_32%),linear-gradient(180deg,_#ffffff_0%,_#f7f7f7_100%)] p-6">
@@ -182,3 +234,97 @@
         </section>
     </section>
 @endsection
+
+@push('scripts')
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('subscription-form');
+            const openButton = document.getElementById('start-subscription-button');
+            const modal = document.getElementById('gateway-modal');
+            const closeButton = document.getElementById('gateway-close');
+            const approveButton = document.getElementById('gateway-approve');
+            const declineButton = document.getElementById('gateway-decline');
+            const planSelect = document.getElementById('plan_id');
+            const planTotal = document.getElementById('gateway-plan-total');
+            const cardholder = document.getElementById('gateway_cardholder');
+            const cardNumber = document.getElementById('gateway_card_number');
+            const expiry = document.getElementById('gateway_expiry');
+            const cvv = document.getElementById('gateway_cvv');
+            const statusField = document.getElementById('payment_gateway_status');
+            const refField = document.getElementById('payment_gateway_ref');
+            const last4Field = document.getElementById('payment_card_last4');
+            const reasonField = document.getElementById('payment_gateway_reason');
+
+            if (!form || !openButton || !modal) {
+                return;
+            }
+
+            const updatePlanTotal = function () {
+                const selectedOption = planSelect.options[planSelect.selectedIndex];
+                const amount = selectedOption ? selectedOption.dataset.price : '0.00';
+                planTotal.textContent = '$' + amount;
+            };
+
+            const openModal = function () {
+                updatePlanTotal();
+                modal.classList.remove('hidden');
+            };
+
+            const closeModal = function () {
+                modal.classList.add('hidden');
+            };
+
+            const buildGatewayReference = function () {
+                const timestamp = Date.now().toString().slice(-8);
+                const random = Math.floor(Math.random() * 9000 + 1000).toString();
+                return 'SIM-' + timestamp + '-' + random;
+            };
+
+            const validateGatewayInputs = function () {
+                const digitsOnly = cardNumber.value.replace(/\D/g, '');
+
+                if (!cardholder.value.trim() || digitsOnly.length < 12 || !expiry.value.trim() || cvv.value.replace(/\D/g, '').length < 3) {
+                    alert('Complete cardholder, card number, expiry, and CVV to continue.');
+                    return null;
+                }
+
+                return digitsOnly;
+            };
+
+            const submitWithStatus = function (status, reasonCode) {
+                const digitsOnly = validateGatewayInputs();
+
+                if (!digitsOnly) {
+                    return;
+                }
+
+                statusField.value = status;
+                refField.value = buildGatewayReference();
+                last4Field.value = digitsOnly.slice(-4);
+                reasonField.value = reasonCode;
+
+                closeModal();
+                form.submit();
+            };
+
+            openButton.addEventListener('click', openModal);
+            closeButton.addEventListener('click', closeModal);
+            modal.addEventListener('click', function (event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            approveButton.addEventListener('click', function () {
+                submitWithStatus('success', 'simulated_authorized');
+            });
+
+            declineButton.addEventListener('click', function () {
+                submitWithStatus('failed', 'simulated_declined');
+            });
+
+            planSelect.addEventListener('change', updatePlanTotal);
+            updatePlanTotal();
+        });
+    </script>
+@endpush

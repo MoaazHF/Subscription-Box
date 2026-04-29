@@ -18,7 +18,16 @@ class SubscriptionService
     ) {}
 
     /**
-     * @param  array{address_id:string,start_date:string,auto_renew?:bool,eco_shipping?:bool}  $payload
+     * @param  array{
+     *     address_id:string,
+     *     start_date:string,
+     *     auto_renew?:bool,
+     *     eco_shipping?:bool,
+     *     payment_gateway_status:string,
+     *     payment_gateway_ref:string,
+     *     payment_card_last4:string,
+     *     payment_gateway_reason:string
+     * }  $payload
      */
     public function createForUser(User $user, SubscriptionPlan $plan, array $payload, ?string $ipAddress = null): Subscription
     {
@@ -40,13 +49,25 @@ class SubscriptionService
                 'loyalty_points' => 0,
             ]);
 
-            $this->boxProvisioningService->provisionCurrentBox($subscription);
+            $payment = $this->billingService->charge($subscription, 'subscription_started', [
+                'status' => $payload['payment_gateway_status'],
+                'gateway_ref' => $payload['payment_gateway_ref'],
+                'gateway_reason_code' => $payload['payment_gateway_reason'],
+            ]);
 
-            $payment = $this->billingService->charge($subscription, 'subscription_started');
+            if ($payment->status === 'success') {
+                $this->boxProvisioningService->provisionCurrentBox($subscription);
+            } else {
+                $subscription->update([
+                    'status' => 'suspended',
+                ]);
+            }
 
             $this->auditLogService->record($user, 'subscription.created', $subscription, [
                 'plan' => $plan->name,
                 'payment_id' => $payment->id,
+                'payment_status' => $payment->status,
+                'card_last4' => $payload['payment_card_last4'],
             ], $ipAddress);
 
             return $subscription->load(['plan', 'address', 'payments']);

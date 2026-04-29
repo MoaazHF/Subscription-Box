@@ -42,12 +42,18 @@ class SubscriptionController extends Controller
             ->where('is_active', true)
             ->findOrFail($request->validated('plan_id'));
 
-        $this->subscriptionService->createForUser(
+        $subscription = $this->subscriptionService->createForUser(
             $request->user(),
             $plan,
             $request->validated(),
             $request->ip()
         );
+
+        $latestPayment = $subscription->payments->sortByDesc('created_at')->first();
+
+        if ($latestPayment && $latestPayment->status === 'failed') {
+            return redirect()->route('subscriptions.index')->with('error', 'Payment declined. Transaction was saved and subscription is suspended.');
+        }
 
         return redirect()->route('subscriptions.index')->with('status', 'Subscription started.');
     }

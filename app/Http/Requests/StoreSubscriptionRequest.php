@@ -19,6 +19,10 @@ class StoreSubscriptionRequest extends FormRequest
             'start_date' => ['required', 'date'],
             'auto_renew' => ['nullable', 'boolean'],
             'eco_shipping' => ['nullable', 'boolean'],
+            'payment_gateway_status' => ['required', 'in:success,failed'],
+            'payment_gateway_ref' => ['required', 'string', 'max:100'],
+            'payment_card_last4' => ['required', 'digits:4'],
+            'payment_gateway_reason' => ['required', 'string', 'max:50'],
         ];
     }
 }
