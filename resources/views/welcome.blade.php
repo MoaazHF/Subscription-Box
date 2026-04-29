@@ -1,86 +1,60 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="grid gap-8 xl:grid-cols-[1.1fr_0.9fr] xl:items-center">
-        <div class="space-y-8">
-            <div class="space-y-4">
-                <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Platform Journey</p>
-                <h1 class="max-w-4xl text-5xl font-bold tracking-[-0.05em] text-ink sm:text-6xl">
-                    Subscription, box, and delivery flow in one magazine-style surface.
-                </h1>
-                <p class="max-w-2xl text-base leading-8 text-ash">
-                    A complete subscription-commerce experience with customer onboarding, curated box operations,
-                    and real-time delivery visibility presented in a single interface.
-                </p>
-            </div>
+    <section class="air-float overflow-hidden rounded-[36px] border border-hairline bg-canvas">
+        <div class="grid gap-8 bg-[radial-gradient(circle_at_top_right,rgba(255,56,92,0.12),transparent_34%),linear-gradient(180deg,#ffffff_0%,#f8f8f8_100%)] p-8 lg:grid-cols-[1.15fr_0.85fr] lg:p-12">
+            <div class="space-y-7">
+                <div class="space-y-4">
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Subscription Commerce Platform</p>
+                    <h1 class="max-w-4xl text-5xl font-bold tracking-[-0.05em] text-ink sm:text-6xl">Run subscriptions, curate boxes, and track deliveries from one dashboard.</h1>
+                    <p class="max-w-2xl text-base leading-8 text-ash">
+                        Deliver a complete customer experience with integrated billing, monthly box fulfillment, and operational delivery visibility.
+                    </p>
+                </div>
 
-            <div class="air-float overflow-hidden rounded-[32px] border border-hairline bg-canvas">
-                <div class="grid gap-4 p-3 md:grid-cols-[1fr_1fr_1fr_auto]">
-                    <div class="rounded-[24px] bg-cloud px-5 py-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Where</p>
-                        <p class="mt-2 text-sm font-semibold text-ink">Subscription and account setup</p>
+                <div class="flex flex-wrap gap-3">
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="air-button-primary px-6">Open Dashboard</a>
+                        <a href="{{ route('plans.index') }}" class="air-button-secondary px-6">Explore Plans</a>
+                    @else
+                        <a href="{{ route('register') }}" class="air-button-primary px-6">Create Account</a>
+                        <a href="{{ route('plans.index') }}" class="air-button-secondary px-6">View Pricing</a>
+                    @endauth
+                </div>
+
+                <div class="grid gap-3 sm:grid-cols-3">
+                    <div class="rounded-[22px] border border-hairline bg-canvas/90 p-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-ash">Automation</p>
+                        <p class="mt-2 text-sm font-semibold text-ink">Subscription to box provisioning</p>
                     </div>
-                    <div class="rounded-[24px] bg-cloud px-5 py-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">When</p>
-                        <p class="mt-2 text-sm font-semibold text-ink">Current month box provision</p>
+                    <div class="rounded-[22px] border border-hairline bg-canvas/90 p-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-ash">Operations</p>
+                        <p class="mt-2 text-sm font-semibold text-ink">Driver and delivery control</p>
                     </div>
-                    <div class="rounded-[24px] bg-cloud px-5 py-4">
-                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Who</p>
-                        <p class="mt-2 text-sm font-semibold text-ink">Delivery board and admin updates</p>
-                    </div>
-                    <div class="flex items-center justify-center">
-                        @auth
-                            <a href="{{ route('dashboard') }}" class="flex h-16 w-16 items-center justify-center rounded-full bg-rausch text-xl font-bold text-white transition hover:bg-rausch-deep">→</a>
-                        @else
-                            <a href="{{ route('register') }}" class="flex h-16 w-16 items-center justify-center rounded-full bg-rausch text-xl font-bold text-white transition hover:bg-rausch-deep">→</a>
-                        @endauth
+                    <div class="rounded-[22px] border border-hairline bg-canvas/90 p-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-ash">Support</p>
+                        <p class="mt-2 text-sm font-semibold text-ink">Claims and audit visibility</p>
                     </div>
                 </div>
             </div>
 
-            <div class="grid gap-4 md:grid-cols-3">
-                <div class="rounded-[24px] border border-hairline bg-canvas p-5">
-                    <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-rausch">Account</p>
-                    <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-ink">Customer foundation</h2>
-                    <p class="mt-3 text-sm leading-7 text-ash">Roles, addresses, subscriptions, payments, and audit logs.</p>
-                </div>
-                <div class="rounded-[24px] border border-hairline bg-canvas p-5">
-                    <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-rausch">Fulfillment</p>
-                    <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-ink">Curated box</h2>
-                    <p class="mt-3 text-sm leading-7 text-ash">Starter items, box detail, and customization entry points.</p>
-                </div>
-                <div class="rounded-[24px] border border-hairline bg-canvas p-5">
-                    <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-rausch">Logistics</p>
-                    <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-ink">Delivery operations</h2>
-                    <p class="mt-3 text-sm leading-7 text-ash">Tracking board, delivery detail, and admin status changes.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="air-float overflow-hidden rounded-[32px] border border-hairline bg-canvas">
-            <div class="aspect-[4/3] bg-[linear-gradient(145deg,#fff1f4_0%,#ffffff_36%,#f7f7f7_100%)] p-8">
-                <div class="flex h-full flex-col justify-between">
-                    <div class="flex items-start justify-between gap-4">
-                        <div>
-                            <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Magazine panel</p>
-                            <h2 class="mt-3 max-w-sm text-3xl font-bold tracking-[-0.04em] text-ink">Built for customers, operations, and support teams.</h2>
-                        </div>
-                        <img src="{{ asset('AppIcon.png') }}" alt="Subscription Box app icon" class="h-24 w-24 rounded-[28px] object-cover ring-1 ring-white/80 shadow-[0_24px_60px_rgba(255,56,92,0.18)]">
+            <div class="air-photo flex min-h-[360px] flex-col justify-between bg-[linear-gradient(145deg,#fff1f4_0%,#ffffff_42%,#f7f7f7_100%)] p-7">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Live Operations</p>
+                        <h2 class="mt-3 max-w-sm text-3xl font-bold tracking-[-0.04em] text-ink">Built for teams that ship every month.</h2>
                     </div>
+                    <img src="{{ asset('AppIcon.png') }}" alt="Subscription Box app icon" class="h-24 w-24 rounded-[28px] object-cover ring-1 ring-white/80 shadow-[0_24px_60px_rgba(255,56,92,0.18)]">
+                </div>
 
-                    <div class="grid gap-3 sm:grid-cols-3">
-                        <div class="rounded-[24px] bg-canvas/90 p-4 backdrop-blur">
-                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Flow</p>
-                            <p class="mt-2 text-sm font-semibold text-ink">Address → Subscription</p>
-                        </div>
-                        <div class="rounded-[24px] bg-canvas/90 p-4 backdrop-blur">
-                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Auto-create</p>
-                            <p class="mt-2 text-sm font-semibold text-ink">Box → Delivery</p>
-                        </div>
-                        <div class="rounded-[24px] bg-canvas/90 p-4 backdrop-blur">
-                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Views</p>
-                            <p class="mt-2 text-sm font-semibold text-ink">Subscriber + Admin</p>
-                        </div>
+                <div class="grid gap-3 sm:grid-cols-2">
+                    <div class="rounded-[20px] border border-hairline bg-canvas p-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-ash">Flow</p>
+                        <p class="mt-2 text-sm font-semibold text-ink">Account → Subscription → Box</p>
+                    </div>
+                    <div class="rounded-[20px] border border-hairline bg-canvas p-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-ash">Execution</p>
+                        <p class="mt-2 text-sm font-semibold text-ink">Delivery assignment → Tracking</p>
                     </div>
                 </div>
             </div>
