@@ -9,8 +9,8 @@
                     Subscription, box, and delivery flow in one magazine-style surface.
                 </h1>
                 <p class="max-w-2xl text-base leading-8 text-ash">
-                    Team 1 starts the customer lifecycle. Team 2 turns that subscription into a current box.
-                    Team 3 turns that box into a live delivery record. The frontend now shows the chain instead of hiding it.
+                    A complete subscription-commerce experience with customer onboarding, curated box operations,
+                    and real-time delivery visibility presented in a single interface.
                 </p>
             </div>
 
@@ -18,7 +18,7 @@
                 <div class="grid gap-4 p-3 md:grid-cols-[1fr_1fr_1fr_auto]">
                     <div class="rounded-[24px] bg-cloud px-5 py-4">
                         <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Where</p>
-                        <p class="mt-2 text-sm font-semibold text-ink">Team 1 subscription setup</p>
+                        <p class="mt-2 text-sm font-semibold text-ink">Subscription and account setup</p>
                     </div>
                     <div class="rounded-[24px] bg-cloud px-5 py-4">
                         <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">When</p>
@@ -40,18 +40,18 @@
 
             <div class="grid gap-4 md:grid-cols-3">
                 <div class="rounded-[24px] border border-hairline bg-canvas p-5">
-                    <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-rausch">Team 1</p>
-                    <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-ink">Core system</h2>
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-rausch">Account</p>
+                    <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-ink">Customer foundation</h2>
                     <p class="mt-3 text-sm leading-7 text-ash">Roles, addresses, subscriptions, payments, and audit logs.</p>
                 </div>
                 <div class="rounded-[24px] border border-hairline bg-canvas p-5">
-                    <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-rausch">Team 2</p>
-                    <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-ink">Current box</h2>
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-rausch">Fulfillment</p>
+                    <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-ink">Curated box</h2>
                     <p class="mt-3 text-sm leading-7 text-ash">Starter items, box detail, and customization entry points.</p>
                 </div>
                 <div class="rounded-[24px] border border-hairline bg-canvas p-5">
-                    <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-rausch">Team 3</p>
-                    <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-ink">Delivery record</h2>
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-rausch">Logistics</p>
+                    <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-ink">Delivery operations</h2>
                     <p class="mt-3 text-sm leading-7 text-ash">Tracking board, delivery detail, and admin status changes.</p>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                     <div class="flex items-start justify-between gap-4">
                         <div>
                             <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Magazine panel</p>
-                            <h2 class="mt-3 max-w-sm text-3xl font-bold tracking-[-0.04em] text-ink">Readable by the whole team, not only Team 1.</h2>
+                            <h2 class="mt-3 max-w-sm text-3xl font-bold tracking-[-0.04em] text-ink">Built for customers, operations, and support teams.</h2>
                         </div>
                         <img src="{{ asset('AppIcon.png') }}" alt="Subscription Box app icon" class="h-24 w-24 rounded-[28px] object-cover ring-1 ring-white/80 shadow-[0_24px_60px_rgba(255,56,92,0.18)]">
                     </div>
@@ -99,7 +99,7 @@
             <article class="overflow-hidden rounded-[28px] border border-hairline bg-canvas">
                 <div class="aspect-[4/3] bg-[linear-gradient(160deg,#fff1f4_0%,#ffffff_55%,#f7f7f7_100%)] p-6">
                     <div class="flex h-full flex-col justify-between">
-                        <span class="inline-flex w-fit rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold text-ink">Team 1</span>
+                        <span class="inline-flex w-fit rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold text-ink">Account</span>
                         <div>
                             <h3 class="text-[1.35rem] font-bold tracking-[-0.03em] text-ink">Subscription entry</h3>
                             <p class="mt-2 text-sm leading-7 text-ash">Register, sign in, manage addresses, and start the lifecycle from one place.</p>
@@ -117,7 +117,7 @@
             <article class="overflow-hidden rounded-[28px] border border-hairline bg-canvas">
                 <div class="aspect-[4/3] bg-[linear-gradient(160deg,#ffffff_0%,#f7f7f7_52%,#edf3ff_100%)] p-6">
                     <div class="flex h-full flex-col justify-between">
-                        <span class="inline-flex w-fit rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold text-ink">Team 2</span>
+                        <span class="inline-flex w-fit rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold text-ink">Fulfillment</span>
                         <div>
                             <h3 class="text-[1.35rem] font-bold tracking-[-0.03em] text-ink">Current box</h3>
                             <p class="mt-2 text-sm leading-7 text-ash">Once a subscription exists, the app provisions the current box and starter items automatically.</p>
@@ -136,7 +136,7 @@
             <article class="overflow-hidden rounded-[28px] border border-hairline bg-canvas">
                 <div class="aspect-[4/3] bg-[linear-gradient(160deg,#ffffff_0%,#f7f7f7_48%,#fff4f7_100%)] p-6">
                     <div class="flex h-full flex-col justify-between">
-                        <span class="inline-flex w-fit rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold text-ink">Team 3</span>
+                        <span class="inline-flex w-fit rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold text-ink">Logistics</span>
                         <div>
                             <h3 class="text-[1.35rem] font-bold tracking-[-0.03em] text-ink">Delivery tracking</h3>
                             <p class="mt-2 text-sm leading-7 text-ash">The same flow also creates a delivery record, subscriber tracking page, and admin update path.</p>

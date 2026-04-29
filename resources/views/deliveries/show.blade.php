@@ -65,7 +65,7 @@
                             </div>
                             <div>
                                 <p class="text-2xl font-semibold tracking-[-0.02em] text-ink">{{ $delivery->box?->theme ?? 'Standard box' }}</p>
-                                <p class="mt-3 text-sm leading-7 text-ash">Delivery and box records stay linked, so the operations team can trace shipping progress back to the exact subscription box period.</p>
+                                <p class="mt-3 text-sm leading-7 text-ash">Delivery and box records stay linked, so support teams can trace shipping progress back to the exact subscription period.</p>
                             </div>
                         </div>
                     </div>
@@ -107,7 +107,7 @@
                             <div class="space-y-2">
                                 <label for="type" class="text-sm font-semibold text-ink">Issue Type</label>
                                 <select id="type" name="type" class="air-select">
-                                    <option value="damage">Damage</option>
+                                    <option value="damaged">Damaged</option>
                                     <option value="missing">Missing Box/Item</option>
                                 </select>
                             </div>

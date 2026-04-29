@@ -22,7 +22,7 @@
                         </div>
 
                         <div>
-                            <p class="air-kicker">Team 2 customization</p>
+                            <p class="air-kicker">Box customization</p>
                             <h1 class="mt-3 text-4xl font-semibold tracking-[-0.03em] text-ink">
                                 {{ DateTime::createFromFormat('!m', $box->period_month)->format('F') }} {{ $box->period_year }} box
                             </h1>

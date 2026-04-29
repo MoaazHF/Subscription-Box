@@ -7,7 +7,7 @@
         <div class="air-panel">
             <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
                 <div>
-                    <p class="air-kicker">Team 2 workflow</p>
+                    <p class="air-kicker">Fulfillment workflow</p>
                     <h1 class="air-title">Current boxes and customization windows.</h1>
                     <p class="air-copy">Each subscription provisions a current box. This surface shows the active theme, lock date, and whether the user can still swap or remove items.</p>
                 </div>

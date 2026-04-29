@@ -9,7 +9,7 @@
                 <div>
                     <p class="air-kicker">{{ $isAdminView ? 'Admin delivery board' : 'Delivery tracking' }}</p>
                     <h1 class="air-title">{{ $isAdminView ? 'All deliveries across subscribers.' : 'My active delivery records.' }}</h1>
-                    <p class="air-copy">Phase 1 keeps the delivery workflow direct: status, address, estimated date, and a clear path into the full record for updates or review.</p>
+                    <p class="air-copy">Delivery operations stay direct: status, address, estimated date, and a clear path into the full record for updates or review.</p>
                 </div>
                 <div class="grid gap-3 sm:grid-cols-2">
                     <div class="air-stat">

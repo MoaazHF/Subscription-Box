@@ -12,8 +12,8 @@
                     </div>
                     <div class="grid gap-3 sm:grid-cols-2">
                         <div class="rounded-[24px] bg-canvas/90 p-4">
-                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Team 1</p>
-                            <p class="mt-2 text-sm font-semibold text-ink">Account + subscription</p>
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Onboarding</p>
+                            <p class="mt-2 text-sm font-semibold text-ink">Account and subscription setup</p>
                         </div>
                         <div class="rounded-[24px] bg-canvas/90 p-4">
                             <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Chain result</p>

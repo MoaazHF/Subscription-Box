@@ -9,7 +9,7 @@
                 <div>
                     <p class="air-kicker">Admin only</p>
                     <h1 class="air-title">Audit logs stay explicit and reviewable.</h1>
-                    <p class="air-copy">Each Team 1 action writes a human-readable entry so the workflow remains traceable for the other teams and for admin review.</p>
+                    <p class="air-copy">Each critical operation writes a human-readable entry so customer and operational events remain traceable for support and compliance review.</p>
                 </div>
                 <span class="air-chip-dark">{{ $logs->total() }} total</span>
             </div>

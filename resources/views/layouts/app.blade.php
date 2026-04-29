@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="{{ asset('AppIcon.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('AppIcon.png') }}">
     <meta name="theme-color" content="#ff385c">
+    <script src="https://unpkg.com/lucide@0.511.0/dist/umd/lucide.min.js" defer></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
@@ -18,36 +19,36 @@
                     <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-3">
                         <img src="{{ asset('AppIcon.png') }}" alt="Subscription Box icon" class="h-12 w-12 rounded-2xl object-cover shadow-sm ring-1 ring-hairline">
                         <div class="min-w-0">
-                            <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Platform MVP</p>
+                            <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Subscription Platform</p>
                             <p class="truncate text-sm font-semibold text-ink">Subscription Box Platform</p>
                         </div>
                     </a>
 
                     <div class="hidden items-center justify-center gap-8 lg:flex">
                         <a href="{{ route('subscriptions.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('subscriptions.*') ? '' : 'opacity-70 hover:opacity-100' }}">
-                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg">⌂</span>
+                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg"><i data-lucide="badge-check" class="h-5 w-5"></i></span>
                             <span class="border-b-2 pb-1 {{ request()->routeIs('subscriptions.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Subscriptions</span>
                         </a>
                         <a href="{{ route('boxes.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('boxes.*') ? '' : 'opacity-70 hover:opacity-100' }}">
-                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg">◫</span>
+                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg"><i data-lucide="package-open" class="h-5 w-5"></i></span>
                             <span class="border-b-2 pb-1 {{ request()->routeIs('boxes.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Boxes</span>
                         </a>
                         <a href="{{ route('deliveries.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('deliveries.*') ? '' : 'opacity-70 hover:opacity-100' }}">
-                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg">◌</span>
+                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg"><i data-lucide="truck" class="h-5 w-5"></i></span>
                             <span class="border-b-2 pb-1 {{ request()->routeIs('deliveries.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Deliveries</span>
                         </a>
                     </div>
 
                     <nav class="flex flex-wrap items-center justify-end gap-2 text-sm font-medium text-ash">
                         @auth
-                            <span class="hidden rounded-full border border-hairline bg-canvas px-4 py-2 text-ink md:inline-flex">{{ auth()->user()->name }}</span>
+                            <span class="hidden items-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-2 text-ink md:inline-flex"><i data-lucide="user-round" class="h-4 w-4"></i>{{ auth()->user()->name }}</span>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="inline-flex items-center justify-center rounded-full border border-hairline bg-canvas px-4 py-2 text-sm font-semibold text-ink transition hover:border-ink/30 hover:bg-cloud">Logout</button>
+                                <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-2 text-sm font-semibold text-ink transition hover:border-ink/30 hover:bg-cloud"><i data-lucide="log-out" class="h-4 w-4"></i>Logout</button>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" class="inline-flex items-center justify-center rounded-full border border-transparent px-4 py-2 text-sm font-semibold text-ink transition hover:bg-cloud">Login</a>
-                            <a href="{{ route('register') }}" class="inline-flex items-center justify-center rounded-full bg-rausch px-4 py-2 text-sm font-semibold text-white transition hover:bg-rausch-deep">Create account</a>
+                            <a href="{{ route('login') }}" class="inline-flex items-center justify-center gap-2 rounded-full border border-transparent px-4 py-2 text-sm font-semibold text-ink transition hover:bg-cloud"><i data-lucide="log-in" class="h-4 w-4"></i>Login</a>
+                            <a href="{{ route('register') }}" class="inline-flex items-center justify-center gap-2 rounded-full bg-rausch px-4 py-2 text-sm font-semibold text-white transition hover:bg-rausch-deep"><i data-lucide="user-plus" class="h-4 w-4"></i>Create account</a>
                         @endauth
                     </nav>
                 </div>
@@ -103,20 +104,27 @@
         <footer class="mt-10 border-t border-hairline bg-canvas/90">
             <div class="air-shell grid gap-8 py-8 text-sm text-ash md:grid-cols-3">
                 <div class="space-y-3">
-                    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Support</p>
-                    <p>Clear flows for subscribers, admins, and the rest of the team.</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Customer Experience</p>
+                    <p>Unified account, billing, box management, and delivery tracking in one platform.</p>
                 </div>
                 <div class="space-y-3">
-                    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Platform</p>
-                    <p>Team 1 starts the subscription, Team 2 provisions the box, Team 3 tracks the delivery.</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Operations</p>
+                    <p>Reliable subscription provisioning, fulfillment tracking, and audit visibility for support teams.</p>
                 </div>
                 <div class="space-y-3">
-                    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Build State</p>
-                    <p>Frontend aligned to the design system and backed by the same readable MVP workflow.</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Platform Quality</p>
+                    <p>Production-ready interface with consistent design, accessible controls, and clear workflows.</p>
                 </div>
             </div>
         </footer>
     </div>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

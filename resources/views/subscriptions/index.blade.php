@@ -8,7 +8,7 @@
             <div class="air-panel overflow-hidden">
                 <div class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
                     <div>
-                        <p class="air-kicker">Team 1 workflow</p>
+                        <p class="air-kicker">Subscription workflow</p>
                         <h1 class="air-title">Start the subscription lifecycle.</h1>
                         <p class="air-copy">Choose a plan, bind it to a saved address, and let the system generate the first billing record and the downstream box workflow.</p>
 
@@ -92,7 +92,7 @@
 
                     <div class="air-photo flex min-h-[340px] flex-col justify-between bg-[radial-gradient(circle_at_top_right,_rgba(255,56,92,0.20),_transparent_32%),linear-gradient(180deg,_#ffffff_0%,_#f7f7f7_100%)] p-6">
                         <div class="flex items-center justify-between">
-                            <span class="air-chip">Readable MVP</span>
+                            <span class="air-chip">Production-ready</span>
                             <span class="air-chip">Billing + provisioning</span>
                         </div>
                         <div class="space-y-4">
