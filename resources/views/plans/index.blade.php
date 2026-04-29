@@ -15,16 +15,49 @@
 
         <div class="mt-10 grid gap-6 lg:grid-cols-3">
             @foreach ($plans as $plan)
+                @php
+                    $planKey = strtolower(trim($plan->name));
+                    $planBackgrounds = [
+                        'basic' => asset('basic.png'),
+                        'standard' => asset('standrad.png'),
+                        'premium' => asset('premium.png'),
+                    ];
+                    $planBackground = $planBackgrounds[$planKey] ?? null;
+                    $fallbackGradient = $loop->first
+                        ? 'bg-[linear-gradient(160deg,#fff4f7_0%,#ffffff_60%,#f7f7f7_100%)]'
+                        : ($loop->iteration === 2
+                            ? 'bg-[linear-gradient(160deg,#fff8f3_0%,#ffffff_58%,#f7f7f7_100%)]'
+                            : 'bg-[linear-gradient(160deg,#f7efff_0%,#ffffff_58%,#f7f7f7_100%)]');
+                    $headerStyle = $planBackground
+                        ? "background-image: linear-gradient(160deg, rgba(15, 23, 42, 0.52) 0%, rgba(15, 23, 42, 0.28) 45%, rgba(15, 23, 42, 0.14) 100%), url('{$planBackground}'); background-size: cover; background-position: center;"
+                        : null;
+                @endphp
                 <article class="overflow-hidden rounded-[30px] border border-hairline bg-canvas">
-                    <div class="aspect-[4/3] p-8 {{ $loop->first ? 'bg-[linear-gradient(160deg,#fff4f7_0%,#ffffff_60%,#f7f7f7_100%)]' : ($loop->iteration === 2 ? 'bg-[linear-gradient(160deg,#fff8f3_0%,#ffffff_58%,#f7f7f7_100%)]' : 'bg-[linear-gradient(160deg,#f7efff_0%,#ffffff_58%,#f7f7f7_100%)]') }}">
+                    <div @class(['aspect-[4/3] p-8', $fallbackGradient => ! $planBackground]) @if($headerStyle) style="{{ $headerStyle }}" @endif>
                         <div class="flex h-full flex-col justify-between">
                             <div class="flex items-center justify-between gap-4">
-                                <span class="inline-flex rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-ink">{{ $plan->name }}</span>
-                                <span class="inline-flex rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold text-ink">Active</span>
+                                <span @class([
+                                    'inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em]',
+                                    'border border-white/30 bg-white/20 text-white backdrop-blur-sm' => $planBackground,
+                                    'border border-hairline bg-canvas text-ink' => ! $planBackground,
+                                ])>{{ $plan->name }}</span>
+                                <span @class([
+                                    'inline-flex rounded-full px-3 py-1 text-xs font-semibold',
+                                    'border border-white/30 bg-white/20 text-white backdrop-blur-sm' => $planBackground,
+                                    'border border-hairline bg-canvas text-ink' => ! $planBackground,
+                                ])>Active</span>
                             </div>
                             <div>
-                                <h2 class="text-5xl font-bold tracking-[-0.05em] text-ink">${{ number_format((float) $plan->price_monthly, 2) }}</h2>
-                                <p class="mt-1 text-sm text-ash">monthly</p>
+                                <h2 @class([
+                                    'text-5xl font-bold tracking-[-0.05em]',
+                                    'text-white drop-shadow-[0_8px_24px_rgba(0,0,0,0.45)]' => $planBackground,
+                                    'text-ink' => ! $planBackground,
+                                ])>${{ number_format((float) $plan->price_monthly, 2) }}</h2>
+                                <p @class([
+                                    'mt-1 text-sm',
+                                    'text-white/90' => $planBackground,
+                                    'text-ash' => ! $planBackground,
+                                ])>monthly</p>
                             </div>
                         </div>
                     </div>
