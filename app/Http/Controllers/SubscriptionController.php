@@ -55,7 +55,12 @@ class SubscriptionController extends Controller
             return redirect()->route('subscriptions.index')->with('error', 'Payment declined. Transaction was saved and subscription is suspended.');
         }
 
-        return redirect()->route('subscriptions.index')->with('status', 'Subscription started.');
+        return redirect()->route('subscriptions.index')
+            ->with('status', 'Subscription started.')
+            ->with('payment_success', [
+                'amount' => number_format((float) $latestPayment?->amount, 2),
+                'reference' => $latestPayment?->gateway_ref,
+            ]);
     }
 
     public function pause(Request $request, Subscription $subscription): RedirectResponse

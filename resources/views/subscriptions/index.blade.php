@@ -4,6 +4,27 @@
 
 @section('content')
     <section class="space-y-8">
+        @if (session('payment_success'))
+            <div id="payment-success-popup" class="fixed right-5 top-24 z-[60] w-full max-w-sm">
+                <div class="relative overflow-hidden rounded-[24px] border border-emerald-200 bg-white p-5 shadow-[0_22px_55px_rgba(16,185,129,0.22)]">
+                    <div class="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-emerald-100"></div>
+                    <div class="relative flex items-start gap-4">
+                        <div class="relative mt-0.5 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-white">
+                            <span class="absolute inline-flex h-12 w-12 animate-ping rounded-full bg-emerald-400/60"></span>
+                            <svg class="relative h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m5 13 4 4L19 7" />
+                            </svg>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600">Payment success</p>
+                            <p class="text-base font-semibold text-ink">Subscription transaction approved.</p>
+                            <p class="text-sm text-ash">Amount: ${{ session('payment_success.amount') }} · Ref: {{ session('payment_success.reference') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <section class="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
             <div class="air-panel overflow-hidden">
                 <div class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
@@ -240,6 +261,7 @@
     <script src="https://cdn.jsdelivr.net/npm/card-validator@10.0.3/dist/card-validator.min.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', function () {
+            const successPopup = document.getElementById('payment-success-popup');
             const form = document.getElementById('subscription-form');
             const openButton = document.getElementById('start-subscription-button');
             const modal = document.getElementById('gateway-modal');
@@ -258,6 +280,14 @@
             const reasonField = document.getElementById('payment_gateway_reason');
 
             if (!form || !openButton || !modal) {
+                if (successPopup) {
+                    window.setTimeout(function () {
+                        successPopup.classList.add('opacity-0', 'translate-y-1', 'transition', 'duration-500');
+                        window.setTimeout(function () {
+                            successPopup.remove();
+                        }, 520);
+                    }, 3400);
+                }
                 return;
             }
 
@@ -385,6 +415,15 @@
 
             planSelect.addEventListener('change', updatePlanTotal);
             updatePlanTotal();
+
+            if (successPopup) {
+                window.setTimeout(function () {
+                    successPopup.classList.add('opacity-0', 'translate-y-1', 'transition', 'duration-500');
+                    window.setTimeout(function () {
+                        successPopup.remove();
+                    }, 520);
+                }, 3400);
+            }
         });
     </script>
 @endpush
