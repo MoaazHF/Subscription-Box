@@ -25,7 +25,7 @@ Optional but recommended:
 ## 2) Clone Repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/MoaazHF/Subscription-Box.git
 cd Subscription-Box
 ```
 
