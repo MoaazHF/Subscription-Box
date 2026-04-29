@@ -24,6 +24,26 @@
                 </div>
             </div>
         @endif
+        @if (session('payment_failed'))
+            <div id="payment-failed-popup" class="fixed right-5 top-24 z-[60] w-full max-w-sm">
+                <div class="relative overflow-hidden rounded-[24px] border border-red-200 bg-white p-5 shadow-[0_22px_55px_rgba(239,68,68,0.24)]">
+                    <div class="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-red-100"></div>
+                    <div class="relative flex items-start gap-4">
+                        <div class="relative mt-0.5 flex h-12 w-12 items-center justify-center rounded-full bg-red-500 text-white">
+                            <span class="absolute inline-flex h-12 w-12 animate-ping rounded-full bg-red-400/60"></span>
+                            <svg class="relative h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+                            </svg>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-red-600">Payment failed</p>
+                            <p class="text-base font-semibold text-ink">Transaction was declined.</p>
+                            <p class="text-sm text-ash">Amount: ${{ session('payment_failed.amount') }} · Ref: {{ session('payment_failed.reference') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
 
         <section class="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
             <div class="air-panel overflow-hidden">
@@ -262,6 +282,7 @@
     <script>
         window.addEventListener('DOMContentLoaded', function () {
             const successPopup = document.getElementById('payment-success-popup');
+            const failedPopup = document.getElementById('payment-failed-popup');
             const form = document.getElementById('subscription-form');
             const openButton = document.getElementById('start-subscription-button');
             const modal = document.getElementById('gateway-modal');
@@ -278,16 +299,22 @@
             const refField = document.getElementById('payment_gateway_ref');
             const last4Field = document.getElementById('payment_card_last4');
             const reasonField = document.getElementById('payment_gateway_reason');
+            const dismissPopup = function (popup) {
+                if (!popup) {
+                    return;
+                }
+
+                window.setTimeout(function () {
+                    popup.classList.add('opacity-0', 'translate-y-1', 'transition', 'duration-500');
+                    window.setTimeout(function () {
+                        popup.remove();
+                    }, 520);
+                }, 3400);
+            };
 
             if (!form || !openButton || !modal) {
-                if (successPopup) {
-                    window.setTimeout(function () {
-                        successPopup.classList.add('opacity-0', 'translate-y-1', 'transition', 'duration-500');
-                        window.setTimeout(function () {
-                            successPopup.remove();
-                        }, 520);
-                    }, 3400);
-                }
+                dismissPopup(successPopup);
+                dismissPopup(failedPopup);
                 return;
             }
 
@@ -416,14 +443,8 @@
             planSelect.addEventListener('change', updatePlanTotal);
             updatePlanTotal();
 
-            if (successPopup) {
-                window.setTimeout(function () {
-                    successPopup.classList.add('opacity-0', 'translate-y-1', 'transition', 'duration-500');
-                    window.setTimeout(function () {
-                        successPopup.remove();
-                    }, 520);
-                }, 3400);
-            }
+            dismissPopup(successPopup);
+            dismissPopup(failedPopup);
         });
     </script>
 @endpush

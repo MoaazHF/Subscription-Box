@@ -52,7 +52,12 @@ class SubscriptionController extends Controller
         $latestPayment = $subscription->payments->sortByDesc('created_at')->first();
 
         if ($latestPayment && $latestPayment->status === 'failed') {
-            return redirect()->route('subscriptions.index')->with('error', 'Payment declined. Transaction was saved and subscription is suspended.');
+            return redirect()->route('subscriptions.index')
+                ->with('error', 'Payment declined. Transaction was saved and subscription is suspended.')
+                ->with('payment_failed', [
+                    'amount' => number_format((float) $latestPayment->amount, 2),
+                    'reference' => $latestPayment->gateway_ref,
+                ]);
         }
 
         return redirect()->route('subscriptions.index')
