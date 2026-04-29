@@ -47,20 +47,18 @@ class Item extends Model
     {
         parent::boot();
 
-        static::creating(function ($model) {
+        static::creating(function ($model): void {
             if (empty($model->id)) {
                 $model->id = (string) Str::uuid();
             }
         });
     }
 
-    /** @return BelongsToMany<AllergenTag> */
     public function allergenTags(): BelongsToMany
     {
-        return $this->belongsToMany(AllergenTag::class, 'item_allergens', 'item_id', 'allergen_id');
+        return $this->belongsToMany(AllergenTag::class, 'item_allergens', 'item_id', 'allergen_tag_id');
     }
 
-    /** @return HasMany<BoxItem> */
     public function boxItems(): HasMany
     {
         return $this->hasMany(BoxItem::class);

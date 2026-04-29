@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Delivery extends Model
@@ -12,6 +13,8 @@ class Delivery extends Model
     use HasFactory;
 
     public const PENDING = 'pending';
+
+    public const PICKING = 'picking';
 
     public const PACKED = 'packed';
 
@@ -25,6 +28,7 @@ class Delivery extends Model
 
     public const STATUSES = [
         self::PENDING,
+        self::PICKING,
         self::PACKED,
         self::SHIPPED,
         self::OUT_FOR_DELIVERY,
@@ -34,16 +38,13 @@ class Delivery extends Model
 
     public const STOPS_BY_STATUS = [
         self::PENDING => null,
+        self::PICKING => 4,
         self::PACKED => 3,
         self::SHIPPED => 2,
         self::OUT_FOR_DELIVERY => 1,
         self::DELIVERED => 0,
         self::UNDELIVERABLE => 0,
     ];
-
-    protected $table = 'deliveries';
-
-    protected $primaryKey = 'id';
 
     protected $keyType = 'string';
 
@@ -62,18 +63,21 @@ class Delivery extends Model
         'eco_dispatch',
     ];
 
-    protected $casts = [
-        'estimated_delivery' => 'date',
-        'actual_delivery' => 'datetime',
-        'eco_dispatch' => 'boolean',
-        'stops_remaining' => 'integer',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'estimated_delivery' => 'date',
+            'actual_delivery' => 'datetime',
+            'eco_dispatch' => 'boolean',
+            'stops_remaining' => 'integer',
+        ];
+    }
 
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
-        static::creating(function ($model) {
+        static::creating(function ($model): void {
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
@@ -85,9 +89,8 @@ class Delivery extends Model
         return $this->belongsTo(Box::class, 'box_id');
     }
 
-    public function driver()
+    public function driver(): BelongsTo
     {
-        // Assuming Driver model exists or will exist in Mohy's scope
         return $this->belongsTo(Driver::class, 'driver_id');
     }
 
@@ -96,16 +99,15 @@ class Delivery extends Model
         return $this->belongsTo(Address::class, 'address_id');
     }
 
+    public function claims(): HasMany
+    {
+        return $this->hasMany(Claim::class, 'delivery_id');
+    }
+
     public function belongsToUser(User $user): bool
     {
         $this->loadMissing('address');
 
         return $this->address?->user_id === $user->id;
-    }
-
-    public function claims()
-    {
-        // Assuming Claim model exists
-        return $this->hasMany(Claim::class, 'delivery_id');
     }
 }

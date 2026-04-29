@@ -8,5 +8,7 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('subscriptions:renew')->daily();
-Schedule::command('delivery:check-missing')->daily();
+Schedule::command('subscriptions:renew')->daily()->withoutOverlapping();
+Schedule::command('delivery:check-missing')->daily()->withoutOverlapping();
+Schedule::command('notifications:process-queued')->everyFiveMinutes()->withoutOverlapping();
+Schedule::command('lifecycle:sync-time-based')->hourly()->withoutOverlapping();
