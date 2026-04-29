@@ -9,6 +9,7 @@ use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\DeliveryZoneController;
+use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\DriverManagementController;
 use App\Http\Controllers\FlashSaleController;
@@ -27,6 +28,7 @@ use App\Http\Controllers\WarehouseStaffController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
+Route::get('/docs', DocumentationController::class)->name('docs.index');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

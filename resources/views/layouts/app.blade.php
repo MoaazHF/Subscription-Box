@@ -156,30 +156,30 @@
                     <div class="space-y-4">
                         <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Resources</p>
                         <div class="grid gap-2 text-sm">
-                            <a href="/articles" class="cursor-pointer text-ash transition hover:text-ink">Articles</a>
-                            <a href="/articles/product-updates" class="cursor-pointer text-ash transition hover:text-ink">Product updates</a>
-                            <a href="/articles/operations-playbooks" class="cursor-pointer text-ash transition hover:text-ink">Operations playbooks</a>
-                            <a href="/articles/shipping-guides" class="cursor-pointer text-ash transition hover:text-ink">Shipping guides</a>
+                            <a href="{{ route('docs.index', ['tab' => 'resources']) }}#articles" class="cursor-pointer text-ash transition hover:text-ink">Articles</a>
+                            <a href="{{ route('docs.index', ['tab' => 'resources']) }}#product-updates" class="cursor-pointer text-ash transition hover:text-ink">Product updates</a>
+                            <a href="{{ route('docs.index', ['tab' => 'resources']) }}#operations-playbooks" class="cursor-pointer text-ash transition hover:text-ink">Operations playbooks</a>
+                            <a href="{{ route('docs.index', ['tab' => 'resources']) }}#shipping-guides" class="cursor-pointer text-ash transition hover:text-ink">Shipping guides</a>
                         </div>
                     </div>
 
                     <div class="space-y-4">
                         <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Support</p>
                         <div class="grid gap-2 text-sm">
-                            <a href="/faq" class="cursor-pointer text-ash transition hover:text-ink">FAQ</a>
-                            <a href="/help-center" class="cursor-pointer text-ash transition hover:text-ink">Help center</a>
-                            <a href="/support/tickets" class="cursor-pointer text-ash transition hover:text-ink">Support tickets</a>
-                            <a href="mailto:subscriptionboxplatform@gmail.com" class="cursor-pointer text-ash transition hover:text-ink">subscriptionboxplatform@gmail.com</a>
+                            <a href="{{ route('docs.index', ['tab' => 'support']) }}#faq" class="cursor-pointer text-ash transition hover:text-ink">FAQ</a>
+                            <a href="{{ route('docs.index', ['tab' => 'support']) }}#help-center" class="cursor-pointer text-ash transition hover:text-ink">Help center</a>
+                            <a href="{{ route('docs.index', ['tab' => 'support']) }}#support-tickets" class="cursor-pointer text-ash transition hover:text-ink">Support tickets</a>
+                            <a href="{{ route('docs.index', ['tab' => 'support']) }}#contact-email" class="cursor-pointer text-ash transition hover:text-ink">subscriptionboxplatform@gmail.com</a>
                         </div>
                     </div>
 
                     <div class="space-y-4">
                         <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Company</p>
                         <div class="grid gap-2 text-sm">
-                            <a href="/about" class="cursor-pointer text-ash transition hover:text-ink">About</a>
-                            <a href="/careers" class="cursor-pointer text-ash transition hover:text-ink">Careers</a>
-                            <a href="/privacy" class="cursor-pointer text-ash transition hover:text-ink">Privacy policy</a>
-                            <a href="/terms" class="cursor-pointer text-ash transition hover:text-ink">Terms of service</a>
+                            <a href="{{ route('docs.index', ['tab' => 'company']) }}#about" class="cursor-pointer text-ash transition hover:text-ink">About</a>
+                            <a href="{{ route('docs.index', ['tab' => 'company']) }}#careers" class="cursor-pointer text-ash transition hover:text-ink">Careers</a>
+                            <a href="{{ route('docs.index', ['tab' => 'company']) }}#privacy-policy" class="cursor-pointer text-ash transition hover:text-ink">Privacy policy</a>
+                            <a href="{{ route('docs.index', ['tab' => 'company']) }}#terms-of-service" class="cursor-pointer text-ash transition hover:text-ink">Terms of service</a>
                         </div>
                     </div>
                 </div>
