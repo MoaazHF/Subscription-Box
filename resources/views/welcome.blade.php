@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="relative isolate overflow-hidden rounded-[36px] border border-hairline bg-canvas">
+    <section class="relative isolate mx-auto max-w-[1200px] overflow-hidden rounded-[36px] border border-hairline bg-canvas">
         <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('HeroSection.png') }}');"></div>
         <div class="absolute inset-0 bg-[linear-gradient(120deg,rgba(16,24,40,0.78)_0%,rgba(16,24,40,0.65)_42%,rgba(16,24,40,0.45)_100%)]"></div>
 
-        <div class="relative grid min-h-[78vh] gap-10 p-8 md:p-12 lg:grid-cols-[1.1fr_0.9fr]">
-            <div class="flex flex-col justify-end gap-7 pb-4">
+        <div class="relative grid min-h-[78vh] items-center gap-10 p-8 md:p-12 lg:grid-cols-[1.1fr_0.9fr]">
+            <div class="flex flex-col items-center justify-center gap-7 pb-4 text-center">
                 <div class="space-y-4">
                     <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/90">Subscription Platform</p>
                     <h1 class="max-w-4xl text-5xl font-bold tracking-[-0.05em] text-white sm:text-6xl">Operate your subscription business from one production-ready workspace.</h1>
@@ -15,7 +15,7 @@
                     </p>
                 </div>
 
-                <div class="flex flex-wrap gap-3">
+                <div class="flex flex-wrap justify-center gap-3">
                     @auth
                         <a href="{{ route('dashboard') }}" class="air-button-primary cursor-pointer px-6">Open Dashboard</a>
                         <a href="{{ route('plans.index') }}" class="air-button-secondary cursor-pointer border-white/40 bg-white/10 px-6 text-white hover:bg-white/20">Explore Plans</a>
@@ -26,7 +26,7 @@
                 </div>
             </div>
 
-            <div class="flex items-end lg:items-center lg:justify-end">
+            <div class="flex items-end justify-center lg:items-center">
                 <div class="w-full max-w-md space-y-4 rounded-[28px] border border-white/25 bg-white/15 p-6 backdrop-blur-md">
                     <div class="flex items-center justify-between gap-4">
                         <div>
@@ -50,22 +50,22 @@
         </div>
     </section>
 
-    <section class="mt-14">
-        <div class="max-w-3xl">
+    <section class="mx-auto mt-14 max-w-[1200px]">
+        <div class="mx-auto max-w-3xl text-center">
             <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">What We Do</p>
             <h2 class="mt-3 text-[2rem] font-bold tracking-[-0.04em] text-ink">From subscription signup to doorstep delivery, the platform executes the full cycle.</h2>
             <p class="mt-3 text-base leading-8 text-ash">Each stage keeps data consistent between customer-facing screens and operations dashboards, so teams move faster with fewer manual handoffs.</p>
         </div>
 
         <div class="mt-6 grid gap-6 lg:grid-cols-3">
-            <article class="rounded-[28px] border border-hairline bg-canvas p-6">
+            <article class="rounded-[28px] border border-hairline bg-canvas p-6 text-center">
                 <p class="inline-flex rounded-full border border-hairline bg-cloud px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-ink">01</p>
                 <h3 class="mt-4 text-[1.35rem] font-bold tracking-[-0.03em] text-ink">Acquire & Subscribe</h3>
                 <p class="mt-2 text-sm leading-7 text-ash">Customers register, pick plans, set addresses, and activate subscription billing with payment tracking and lifecycle states.</p>
                 <a href="{{ route('plans.index') }}" class="mt-5 inline-flex items-center rounded-full border border-hairline px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-cloud cursor-pointer">Review plans</a>
             </article>
 
-            <article class="rounded-[28px] border border-hairline bg-canvas p-6">
+            <article class="rounded-[28px] border border-hairline bg-canvas p-6 text-center">
                 <p class="inline-flex rounded-full border border-hairline bg-cloud px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-ink">02</p>
                 <h3 class="mt-4 text-[1.35rem] font-bold tracking-[-0.03em] text-ink">Curate & Fulfill</h3>
                 <p class="mt-2 text-sm leading-7 text-ash">Monthly boxes are generated, customized, packed with tracked inventory, and prepared for dispatch with status visibility.</p>
@@ -74,7 +74,7 @@
                 @endif
             </article>
 
-            <article class="rounded-[28px] border border-hairline bg-canvas p-6">
+            <article class="rounded-[28px] border border-hairline bg-canvas p-6 text-center">
                 <p class="inline-flex rounded-full border border-hairline bg-cloud px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-ink">03</p>
                 <h3 class="mt-4 text-[1.35rem] font-bold tracking-[-0.03em] text-ink">Dispatch & Support</h3>
                 <p class="mt-2 text-sm leading-7 text-ash">Drivers and delivery records handle last-mile execution, while claims, notifications, and audit logs provide operational control.</p>
@@ -85,13 +85,13 @@
         </div>
     </section>
 
-    <section class="mt-14">
-        <div class="flex items-center justify-between gap-4">
+    <section class="mx-auto mt-14 max-w-[1200px]">
+        <div class="flex flex-col items-center justify-center gap-4 text-center">
             <div>
                 <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Plans</p>
                 <h2 class="mt-3 text-[2rem] font-bold tracking-[-0.04em] text-ink">Seeded subscription tiers</h2>
             </div>
-            <a href="{{ route('plans.index') }}" class="inline-flex items-center rounded-full border border-hairline bg-canvas px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-cloud">See all details</a>
+            <a href="{{ route('plans.index') }}" class="inline-flex cursor-pointer items-center rounded-full border border-hairline bg-canvas px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-cloud">See all details</a>
         </div>
 
         <div class="mt-6 grid gap-6 md:grid-cols-3">
