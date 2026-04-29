@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
@@ -38,11 +39,11 @@ class Box extends Model
         ];
     }
 
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
-        static::creating(function ($model) {
+        static::creating(function ($model): void {
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
@@ -71,6 +72,16 @@ class Box extends Model
     public function customisation(): HasOne
     {
         return $this->hasOne(BoxCustomisation::class);
+    }
+
+    public function delivery(): HasOne
+    {
+        return $this->hasOne(Delivery::class);
+    }
+
+    public function socialPosts(): HasMany
+    {
+        return $this->hasMany(SocialPost::class);
     }
 
     public function ownedBy(User $user): bool

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Subscription extends BaseModel
 {
@@ -64,5 +65,20 @@ class Subscription extends BaseModel
     public function boxes(): HasMany
     {
         return $this->hasMany(Box::class);
+    }
+
+    public function claims(): HasMany
+    {
+        return $this->hasMany(Claim::class);
+    }
+
+    public function retentionOffers(): HasMany
+    {
+        return $this->hasMany(RetentionOffer::class);
+    }
+
+    public function giftSubscription(): HasOne
+    {
+        return $this->hasOne(GiftSubscription::class);
     }
 }
