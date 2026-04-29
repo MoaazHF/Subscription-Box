@@ -44,6 +44,10 @@ class AuthController extends Controller
             $request->ip()
         );
 
+        if ($request->user()->must_change_password) {
+            return redirect()->route('password.change.edit');
+        }
+
         return redirect()->route('dashboard');
     }
 

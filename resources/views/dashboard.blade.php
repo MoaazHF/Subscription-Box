@@ -67,30 +67,53 @@
                 <h2 class="mt-3 text-[2rem] font-bold tracking-[-0.04em] text-ink">Workflows</h2>
 
                 <div class="mt-6 grid gap-4 md:grid-cols-2">
-                    <a href="{{ route('addresses.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
-                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Account</p>
-                        <p class="mt-2 text-lg font-semibold text-ink">Manage addresses</p>
-                    </a>
-                    <a href="{{ route('plans.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
-                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Catalog</p>
-                        <p class="mt-2 text-lg font-semibold text-ink">Review plans</p>
-                    </a>
-                    <a href="{{ route('subscriptions.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
-                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Billing</p>
-                        <p class="mt-2 text-lg font-semibold text-ink">Manage subscriptions</p>
-                    </a>
-                    <a href="{{ route('boxes.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
-                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Fulfillment</p>
-                        <p class="mt-2 text-lg font-semibold text-ink">Open current boxes</p>
-                    </a>
-                    <a href="{{ route('deliveries.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
-                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Logistics</p>
-                        <p class="mt-2 text-lg font-semibold text-ink">Track deliveries</p>
-                    </a>
-                    <a href="{{ route('payments.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
-                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Billing</p>
-                        <p class="mt-2 text-lg font-semibold text-ink">See payment history</p>
-                    </a>
+                    @if ($user->isAdmin())
+                        <a href="{{ route('products.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Catalog</p>
+                            <p class="mt-2 text-lg font-semibold text-ink">Manage products</p>
+                        </a>
+                        <a href="{{ route('drivers.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Logistics</p>
+                            <p class="mt-2 text-lg font-semibold text-ink">Manage drivers</p>
+                        </a>
+                        <a href="{{ route('warehouse-staff.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Fulfillment</p>
+                            <p class="mt-2 text-lg font-semibold text-ink">Manage warehouse staff</p>
+                        </a>
+                        <a href="{{ route('delivery-zones.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Coverage</p>
+                            <p class="mt-2 text-lg font-semibold text-ink">Manage delivery zones</p>
+                        </a>
+                        <a href="{{ route('audit-logs.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Governance</p>
+                            <p class="mt-2 text-lg font-semibold text-ink">Review audit logs</p>
+                        </a>
+                    @else
+                        <a href="{{ route('addresses.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Account</p>
+                            <p class="mt-2 text-lg font-semibold text-ink">Manage addresses</p>
+                        </a>
+                        <a href="{{ route('plans.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Catalog</p>
+                            <p class="mt-2 text-lg font-semibold text-ink">Review plans</p>
+                        </a>
+                        <a href="{{ route('subscriptions.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Billing</p>
+                            <p class="mt-2 text-lg font-semibold text-ink">Manage subscriptions</p>
+                        </a>
+                        <a href="{{ route('boxes.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Fulfillment</p>
+                            <p class="mt-2 text-lg font-semibold text-ink">Open current boxes</p>
+                        </a>
+                        <a href="{{ route('deliveries.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Logistics</p>
+                            <p class="mt-2 text-lg font-semibold text-ink">Track deliveries</p>
+                        </a>
+                        <a href="{{ route('payments.index') }}" class="rounded-[24px] border border-hairline bg-canvas p-5 transition hover:bg-cloud">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Billing</p>
+                            <p class="mt-2 text-lg font-semibold text-ink">See payment history</p>
+                        </a>
+                    @endif
                 </div>
             </section>
 

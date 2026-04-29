@@ -29,6 +29,7 @@ class Item extends Model
         'origin_country',
         'sourcing_notes',
         'is_addon',
+        'image_url',
     ];
 
     protected function casts(): array
