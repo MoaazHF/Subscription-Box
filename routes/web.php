@@ -68,8 +68,10 @@ Route::middleware('auth')->group(function () {
         ->middleware('role:admin')
         ->name('deliveries.update-status');
 
-    Route::get('/driver', [DriverController::class, 'index'])->name('driver.index');
-    Route::patch('/driver/deliveries/{delivery}/status', [DriverController::class, 'updateStatus'])->name('driver.deliveries.status');
+    Route::middleware('role:driver')->group(function () {
+        Route::get('/driver', [DriverController::class, 'index'])->name('driver.index');
+        Route::patch('/driver/deliveries/{delivery}/status', [DriverController::class, 'updateStatus'])->name('driver.deliveries.status');
+    });
 
     Route::get('/referrals', [ReferralController::class, 'index'])->name('referrals.index');
     Route::post('/referrals', [ReferralController::class, 'store'])->name('referrals.store');

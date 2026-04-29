@@ -25,18 +25,32 @@
                     </a>
 
                     <div class="hidden items-center justify-center gap-8 lg:flex">
-                        <a href="{{ route('subscriptions.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('subscriptions.*') ? '' : 'opacity-70 hover:opacity-100' }}">
-                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg"><i data-lucide="badge-check" class="h-5 w-5"></i></span>
-                            <span class="border-b-2 pb-1 {{ request()->routeIs('subscriptions.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Subscriptions</span>
-                        </a>
-                        <a href="{{ route('boxes.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('boxes.*') ? '' : 'opacity-70 hover:opacity-100' }}">
-                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg"><i data-lucide="package-open" class="h-5 w-5"></i></span>
-                            <span class="border-b-2 pb-1 {{ request()->routeIs('boxes.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Boxes</span>
-                        </a>
-                        <a href="{{ route('deliveries.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('deliveries.*') ? '' : 'opacity-70 hover:opacity-100' }}">
-                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg"><i data-lucide="truck" class="h-5 w-5"></i></span>
-                            <span class="border-b-2 pb-1 {{ request()->routeIs('deliveries.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Deliveries</span>
-                        </a>
+                        @auth
+                            @if (auth()->user()->isDriver())
+                                <a href="{{ route('driver.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('driver.*') ? '' : 'opacity-70 hover:opacity-100' }}">
+                                    <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg"><i data-lucide="truck" class="h-5 w-5"></i></span>
+                                    <span class="border-b-2 pb-1 {{ request()->routeIs('driver.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Driver</span>
+                                </a>
+                            @else
+                                <a href="{{ route('subscriptions.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('subscriptions.*') ? '' : 'opacity-70 hover:opacity-100' }}">
+                                    <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg"><i data-lucide="badge-check" class="h-5 w-5"></i></span>
+                                    <span class="border-b-2 pb-1 {{ request()->routeIs('subscriptions.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Subscriptions</span>
+                                </a>
+                                <a href="{{ route('boxes.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('boxes.*') ? '' : 'opacity-70 hover:opacity-100' }}">
+                                    <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg"><i data-lucide="package-open" class="h-5 w-5"></i></span>
+                                    <span class="border-b-2 pb-1 {{ request()->routeIs('boxes.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Boxes</span>
+                                </a>
+                                <a href="{{ route('deliveries.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('deliveries.*') ? '' : 'opacity-70 hover:opacity-100' }}">
+                                    <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg"><i data-lucide="truck" class="h-5 w-5"></i></span>
+                                    <span class="border-b-2 pb-1 {{ request()->routeIs('deliveries.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Deliveries</span>
+                                </a>
+                            @endif
+                        @else
+                            <a href="{{ route('plans.index') }}" class="group flex flex-col items-center gap-2 text-sm font-medium text-ink transition {{ request()->routeIs('plans.*') ? '' : 'opacity-70 hover:opacity-100' }}">
+                                <span class="flex h-11 w-11 items-center justify-center rounded-full bg-cloud text-lg"><i data-lucide="layout-grid" class="h-5 w-5"></i></span>
+                                <span class="border-b-2 pb-1 {{ request()->routeIs('plans.*') ? 'border-ink' : 'border-transparent group-hover:border-hairline' }}">Plans</span>
+                            </a>
+                        @endauth
                     </div>
 
                     <nav class="flex flex-wrap items-center justify-end gap-2 text-sm font-medium text-ash">
@@ -57,11 +71,19 @@
                     <div class="overflow-x-auto">
                         <div class="flex min-w-max items-center gap-2 pb-1">
                             <a href="{{ route('dashboard') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('dashboard') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Dashboard</a>
-                            <a href="{{ route('plans.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('plans.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Plans</a>
-                            <a href="{{ route('addresses.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('addresses.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Addresses</a>
-                            <a href="{{ route('payments.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('payments.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Payments</a>
-                            @if (Route::has('audit-logs.index') && method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin())
+                            @if (auth()->user()->isDriver())
+                                <a href="{{ route('driver.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('driver.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Driver Panel</a>
+                            @else
+                                <a href="{{ route('plans.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('plans.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Plans</a>
+                                <a href="{{ route('addresses.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('addresses.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Addresses</a>
+                                <a href="{{ route('payments.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('payments.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Payments</a>
+                                <a href="{{ route('notifications.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('notifications.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Notifications</a>
+                            @endif
+                            @if (Route::has('audit-logs.index') && auth()->user()->isAdmin())
                                 <a href="{{ route('audit-logs.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('audit-logs.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Audit logs</a>
+                                <a href="{{ route('drivers.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('drivers.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Drivers</a>
+                                <a href="{{ route('warehouse-staff.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('warehouse-staff.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Warehouse Staff</a>
+                                <a href="{{ route('delivery-zones.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('delivery-zones.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Delivery Zones</a>
                             @endif
                         </div>
                     </div>

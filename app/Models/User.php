@@ -108,4 +108,19 @@ class User extends Authenticatable
     {
         return $this->role?->name === Role::ADMIN;
     }
+
+    public function isDriver(): bool
+    {
+        return $this->role?->name === Role::DRIVER;
+    }
+
+    public function isWarehouseStaff(): bool
+    {
+        return $this->role?->name === Role::WAREHOUSE_STAFF;
+    }
+
+    public function isSubscriber(): bool
+    {
+        return $this->role?->name === Role::SUBSCRIBER;
+    }
 }
