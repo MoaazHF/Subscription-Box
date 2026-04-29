@@ -123,19 +123,70 @@
             @yield('content')
         </main>
 
-        <footer class="mt-10 border-t border-hairline bg-canvas/90">
-            <div class="air-shell grid gap-8 py-8 text-sm text-ash md:grid-cols-3">
-                <div class="space-y-3">
-                    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Customer Experience</p>
-                    <p>Unified account, billing, box management, and delivery tracking in one platform.</p>
+        <footer class="mt-14 border-t border-hairline bg-[linear-gradient(180deg,#ffffff_0%,#f5f8ff_100%)]">
+            <div class="air-shell py-12">
+                <div class="grid gap-10 lg:grid-cols-[1.3fr_repeat(4,minmax(0,1fr))]">
+                    <div class="space-y-5">
+                        <a href="{{ route('home') }}" class="inline-flex items-center gap-3">
+                            <img src="{{ asset('AppIcon.png') }}" alt="Subscription Box icon" class="h-10 w-10 rounded-xl object-cover ring-1 ring-hairline">
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-[0.28em] text-rausch">Subscription Platform</p>
+                                <p class="text-sm font-semibold text-ink">Subscription Box Platform</p>
+                            </div>
+                        </a>
+                        <p class="max-w-sm text-sm leading-7 text-ash">Enterprise subscription operations for billing, fulfillment, dispatch management, and support workflows in one system.</p>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:border-ink/30 hover:bg-cloud" aria-label="LinkedIn"><i data-lucide="linkedin" class="h-4 w-4"></i></a>
+                            <a href="https://www.x.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:border-ink/30 hover:bg-cloud" aria-label="X"><i data-lucide="twitter" class="h-4 w-4"></i></a>
+                            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:border-ink/30 hover:bg-cloud" aria-label="Instagram"><i data-lucide="instagram" class="h-4 w-4"></i></a>
+                            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:border-ink/30 hover:bg-cloud" aria-label="YouTube"><i data-lucide="youtube" class="h-4 w-4"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Product</p>
+                        <div class="grid gap-2 text-sm">
+                            <a href="{{ route('plans.index') }}" class="cursor-pointer text-ash transition hover:text-ink">Subscription plans</a>
+                            <a href="{{ route('subscriptions.index') }}" class="cursor-pointer text-ash transition hover:text-ink">Subscription management</a>
+                            <a href="{{ route('boxes.index') }}" class="cursor-pointer text-ash transition hover:text-ink">Box lifecycle</a>
+                            <a href="{{ route('deliveries.index') }}" class="cursor-pointer text-ash transition hover:text-ink">Delivery tracking</a>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Resources</p>
+                        <div class="grid gap-2 text-sm">
+                            <a href="/articles" class="cursor-pointer text-ash transition hover:text-ink">Articles</a>
+                            <a href="/articles/product-updates" class="cursor-pointer text-ash transition hover:text-ink">Product updates</a>
+                            <a href="/articles/operations-playbooks" class="cursor-pointer text-ash transition hover:text-ink">Operations playbooks</a>
+                            <a href="/articles/shipping-guides" class="cursor-pointer text-ash transition hover:text-ink">Shipping guides</a>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Support</p>
+                        <div class="grid gap-2 text-sm">
+                            <a href="/faq" class="cursor-pointer text-ash transition hover:text-ink">FAQ</a>
+                            <a href="/help-center" class="cursor-pointer text-ash transition hover:text-ink">Help center</a>
+                            <a href="/support/tickets" class="cursor-pointer text-ash transition hover:text-ink">Support tickets</a>
+                            <a href="mailto:subscriptionboxplatform@gmail.com" class="cursor-pointer text-ash transition hover:text-ink">subscriptionboxplatform@gmail.com</a>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Company</p>
+                        <div class="grid gap-2 text-sm">
+                            <a href="/about" class="cursor-pointer text-ash transition hover:text-ink">About</a>
+                            <a href="/careers" class="cursor-pointer text-ash transition hover:text-ink">Careers</a>
+                            <a href="/privacy" class="cursor-pointer text-ash transition hover:text-ink">Privacy policy</a>
+                            <a href="/terms" class="cursor-pointer text-ash transition hover:text-ink">Terms of service</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="space-y-3">
-                    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Operations</p>
-                    <p>Reliable subscription provisioning, fulfillment tracking, and audit visibility for support teams.</p>
-                </div>
-                <div class="space-y-3">
-                    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-ink">Platform Quality</p>
-                    <p>Production-ready interface with consistent design, accessible controls, and clear workflows.</p>
+
+                <div class="mt-10 flex flex-col gap-3 border-t border-hairline pt-6 text-xs text-ash sm:flex-row sm:items-center sm:justify-between">
+                    <p>&copy; {{ now()->year }} Subscription Box Platform. All rights reserved.</p>
+                    <p>Security, compliance, and operational transparency for subscription commerce.</p>
                 </div>
             </div>
         </footer>
