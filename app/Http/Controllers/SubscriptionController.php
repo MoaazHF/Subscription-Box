@@ -33,9 +33,13 @@ class SubscriptionController extends Controller
             ->exists();
 
         if ($existingSubscription) {
-            return back()->withErrors([
-                'subscription' => 'You already have a subscription to manage.',
-            ]);
+            return redirect()->route('subscriptions.index')
+                ->with('error', 'You already have a subscription to manage.')
+                ->with('failure_popup', [
+                    'title' => 'Action blocked',
+                    'message' => 'You already have an active or paused subscription.',
+                    'details' => 'Manage the current subscription before starting a new one.',
+                ]);
         }
 
         $plan = SubscriptionPlan::query()
@@ -54,9 +58,10 @@ class SubscriptionController extends Controller
         if ($latestPayment && $latestPayment->status === 'failed') {
             return redirect()->route('subscriptions.index')
                 ->with('error', 'Payment declined. Transaction was saved and subscription is suspended.')
-                ->with('payment_failed', [
-                    'amount' => number_format((float) $latestPayment->amount, 2),
-                    'reference' => $latestPayment->gateway_ref,
+                ->with('failure_popup', [
+                    'title' => 'Payment failed',
+                    'message' => 'Transaction was declined.',
+                    'details' => 'Amount: $'.number_format((float) $latestPayment->amount, 2).' · Ref: '.$latestPayment->gateway_ref,
                 ]);
         }
 

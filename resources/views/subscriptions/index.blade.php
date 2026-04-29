@@ -24,7 +24,7 @@
                 </div>
             </div>
         @endif
-        @if (session('payment_failed'))
+        @if (session('failure_popup'))
             <div id="payment-failed-popup" class="fixed right-5 top-24 z-[60] w-full max-w-sm">
                 <div class="relative overflow-hidden rounded-[24px] border border-red-200 bg-white p-5 shadow-[0_22px_55px_rgba(239,68,68,0.24)]">
                     <div class="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-red-100"></div>
@@ -36,9 +36,11 @@
                             </svg>
                         </div>
                         <div class="space-y-1">
-                            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-red-600">Payment failed</p>
-                            <p class="text-base font-semibold text-ink">Transaction was declined.</p>
-                            <p class="text-sm text-ash">Amount: ${{ session('payment_failed.amount') }} · Ref: {{ session('payment_failed.reference') }}</p>
+                            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-red-600">{{ session('failure_popup.title') }}</p>
+                            <p class="text-base font-semibold text-ink">{{ session('failure_popup.message') }}</p>
+                            @if (session('failure_popup.details'))
+                                <p class="text-sm text-ash">{{ session('failure_popup.details') }}</p>
+                            @endif
                         </div>
                     </div>
                 </div>
