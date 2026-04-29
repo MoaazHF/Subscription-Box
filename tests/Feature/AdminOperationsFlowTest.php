@@ -88,4 +88,15 @@ class AdminOperationsFlowTest extends TestCase
             ])
             ->assertForbidden();
     }
+
+    public function test_driver_role_is_forbidden_from_admin_ops_routes(): void
+    {
+        $this->seed();
+
+        $driver = User::query()->where('email', 'driver@example.com')->firstOrFail();
+
+        $this->actingAs($driver)
+            ->get(route('drivers.index'))
+            ->assertForbidden();
+    }
 }

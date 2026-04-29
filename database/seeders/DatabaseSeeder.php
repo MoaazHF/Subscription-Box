@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Driver;
 use App\Models\Item;
 use App\Models\Role;
 use App\Models\User;
@@ -74,7 +75,7 @@ class DatabaseSeeder extends Seeder
 
         $this->seedItems();
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'test@example.com'],
             [
                 'role_id' => DB::table('roles')->where('name', Role::SUBSCRIBER)->value('id') ?? 1,
@@ -85,7 +86,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'admin@example.com'],
             [
                 'role_id' => DB::table('roles')->where('name', Role::ADMIN)->value('id') ?? 4,
@@ -95,6 +96,31 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password'),
             ]
         );
+
+        $driverUser = User::updateOrCreate(
+            ['email' => 'driver@example.com'],
+            [
+                'role_id' => DB::table('roles')->where('name', Role::DRIVER)->value('id') ?? 3,
+                'name' => 'driver User',
+                'phone' => null,
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+            ]
+        );
+
+        $driverProfile = Driver::query()->firstOrNew([
+            'user_id' => $driverUser->id,
+        ]);
+
+        if (! $driverProfile->exists) {
+            $driverProfile->id = (string) Str::uuid();
+        }
+
+        $driverProfile->fill([
+            'vehicle_number' => 'DRV-1001',
+            'is_active' => true,
+        ]);
+        $driverProfile->save();
     }
 
     private function seedItems(): void
