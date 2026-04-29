@@ -3,21 +3,21 @@
 @section('content')
     <section class="grid gap-6 xl:grid-cols-[0.95fr_1.05fr] xl:items-center">
         <div class="air-float overflow-hidden rounded-[32px] border border-hairline bg-canvas">
-            <div class="aspect-[4/3] bg-[linear-gradient(155deg,#ffffff_0%,#fff3f6_44%,#f7f7f7_100%)] p-8">
+            <div class="aspect-[4/3] bg-cover bg-center p-8" style="background-image: linear-gradient(155deg, rgba(17, 24, 39, 0.72) 0%, rgba(17, 24, 39, 0.55) 44%, rgba(17, 24, 39, 0.44) 100%), url('{{ asset('register.png') }}');">
                 <div class="flex h-full flex-col justify-between">
                     <div class="space-y-4">
-                        <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Create account</p>
-                        <h1 class="max-w-xl text-5xl font-bold tracking-[-0.05em] text-ink">Start with the subscription foundation.</h1>
-                        <p class="max-w-lg text-sm leading-7 text-ash">New accounts enter as subscribers. From there the app can generate the current box and the first delivery record automatically.</p>
+                        <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/90">Create account</p>
+                        <h1 class="max-w-xl text-5xl font-bold tracking-[-0.05em] text-white">Start with the subscription foundation.</h1>
+                        <p class="max-w-lg text-sm leading-7 text-white/90">New accounts enter as subscribers. From there the app can generate the current box and the first delivery record automatically.</p>
                     </div>
                     <div class="grid gap-3 sm:grid-cols-2">
-                        <div class="rounded-[24px] bg-canvas/90 p-4">
-                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Onboarding</p>
-                            <p class="mt-2 text-sm font-semibold text-ink">Account and subscription setup</p>
+                        <div class="rounded-[24px] border border-white/25 bg-white/15 p-4 backdrop-blur-sm">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-white/80">Onboarding</p>
+                            <p class="mt-2 text-sm font-semibold text-white">Account and subscription setup</p>
                         </div>
-                        <div class="rounded-[24px] bg-canvas/90 p-4">
-                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Chain result</p>
-                            <p class="mt-2 text-sm font-semibold text-ink">Box + delivery visibility</p>
+                        <div class="rounded-[24px] border border-white/25 bg-white/15 p-4 backdrop-blur-sm">
+                            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-white/80">Chain result</p>
+                            <p class="mt-2 text-sm font-semibold text-white">Box + delivery visibility</p>
                         </div>
                     </div>
                 </div>
