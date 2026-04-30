@@ -97,6 +97,7 @@
         <div class="mt-6 grid gap-6 md:grid-cols-3">
             @foreach ($plans as $plan)
                 @php
+                    $planActionUrl = auth()->check() ? route('subscriptions.index') : route('register');
                     $planKey = strtolower(trim($plan->name));
                     $planBackgrounds = [
                         'basic' => asset('basic.png'),
@@ -113,39 +114,41 @@
                         ? "background-image: linear-gradient(160deg, rgba(15, 23, 42, 0.52) 0%, rgba(15, 23, 42, 0.28) 45%, rgba(15, 23, 42, 0.14) 100%), url('{$planBackground}'); background-size: cover; background-position: center;"
                         : null;
                 @endphp
-                <article class="overflow-hidden rounded-[28px] border border-hairline bg-canvas">
-                    <div @class(['aspect-[4/3] p-6', $fallbackGradient => ! $planBackground]) @if($headerStyle) style="{{ $headerStyle }}" @endif>
-                        <div class="flex h-full flex-col justify-between">
-                            <span @class([
-                                'inline-flex w-fit rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em]',
-                                'border border-white/30 bg-white/20 text-white backdrop-blur-sm' => $planBackground,
-                                'border border-hairline bg-canvas text-ink' => ! $planBackground,
-                            ])>{{ $plan->name }}</span>
-                            <div>
-                                <p @class([
-                                    'text-4xl font-bold tracking-[-0.05em]',
-                                    'text-white drop-shadow-[0_8px_24px_rgba(0,0,0,0.45)]' => $planBackground,
-                                    'text-ink' => ! $planBackground,
-                                ])>${{ number_format((float) $plan->price_monthly, 2) }}</p>
-                                <p @class([
-                                    'mt-1 text-sm',
-                                    'text-white/90' => $planBackground,
-                                    'text-ash' => ! $planBackground,
-                                ])>per month</p>
+                <a href="{{ $planActionUrl }}" class="group block cursor-pointer overflow-hidden rounded-[28px] border border-hairline bg-canvas transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(15,23,42,0.12)]">
+                    <article>
+                        <div @class(['aspect-[4/3] p-6', $fallbackGradient => ! $planBackground]) @if($headerStyle) style="{{ $headerStyle }}" @endif>
+                            <div class="flex h-full flex-col justify-between">
+                                <span @class([
+                                    'inline-flex w-fit rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em]',
+                                    'border border-white/30 bg-white/20 text-white backdrop-blur-sm' => $planBackground,
+                                    'border border-hairline bg-canvas text-ink' => ! $planBackground,
+                                ])>{{ $plan->name }}</span>
+                                <div>
+                                    <p @class([
+                                        'text-4xl font-bold tracking-[-0.05em]',
+                                        'text-white drop-shadow-[0_8px_24px_rgba(0,0,0,0.45)]' => $planBackground,
+                                        'text-ink' => ! $planBackground,
+                                    ])>${{ number_format((float) $plan->price_monthly, 2) }}</p>
+                                    <p @class([
+                                        'mt-1 text-sm',
+                                        'text-white/90' => $planBackground,
+                                        'text-ash' => ! $planBackground,
+                                    ])>per month</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="space-y-4 p-6">
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-ash">Max items</span>
-                            <span class="font-semibold text-ink">{{ $plan->max_items }}</span>
+                        <div class="space-y-4 p-6">
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-ash">Max items</span>
+                                <span class="font-semibold text-ink">{{ $plan->max_items }}</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-ash">Weight cap</span>
+                                <span class="font-semibold text-ink">{{ number_format($plan->max_weight_g) }} g</span>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-ash">Weight cap</span>
-                            <span class="font-semibold text-ink">{{ number_format($plan->max_weight_g) }} g</span>
-                        </div>
-                    </div>
-                </article>
+                    </article>
+                </a>
             @endforeach
         </div>
     </section>
