@@ -18,6 +18,7 @@ use App\Http\Controllers\GiftSubscriptionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Ops\ProductController as AdminProductController;
+use App\Http\Controllers\Ops\SubscriptionManagementController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PromoCodeController;
 use App\Http\Controllers\ReferralController;
@@ -115,6 +116,11 @@ Route::middleware('auth')->group(function () {
 
         Route::middleware('role:admin')->group(function () {
             Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
+
+            Route::get('/ops/subscriptions', [SubscriptionManagementController::class, 'index'])->name('admin-subscriptions.index');
+            Route::post('/ops/subscriptions', [SubscriptionManagementController::class, 'store'])->name('admin-subscriptions.store');
+            Route::patch('/ops/subscriptions/{subscription}', [SubscriptionManagementController::class, 'update'])->name('admin-subscriptions.update');
+            Route::delete('/ops/subscriptions/{subscription}', [SubscriptionManagementController::class, 'destroy'])->name('admin-subscriptions.destroy');
 
             Route::get('/ops/products', [AdminProductController::class, 'index'])->name('products.index');
             Route::post('/ops/products', [AdminProductController::class, 'store'])->name('products.store');

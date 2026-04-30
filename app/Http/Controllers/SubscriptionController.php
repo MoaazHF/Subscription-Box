@@ -17,8 +17,12 @@ class SubscriptionController extends Controller
         private SubscriptionService $subscriptionService
     ) {}
 
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
+        if ($request->user()->isAdmin()) {
+            return redirect()->route('admin-subscriptions.index');
+        }
+
         return view('subscriptions.index', [
             'subscriptions' => $request->user()->subscriptions()->with(['plan', 'address', 'payments'])->latest()->get(),
             'plans' => SubscriptionPlan::query()->where('is_active', true)->orderBy('price_monthly')->get(),
@@ -28,6 +32,11 @@ class SubscriptionController extends Controller
 
     public function store(StoreSubscriptionRequest $request): RedirectResponse
     {
+        if ($request->user()->isAdmin()) {
+            return redirect()->route('admin-subscriptions.index')
+                ->with('error', 'Admins must manage subscriptions from the operations panel.');
+        }
+
         $existingSubscription = $request->user()->subscriptions()
             ->whereIn('status', ['active', 'paused'])
             ->exists();
