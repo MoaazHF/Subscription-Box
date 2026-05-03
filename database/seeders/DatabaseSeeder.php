@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Driver;
 use App\Models\Item;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\WarehouseStaff;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -76,7 +74,7 @@ class DatabaseSeeder extends Seeder
 
         $this->seedItems();
 
-        User::updateOrCreate(
+        User::firstOrCreate(
             ['email' => 'test@example.com'],
             [
                 'role_id' => DB::table('roles')->where('name', Role::SUBSCRIBER)->value('id') ?? 1,
@@ -87,7 +85,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        User::updateOrCreate(
+        User::firstOrCreate(
             ['email' => 'admin@example.com'],
             [
                 'role_id' => DB::table('roles')->where('name', Role::ADMIN)->value('id') ?? 4,
@@ -98,7 +96,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        $driverUser = User::updateOrCreate(
+        User::firstOrCreate(
             ['email' => 'driver@example.com'],
             [
                 'role_id' => DB::table('roles')->where('name', Role::DRIVER)->value('id') ?? 3,
@@ -108,70 +106,46 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password'),
             ]
         );
-
-        $driverProfile = Driver::query()->firstOrNew([
-            'user_id' => $driverUser->id,
-        ]);
-
-        if (! $driverProfile->exists) {
-            $driverProfile->id = (string) Str::uuid();
-        }
-
-        $driverProfile->fill([
-            'vehicle_number' => 'DRV-1001',
-            'is_active' => true,
-        ]);
-        $driverProfile->save();
-
-        $warehouseUser = User::updateOrCreate(
-            ['email' => 'warehouse@example.com'],
+        User::firstOrCreate(
+            ['email' => 'driver@example.com'],
             [
-                'role_id' => DB::table('roles')->where('name', Role::WAREHOUSE_STAFF)->value('id') ?? 2,
-                'name' => 'Warehouse User',
+                'role_id' => DB::table('roles')->where('name', Role::DRIVER)->value('id') ?? 3,
+                'name' => 'driver User',
                 'phone' => null,
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
             ]
         );
-
-        $warehouseProfile = WarehouseStaff::query()->firstOrNew([
-            'user_id' => $warehouseUser->id,
-        ]);
-
-        if (! $warehouseProfile->exists) {
-            $warehouseProfile->id = (string) Str::uuid();
-        }
-
-        $warehouseProfile->fill([
-            'warehouse_location' => 'Main Distribution Center',
-        ]);
-        $warehouseProfile->save();
-
-        foreach ([
+        User::firstOrCreate(
+            ['email' => 'warehouse_staff@example.com'],
             [
-                'name' => 'Cairo Core',
-                'region' => 'Cairo',
-                'country' => 'EG',
-                'is_serviceable' => true,
-            ],
+                'role_id' => DB::table('roles')->where('name', Role::WAREHOUSE_STAFF)->value('id') ?? 2,
+                'name' => 'warehouse_staff User',
+                'phone' => null,
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+            ]
+        );
+        User::firstOrCreate(
+            ['email' => 'warehouse_staff@example.com'],
             [
-                'name' => 'Giza West',
-                'region' => 'Giza',
-                'country' => 'EG',
-                'is_serviceable' => true,
-            ],
+                'role_id' => DB::table('roles')->where('name', Role::WAREHOUSE_STAFF)->value('id') ?? 2,
+                'name' => 'warehouse_staff User',
+                'phone' => null,
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+            ]
+        );
+        User::firstOrCreate(
+            ['email' => 'subscriber@example.com'],
             [
-                'name' => 'Alexandria North',
-                'region' => 'Alexandria',
-                'country' => 'EG',
-                'is_serviceable' => false,
-            ],
-        ] as $zone) {
-            DB::table('delivery_zones')->updateOrInsert(
-                ['name' => $zone['name'], 'country' => $zone['country']],
-                ['region' => $zone['region'], 'is_serviceable' => $zone['is_serviceable']]
-            );
-        }
+                'role_id' => DB::table('roles')->where('name', Role::SUBSCRIBER)->value('id') ?? 1,
+                'name' => 'SUBSCRIBER User',
+                'phone' => null,
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+            ]
+        );
     }
 
     private function seedItems(): void

@@ -19,6 +19,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Ops\ProductController as AdminProductController;
 use App\Http\Controllers\Ops\SubscriptionManagementController;
+use App\Http\Controllers\Ops\UserManagementController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PromoCodeController;
 use App\Http\Controllers\ReferralController;
@@ -126,6 +127,11 @@ Route::middleware('auth')->group(function () {
             Route::post('/ops/products', [AdminProductController::class, 'store'])->name('products.store');
             Route::put('/ops/products/{product}', [AdminProductController::class, 'update'])->name('products.update');
             Route::delete('/ops/products/{product}', [AdminProductController::class, 'destroy'])->name('products.destroy');
+
+            Route::get('/ops/users', [UserManagementController::class, 'index'])->name('admin-users.index');
+            Route::post('/ops/users', [UserManagementController::class, 'store'])->name('admin-users.store');
+            Route::patch('/ops/users/{user}', [UserManagementController::class, 'update'])->name('admin-users.update');
+            Route::delete('/ops/users/{user}', [UserManagementController::class, 'destroy'])->name('admin-users.destroy');
 
             Route::get('/ops/drivers', [DriverManagementController::class, 'index'])->name('drivers.index');
             Route::post('/ops/drivers', [DriverManagementController::class, 'store'])->name('drivers.store');
