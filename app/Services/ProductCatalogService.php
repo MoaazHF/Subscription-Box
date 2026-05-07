@@ -23,7 +23,9 @@ class ProductCatalogService
      */
     public function update(Item $item, array $payload): Item
     {
-        if (($payload['remove_image'] ?? false) && $item->image_url) {
+        $hasReplacementImage = isset($payload['image']) && $payload['image'] instanceof UploadedFile;
+
+        if (($payload['remove_image'] ?? false) && ! $hasReplacementImage && $item->image_url) {
             $this->deleteImage($item->image_url);
             $payload['image_url'] = null;
         }

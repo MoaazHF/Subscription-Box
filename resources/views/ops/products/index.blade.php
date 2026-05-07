@@ -135,12 +135,21 @@
 
                                 <input name="limited_stock" type="number" min="1" class="air-input" value="{{ $product->limited_stock }}" placeholder="Limited stock">
 
-                                <div class="grid gap-3 sm:grid-cols-2 sm:items-center">
-                                    <input name="image" type="file" accept="image/png,image/jpeg,image/webp" class="air-input">
-                                    <label class="inline-flex items-center gap-3 text-sm font-medium text-ink">
-                                        <input type="checkbox" name="remove_image" value="1" class="h-4 w-4 rounded border-hairline text-rausch focus:ring-rausch">
-                                        Remove current image
-                                    </label>
+                                <div class="space-y-3">
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-semibold text-ink" for="image-{{ $product->id }}">Replace image</label>
+                                        <input id="image-{{ $product->id }}" name="image" type="file" accept="image/png,image/jpeg,image/webp" class="air-input">
+                                    </div>
+
+                                    @if ($product->image_url)
+                                        <div class="air-panel-soft flex flex-wrap items-center gap-3 rounded-2xl p-3">
+                                            <img src="{{ asset('storage/'.$product->image_url) }}" alt="{{ $product->name }} current image" class="h-16 w-16 rounded-xl border border-hairline object-cover">
+                                            <label class="inline-flex items-center gap-3 text-sm font-medium text-ink">
+                                                <input type="checkbox" name="remove_image" value="1" class="h-4 w-4 rounded border-hairline text-rausch focus:ring-rausch">
+                                                Remove current image if no replacement is uploaded
+                                            </label>
+                                        </div>
+                                    @endif
                                 </div>
 
                                 <div class="flex flex-wrap gap-3">

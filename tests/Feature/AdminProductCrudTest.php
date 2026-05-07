@@ -41,8 +41,34 @@ class AdminProductCrudTest extends TestCase
         $product = Item::query()->where('name', 'Test Product')->firstOrFail();
         $this->assertNotNull($product->image_url);
         Storage::disk('public')->assertExists($product->image_url);
+        $initialImagePath = $product->image_url;
 
         $updateResponse = $this->actingAs($admin)->put(route('products.update', $product), [
+            'name' => 'Updated Product',
+            'description' => 'Updated description',
+            'weight_g' => 450,
+            'size_category' => 'large',
+            'unit_price' => 15.75,
+            'stock_qty' => 18,
+            'is_limited_edition' => 0,
+            'supplier' => 'New Supplier',
+            'origin_country' => 'US',
+            'sourcing_notes' => 'Updated note',
+            'is_addon' => 0,
+            'image' => UploadedFile::fake()->image('updated-product.png'),
+        ]);
+
+        $updateResponse->assertSessionHas('status');
+
+        $product->refresh();
+        $this->assertNotNull($product->image_url);
+        $this->assertNotSame($initialImagePath, $product->image_url);
+        Storage::disk('public')->assertMissing($initialImagePath);
+        Storage::disk('public')->assertExists($product->image_url);
+
+        $updatedImagePath = $product->image_url;
+
+        $removeImageResponse = $this->actingAs($admin)->put(route('products.update', $product), [
             'name' => 'Updated Product',
             'description' => 'Updated description',
             'weight_g' => 450,
@@ -57,7 +83,8 @@ class AdminProductCrudTest extends TestCase
             'remove_image' => 1,
         ]);
 
-        $updateResponse->assertSessionHas('status');
+        $removeImageResponse->assertSessionHas('status');
+        Storage::disk('public')->assertMissing($updatedImagePath);
 
         $this->assertDatabaseHas('items', [
             'id' => $product->id,
