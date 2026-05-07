@@ -1,47 +1,113 @@
 # Subscription Box Platform
 
-Laravel 13 application for subscription commerce operations.
+Enterprise-grade subscription commerce platform built with Laravel.
 
-The platform covers:
-- customer signup and subscription lifecycle
-- payment records and simulated payment gateway
-- monthly box provisioning and customization
-- delivery tracking and claims
-- admin operations (products, drivers, warehouse staff, zones)
-- growth modules (referrals, rewards, promo codes, gifts, flash sales, social posts)
+![Project Cover](docs/readme-media/cover-dashboard-light.png)
+<!-- REPLACE: docs/readme-media/cover-dashboard-light.png -->
 
-## 1) Requirements
+## Overview
 
-Install these first:
-- PHP 8.3+
+Subscription Box Platform unifies customer subscriptions, billing records, monthly box operations, delivery workflows, and admin operations into one system.
+
+Core capabilities:
+- Account registration and role-based access (subscriber, admin, driver, warehouse staff)
+- Subscription lifecycle with payment simulation and transaction records
+- Box generation and customization workflows
+- Delivery tracking, claims handling, and operations visibility
+- Admin control panels for products, drivers, warehouse staff, and delivery zones
+- Growth modules: referrals, rewards, promo codes, gift subscriptions, flash sales, social posts
+
+## Product Demo
+
+### Full Product Walkthrough (GIF)
+![Full Walkthrough](docs/readme-media/demo-full-flow.gif)
+<!-- REPLACE: docs/readme-media/demo-full-flow.gif -->
+
+### Subscription + Payment Flow (GIF)
+![Subscription Payment Demo](docs/readme-media/demo-subscription-payment.gif)
+<!-- REPLACE: docs/readme-media/demo-subscription-payment.gif -->
+
+### Admin Operations Flow (GIF)
+![Admin Ops Demo](docs/readme-media/demo-admin-ops.gif)
+<!-- REPLACE: docs/readme-media/demo-admin-ops.gif -->
+
+### Product Image Update Flow (GIF)
+![Product Image Update Demo](docs/readme-media/demo-product-image-update.gif)
+<!-- REPLACE: docs/readme-media/demo-product-image-update.gif -->
+
+## Screenshots
+
+### Public Experience
+![Home Page](docs/readme-media/screenshot-home.png)
+<!-- REPLACE: docs/readme-media/screenshot-home.png -->
+
+![Plans Page](docs/readme-media/screenshot-plans.png)
+<!-- REPLACE: docs/readme-media/screenshot-plans.png -->
+
+### Authenticated Dashboard
+![Dashboard](docs/readme-media/screenshot-dashboard.png)
+<!-- REPLACE: docs/readme-media/screenshot-dashboard.png -->
+
+### Admin Panels
+![Products Panel](docs/readme-media/screenshot-ops-products.png)
+<!-- REPLACE: docs/readme-media/screenshot-ops-products.png -->
+
+![Drivers Panel](docs/readme-media/screenshot-ops-drivers.png)
+<!-- REPLACE: docs/readme-media/screenshot-ops-drivers.png -->
+
+![Warehouse Panel](docs/readme-media/screenshot-ops-warehouse.png)
+<!-- REPLACE: docs/readme-media/screenshot-ops-warehouse.png -->
+
+## Tech Stack
+
+- PHP 8.4
+- Laravel 13
+- Tailwind CSS v4 + Vite
+- PostgreSQL
+- PHPUnit 12
+- Lucide Icons
+- Leaflet/OpenStreetMap (mapping-related modules)
+
+## Architecture Snapshot
+
+- `app/Http/Controllers` — application and operations controllers
+- `app/Services` — core domain operations and business logic
+- `app/Http/Requests` — validation layer
+- `resources/views` — Blade UI layer
+- `routes/web.php` — route definitions and middleware grouping
+- `tests/Feature` — feature-level behavior verification
+
+## Getting Started
+
+### 1) Requirements
+
+- PHP 8.4+
 - Composer 2+
-- Node.js 20+ and npm
-- PostgreSQL 16+ (or Docker)
+- Node.js 20+
+- npm
+- PostgreSQL 16+
 - Git
 
-Optional but recommended:
-- Docker + Docker Compose (for PostgreSQL + pgAdmin)
+Optional:
+- Docker + Docker Compose
 
-## 2) Clone Repository
+### 2) Clone
 
 ```bash
 git clone https://github.com/MoaazHF/Subscription-Box.git
 cd Subscription-Box
 ```
 
-## 3) Install Dependencies
+### 3) Install Dependencies
 
 ```bash
 composer install
 npm install
 ```
 
-## 4) Environment Configuration
+### 4) Configure Environment
 
-This repository does not include `.env.example`.
-Create `.env` manually in project root.
-
-Use this baseline:
+Create `.env` in project root.
 
 ```env
 APP_NAME=Laravel
@@ -49,19 +115,6 @@ APP_ENV=local
 APP_KEY=
 APP_DEBUG=true
 APP_URL=http://localhost:8005
-
-APP_LOCALE=en
-APP_FALLBACK_LOCALE=en
-APP_FAKER_LOCALE=en_US
-
-APP_MAINTENANCE_DRIVER=file
-
-BCRYPT_ROUNDS=12
-
-LOG_CHANNEL=stack
-LOG_STACK=single
-LOG_DEPRECATIONS_CHANNEL=null
-LOG_LEVEL=debug
 
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
@@ -77,16 +130,9 @@ PGADMIN_DEFAULT_EMAIL=admin@subscription-box.project
 PGADMIN_DEFAULT_PASSWORD=secret
 
 SESSION_DRIVER=database
-SESSION_LIFETIME=120
-SESSION_ENCRYPT=false
-SESSION_PATH=/
-SESSION_DOMAIN=null
-
-BROADCAST_CONNECTION=log
-FILESYSTEM_DISK=local
-QUEUE_CONNECTION=database
-
 CACHE_STORE=database
+QUEUE_CONNECTION=database
+FILESYSTEM_DISK=local
 
 VITE_APP_NAME="${APP_NAME}"
 ```
@@ -97,9 +143,9 @@ Generate app key:
 php artisan key:generate
 ```
 
-## 5) Start Database
+### 5) Start Database
 
-### Option A: Docker (recommended)
+Docker:
 
 ```bash
 docker compose up -d
@@ -109,85 +155,35 @@ Services:
 - PostgreSQL: `127.0.0.1:5435`
 - pgAdmin: `http://127.0.0.1:5050`
 
-### Option B: Local PostgreSQL
-
-Create databases and user matching `.env`:
-- database: `subscription_box`
-- test database: `subscription_box_test`
-- user: `subscription_box`
-- password: `secret`
-- port: `5435` (or adjust `.env`)
-
-## 6) Run Migrations and Seeders
+### 6) Migrate + Seed
 
 ```bash
 php artisan migrate --seed
-```
-
-## 7) Link Public Storage (required for uploaded product images)
-
-```bash
 php artisan storage:link
 ```
 
-## 8) Start Application
+### 7) Run App
 
-### Full local dev stack (recommended)
+Recommended:
 
 ```bash
 composer run dev
 ```
 
-This starts:
-- Laravel server on `http://127.0.0.1:8005`
-- queue listener
-- Laravel logs stream
-- Vite dev server
+## Default Seeded Accounts
 
-### Manual start (alternative)
+- Subscriber: `test@example.com` / `password`
+- Admin: `admin@example.com` / `password`
+- Driver: `driver@example.com` / `password`
+- Warehouse staff: `warehouse@example.com` / `password`
 
-Terminal 1:
-```bash
-php artisan serve --host=127.0.0.1 --port=8005
-```
-
-Terminal 2:
-```bash
-php artisan queue:listen --tries=1 --timeout=0
-```
-
-Terminal 3:
-```bash
-npm run dev
-```
-
-## 9) Seeded Login Accounts
-
-After `php artisan migrate --seed`:
-
-- Subscriber:
-  - email: `test@example.com`
-  - password: `password`
-
-- Admin:
-  - email: `admin@example.com`
-  - password: `password`
-
-- Driver:
-  - email: `driver@example.com`
-  - password: `password`
-
-- Warehouse staff:
-  - email: `warehouse@example.com`
-  - password: `password`
-
-## 10) Main URLs
+## Key URLs
 
 - Home: `http://127.0.0.1:8005/`
 - Login: `http://127.0.0.1:8005/login`
 - Register: `http://127.0.0.1:8005/register`
 - Plans: `http://127.0.0.1:8005/plans`
-- Documentation center: `http://127.0.0.1:8005/docs`
+- Docs: `http://127.0.0.1:8005/docs`
 
 Admin operation boards:
 - Products: `http://127.0.0.1:8005/ops/products`
@@ -195,38 +191,7 @@ Admin operation boards:
 - Warehouse staff: `http://127.0.0.1:8005/ops/warehouse-staff`
 - Delivery zones: `http://127.0.0.1:8005/ops/delivery-zones`
 
-## 11) Admin CRUD Workflows
-
-### Products
-Admin can:
-- create product
-- upload product image
-- update product
-- replace/remove image
-- delete product
-
-Images are stored on `public` disk and served through `storage` symlink.
-
-### Warehouse Staff Accounts
-Admin can:
-- create warehouse staff account with email + initial password
-- set warehouse location
-- update profile location
-- delete profile/account
-
-First login behavior:
-- newly created warehouse staff accounts are forced to change password
-- user is redirected to `/account/password-change` until password is updated
-
-## 12) Subscription Payment Simulation
-
-On `/subscriptions`:
-- pressing `Start subscription` opens simulated gateway modal
-- approve/decline transaction is captured
-- payment transaction is written to `payments` table with gateway reference
-- failed payment suspends subscription and stores failed transaction
-
-## 13) Testing
+## Testing
 
 Run all tests:
 
@@ -234,73 +199,66 @@ Run all tests:
 php artisan test --compact
 ```
 
-Run specific file:
+Run specific test:
 
 ```bash
 php artisan test --compact tests/Feature/AdminOperationsFlowTest.php
 ```
 
-## 14) Build for Production Assets
+## Build
 
 ```bash
 npm run build
 ```
 
-## 15) Useful Maintenance Commands
+## Media Asset Naming Convention
 
-Clear caches:
+Use this folder:
+- `docs/readme-media/`
 
-```bash
-php artisan optimize:clear
-```
+Suggested asset names:
+- `cover-dashboard-light.png`
+- `demo-full-flow.gif`
+- `demo-subscription-payment.gif`
+- `demo-admin-ops.gif`
+- `demo-product-image-update.gif`
+- `screenshot-home.png`
+- `screenshot-plans.png`
+- `screenshot-dashboard.png`
+- `screenshot-ops-products.png`
+- `screenshot-ops-drivers.png`
+- `screenshot-ops-warehouse.png`
 
-Rebuild view cache:
+## Troubleshooting
 
-```bash
-php artisan view:cache
-```
+### Vite manifest error
 
-Recreate database from scratch:
-
-```bash
-php artisan migrate:fresh --seed
-```
-
-## 16) Troubleshooting
-
-### A) `Vite manifest` not found
-Run:
 ```bash
 npm run build
 ```
+
 or keep dev server running:
+
 ```bash
 npm run dev
 ```
 
-### B) Database connection refused
-- ensure PostgreSQL is running
-- ensure `.env` DB values match actual host/port/user/password
-- if using Docker, confirm containers are up:
+### DB connection refused
+
+- verify PostgreSQL is running
+- verify `.env` DB host/port/user/password
+- if using Docker:
+
 ```bash
 docker compose ps
 ```
 
-### C) Product images not visible
-Ensure storage link exists:
+### Product images not visible
+
 ```bash
 php artisan storage:link
 ```
 
-### D) SQLite test error: `could not find driver`
-Install PDO SQLite extension for PHP, or run tests using configured PostgreSQL test database.
+### SQLite driver error in tests
 
----
-
-Project stack:
-- Laravel 13
-- PHP 8.3+
-- PostgreSQL
-- Tailwind CSS v4 + Vite
-- Leaflet/OpenStreetMap integrations
-- Lucide icons
+Install PDO SQLite extension or use PostgreSQL test DB configuration.
