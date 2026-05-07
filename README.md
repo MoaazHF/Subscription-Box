@@ -19,7 +19,7 @@ Core capabilities:
 
 ## Product Demo
 
-### Full Product Walkthrough (GIF)
+### Full Product Walkthrough
 ![Full Walkthrough](public/WebSiteWalkthrough.gif)
 <!-- REPLACE: docs/readme-media/demo-full-flow.gif -->
 
