@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -28,11 +29,70 @@
         color-scheme: light;
     }
 
+    :root.dark {
+        color-scheme: dark;
+        --color-ink: #eef2ff;
+        --color-focus: #f8fafc;
+        --color-ash: #b9c0d2;
+        --color-mute: #8a94ad;
+        --color-stone: #5f6b85;
+        --color-hairline: #313b51;
+        --color-cloud: #1a2233;
+        --color-canvas: #0f172a;
+        --color-danger: #fb7185;
+        --color-info: #60a5fa;
+    }
+
     body {
         @apply bg-canvas text-ink antialiased;
         background-image:
             radial-gradient(circle at top, rgba(255, 56, 92, 0.08), transparent 26%),
             linear-gradient(180deg, #ffffff 0%, #fbfbfb 52%, #f7f7f7 100%);
+    }
+
+    .dark body {
+        background-image:
+            radial-gradient(circle at top, rgba(255, 56, 92, 0.14), transparent 28%),
+            radial-gradient(circle at 85% 8%, rgba(66, 139, 255, 0.16), transparent 26%),
+            linear-gradient(180deg, #020617 0%, #0b1221 56%, #111827 100%);
+    }
+
+    .dark .bg-ink {
+        background-color: #233149 !important;
+    }
+
+    .dark .border-ink {
+        border-color: #3a4c6d !important;
+    }
+
+    .dark .text-white {
+        color: #f8fbff;
+    }
+
+    .dark .bg-white {
+        background-color: #1b2438;
+    }
+
+    .dark .border-white\/25,
+    .dark .border-white\/30,
+    .dark .border-white\/40 {
+        border-color: rgba(148, 163, 184, 0.4);
+    }
+
+    .dark .bg-white\/10,
+    .dark .bg-white\/15,
+    .dark .bg-white\/20 {
+        background-color: rgba(148, 163, 184, 0.14);
+    }
+
+    .dark .text-white\/90 {
+        color: rgba(241, 245, 249, 0.9);
+    }
+
+    .dark .text-white\/85,
+    .dark .text-white\/80,
+    .dark .text-white\/70 {
+        color: rgba(203, 213, 225, 0.85);
     }
 
     ::selection {
@@ -141,5 +201,13 @@
 
     .air-grid-card {
         @apply rounded-[24px] border border-hairline bg-canvas p-5 transition hover:-translate-y-0.5 hover:border-ink/10;
+    }
+
+    .theme-toggle-btn {
+        @apply inline-flex h-9 w-9 items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:bg-cloud;
+    }
+
+    .theme-toggle-btn-active {
+        @apply border-ink bg-ink text-white;
     }
 }

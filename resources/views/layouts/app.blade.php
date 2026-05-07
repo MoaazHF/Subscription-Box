@@ -7,6 +7,17 @@
     <link rel="icon" type="image/png" href="{{ asset('AppIcon.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('AppIcon.png') }}">
     <meta name="theme-color" content="#ff385c">
+    <script>
+        (function () {
+            const root = document.documentElement;
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const shouldUseDark = savedTheme === 'dark' || (savedTheme !== 'light' && savedTheme !== 'dark' && prefersDark);
+
+            root.classList.toggle('dark', shouldUseDark);
+            root.setAttribute('data-theme', savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : 'system');
+        })();
+    </script>
     <script src="https://unpkg.com/lucide@0.511.0/dist/umd/lucide.min.js" defer></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
@@ -54,6 +65,18 @@
                     </div>
 
                     <nav class="flex flex-wrap items-center justify-end gap-2 text-sm font-medium text-ash">
+                        <div class="inline-flex items-center gap-1 rounded-full border border-hairline bg-canvas p-1">
+                            <button type="button" class="theme-toggle-btn" data-theme-toggle="light" aria-label="Switch to light mode" title="Light mode">
+                                <i data-lucide="sun" class="h-4 w-4"></i>
+                            </button>
+                            <button type="button" class="theme-toggle-btn" data-theme-toggle="dark" aria-label="Switch to dark mode" title="Dark mode">
+                                <i data-lucide="moon" class="h-4 w-4"></i>
+                            </button>
+                            <button type="button" class="theme-toggle-btn" data-theme-toggle="system" aria-label="Use system theme" title="System theme">
+                                <i data-lucide="monitor" class="h-4 w-4"></i>
+                            </button>
+                        </div>
+
                         @auth
                             <span class="hidden items-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-2 text-ink md:inline-flex"><i data-lucide="user-round" class="h-4 w-4"></i>{{ auth()->user()->name }}</span>
                             <form method="POST" action="{{ route('logout') }}">

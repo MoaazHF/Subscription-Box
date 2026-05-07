@@ -4,7 +4,7 @@
     <section class="space-y-8">
         <div class="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
             <div class="air-float overflow-hidden rounded-[32px] border border-hairline bg-canvas">
-                <div class="aspect-[16/9] bg-[linear-gradient(160deg,#fff2f5_0%,#ffffff_56%,#f7f7f7_100%)] p-8">
+                <div class="aspect-[16/9] bg-[linear-gradient(160deg,#fff2f5_0%,#ffffff_56%,#f7f7f7_100%)] p-8 dark:bg-[linear-gradient(160deg,#172033_0%,#101a2d_56%,#0b1426_100%)]">
                     <div class="flex h-full flex-col justify-between">
                         <div class="space-y-4">
                             <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Platform dashboard</p>
@@ -15,15 +15,15 @@
                         </div>
 
                         <div class="grid gap-4 sm:grid-cols-3">
-                            <div class="rounded-[24px] bg-canvas/90 p-5 backdrop-blur">
+                            <div class="rounded-[24px] bg-canvas/90 p-5 backdrop-blur dark:border dark:border-hairline dark:bg-canvas/75">
                                 <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Role</p>
                                 <p class="mt-3 text-[1.6rem] font-bold tracking-[-0.03em] text-ink">{{ ucfirst(str_replace('_', ' ', $user->role?->name ?? 'guest')) }}</p>
                             </div>
-                            <div class="rounded-[24px] bg-canvas/90 p-5 backdrop-blur">
+                            <div class="rounded-[24px] bg-canvas/90 p-5 backdrop-blur dark:border dark:border-hairline dark:bg-canvas/75">
                                 <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Addresses</p>
                                 <p class="mt-3 text-[1.6rem] font-bold tracking-[-0.03em] text-ink">{{ $user->addresses->count() }}</p>
                             </div>
-                            <div class="rounded-[24px] bg-canvas/90 p-5 backdrop-blur">
+                            <div class="rounded-[24px] bg-canvas/90 p-5 backdrop-blur dark:border dark:border-hairline dark:bg-canvas/75">
                                 <p class="text-xs font-semibold uppercase tracking-[0.24em] text-ash">Subscriptions</p>
                                 <p class="mt-3 text-[1.6rem] font-bold tracking-[-0.03em] text-ink">{{ $user->subscriptions->count() }}</p>
                             </div>
