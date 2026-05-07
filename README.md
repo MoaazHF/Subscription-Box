@@ -2,7 +2,7 @@
 
 Enterprise-grade subscription commerce platform built with Laravel.
 
-![Project Cover](docs/readme-media/cover-dashboard-light.png)
+![Project Cover](public/cover.png)
 <!-- REPLACE: docs/readme-media/cover-dashboard-light.png -->
 
 ## Overview
