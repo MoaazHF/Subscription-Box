@@ -20,7 +20,7 @@ Core capabilities:
 ## Product Demo
 
 ### Full Product Walkthrough (GIF)
-![Full Walkthrough](docs/readme-media/demo-full-flow.gif)
+![Full Walkthrough](public/WebSiteWalkthrough.gif)
 <!-- REPLACE: docs/readme-media/demo-full-flow.gif -->
 
 ### Subscription + Payment Flow (GIF)
