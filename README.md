@@ -23,18 +23,6 @@ Core capabilities:
 ![Full Walkthrough](public/WebSiteWalkthrough.gif)
 <!-- REPLACE: docs/readme-media/demo-full-flow.gif -->
 
-### Subscription + Payment Flow (GIF)
-![Subscription Payment Demo](docs/readme-media/demo-subscription-payment.gif)
-<!-- REPLACE: docs/readme-media/demo-subscription-payment.gif -->
-
-### Admin Operations Flow (GIF)
-![Admin Ops Demo](docs/readme-media/demo-admin-ops.gif)
-<!-- REPLACE: docs/readme-media/demo-admin-ops.gif -->
-
-### Product Image Update Flow (GIF)
-![Product Image Update Demo](docs/readme-media/demo-product-image-update.gif)
-<!-- REPLACE: docs/readme-media/demo-product-image-update.gif -->
-
 ## Screenshots
 
 ### Public Experience
