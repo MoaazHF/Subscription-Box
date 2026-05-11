@@ -16,6 +16,7 @@ use App\Http\Controllers\DriverController;
 use App\Http\Controllers\DriverManagementController;
 use App\Http\Controllers\GiftSubscriptionController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Ops\BundleController as AdminBundleController;
 use App\Http\Controllers\Ops\ProductController as AdminProductController;
@@ -35,6 +36,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/docs', DocumentationController::class)->name('docs.index');
+Route::get('/media', [MediaController::class, 'show'])->name('media.show');
+Route::get('/branding/{file}', [MediaController::class, 'branding'])->name('media.branding');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

@@ -191,7 +191,7 @@
                             <span class="air-chip">Billing + provisioning</span>
                         </div>
                         <div class="space-y-4">
-                            <img src="{{ asset('AppIcon.png') }}" alt="Subscription Box icon" class="h-20 w-20 rounded-[24px] object-cover ring-1 ring-hairline">
+                            <img src="{{ route('media.branding', ['file' => 'AppIcon.png']) }}" alt="Subscription Box icon" class="h-20 w-20 rounded-[24px] object-cover ring-1 ring-hairline">
                             <div>
                                 <p class="text-2xl font-semibold tracking-[-0.02em] text-ink">One action starts three team flows.</p>
                                 <p class="mt-3 text-sm leading-7 text-ash">Subscription creation drives payments, current box generation, and delivery provisioning without extra screens or hidden steps.</p>

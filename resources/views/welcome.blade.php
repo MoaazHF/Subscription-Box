@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="relative isolate mx-auto max-w-[1200px] overflow-hidden rounded-[36px] border border-hairline bg-canvas">
-        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('HeroSection.png') }}');"></div>
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ route('media.branding', ['file' => 'HeroSection.png']) }}');"></div>
         <div class="absolute inset-0 bg-[linear-gradient(120deg,rgba(16,24,40,0.78)_0%,rgba(16,24,40,0.65)_42%,rgba(16,24,40,0.45)_100%)]"></div>
 
         <div class="relative grid min-h-[78vh] items-center gap-10 p-8 md:p-12 lg:grid-cols-[1.1fr_0.9fr]">
@@ -33,7 +33,7 @@
                             <p class="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/80">Live Snapshot</p>
                             <p class="mt-2 text-2xl font-bold tracking-[-0.03em] text-white">Operations at a glance</p>
                         </div>
-                        <img src="{{ asset('AppIcon.png') }}" alt="Subscription Box app icon" class="h-16 w-16 rounded-[18px] object-cover ring-1 ring-white/70 shadow-[0_16px_40px_rgba(15,23,42,0.34)]">
+                        <img src="{{ route('media.branding', ['file' => 'AppIcon.png']) }}" alt="Subscription Box app icon" class="h-16 w-16 rounded-[18px] object-cover ring-1 ring-white/70 shadow-[0_16px_40px_rgba(15,23,42,0.34)]">
                     </div>
                     <div class="grid gap-3 sm:grid-cols-2">
                         <div class="rounded-2xl border border-white/20 bg-white/10 p-4">
@@ -100,9 +100,9 @@
                     $planActionUrl = auth()->check() ? route('subscriptions.index') : route('register');
                     $planKey = strtolower(trim($plan->name));
                     $planBackgrounds = [
-                        'basic' => asset('basic.png'),
-                        'standard' => asset('standrad.png'),
-                        'premium' => asset('premium.png'),
+                        'basic' => route('media.branding', ['file' => 'basic.png']),
+                        'standard' => route('media.branding', ['file' => 'standrad.png']),
+                        'premium' => route('media.branding', ['file' => 'premium.png']),
                     ];
                     $planBackground = $planBackgrounds[$planKey] ?? null;
                     $fallbackGradient = $loop->first

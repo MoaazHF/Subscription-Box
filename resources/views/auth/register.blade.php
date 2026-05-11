@@ -3,7 +3,7 @@
 @section('content')
     <section class="grid gap-6 xl:grid-cols-[0.95fr_1.05fr] xl:items-center">
         <div class="air-float overflow-hidden rounded-[32px] border border-hairline bg-canvas">
-            <div class="aspect-[4/3] bg-cover bg-center p-8" style="background-image: linear-gradient(155deg, rgba(17, 24, 39, 0.72) 0%, rgba(17, 24, 39, 0.55) 44%, rgba(17, 24, 39, 0.44) 100%), url('{{ asset('register.png') }}');">
+            <div class="aspect-[4/3] bg-cover bg-center p-8" style="background-image: linear-gradient(155deg, rgba(17, 24, 39, 0.72) 0%, rgba(17, 24, 39, 0.55) 44%, rgba(17, 24, 39, 0.44) 100%), url('{{ route('media.branding', ['file' => 'register.png']) }}');">
                 <div class="flex h-full flex-col justify-between">
                     <div class="space-y-4">
                         <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/90">Create account</p>

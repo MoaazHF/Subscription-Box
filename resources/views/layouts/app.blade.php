@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title ?? config('app.name', 'Subscription Box') }}</title>
-    <link rel="icon" type="image/png" href="{{ asset('AppIcon.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('AppIcon.png') }}">
+    <link rel="icon" type="image/png" href="{{ route('media.branding', ['file' => 'AppIcon.png']) }}">
+    <link rel="apple-touch-icon" href="{{ route('media.branding', ['file' => 'AppIcon.png']) }}">
     <meta name="theme-color" content="#ff385c">
     <script>
         (function () {
@@ -28,7 +28,7 @@
             <div class="air-shell flex flex-col gap-4 py-4">
                 <div class="flex items-center justify-between gap-4">
                     <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-3">
-                        <img src="{{ asset('AppIcon.png') }}" alt="Subscription Box icon" class="h-12 w-12 rounded-2xl object-cover shadow-sm ring-1 ring-hairline">
+                        <img src="{{ route('media.branding', ['file' => 'AppIcon.png']) }}" alt="Subscription Box icon" class="h-12 w-12 rounded-2xl object-cover shadow-sm ring-1 ring-hairline">
                         <div class="min-w-0">
                             <p class="text-[11px] font-semibold uppercase tracking-[0.32em] text-rausch">Subscription Platform</p>
                             <p class="truncate text-sm font-semibold text-ink">Subscription Box Platform</p>
@@ -195,7 +195,7 @@
                 <div class="grid gap-10 lg:grid-cols-[1.3fr_repeat(4,minmax(0,1fr))]">
                     <div class="space-y-5">
                         <a href="{{ route('home') }}" class="inline-flex items-center gap-3">
-                            <img src="{{ asset('AppIcon.png') }}" alt="Subscription Box icon" class="h-10 w-10 rounded-xl object-cover ring-1 ring-hairline">
+                            <img src="{{ route('media.branding', ['file' => 'AppIcon.png']) }}" alt="Subscription Box icon" class="h-10 w-10 rounded-xl object-cover ring-1 ring-hairline">
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-[0.28em] text-rausch">Subscription Platform</p>
                                 <p class="text-sm font-semibold text-ink">Subscription Box Platform</p>

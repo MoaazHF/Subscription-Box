@@ -20,9 +20,9 @@
                     $planActionLabel = auth()->check() ? 'Start subscription' : 'Create account to subscribe';
                     $planKey = strtolower(trim($plan->name));
                     $planBackgrounds = [
-                        'basic' => asset('basic.png'),
-                        'standard' => asset('standrad.png'),
-                        'premium' => asset('premium.png'),
+                        'basic' => route('media.branding', ['file' => 'basic.png']),
+                        'standard' => route('media.branding', ['file' => 'standrad.png']),
+                        'premium' => route('media.branding', ['file' => 'premium.png']),
                     ];
                     $planBackground = $planBackgrounds[$planKey] ?? null;
                     $fallbackGradient = $loop->first
