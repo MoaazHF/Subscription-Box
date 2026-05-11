@@ -1,4 +1,4 @@
-@extends('layouts.app')
+<!-- @extends('layouts.app')
 
 @section('content')
     <h1>Social Posts</h1>
@@ -7,4 +7,6 @@
             <li>{{ $post->caption ?? 'No caption' }} - {{ $post->visibility }}</li>
         @endforeach
     </ul>
-@endsection
+@endsection -->
+
+<!-- Not Time ): -->
