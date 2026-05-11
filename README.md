@@ -25,28 +25,6 @@ Core capabilities:
 
 ## Screenshots
 
-### Public Experience
-![Home Page]()
-![Light Mode](public/Home[LightMode].png)
-![Dark Mode](public/Home[DarkMode].png)
-
-![Plans Page](docs/readme-media/screenshot-plans.png)
-<!-- REPLACE: docs/readme-media/screenshot-plans.png -->
-
-### Authenticated Dashboard
-![Dashboard](docs/readme-media/screenshot-dashboard.png)
-<!-- REPLACE: docs/readme-media/screenshot-dashboard.png -->
-
-### Admin Panels
-![Products Panel](docs/readme-media/screenshot-ops-products.png)
-<!-- REPLACE: docs/readme-media/screenshot-ops-products.png -->
-
-![Drivers Panel](docs/readme-media/screenshot-ops-drivers.png)
-<!-- REPLACE: docs/readme-media/screenshot-ops-drivers.png -->
-
-![Warehouse Panel](docs/readme-media/screenshot-ops-warehouse.png)
-<!-- REPLACE: docs/readme-media/screenshot-ops-warehouse.png -->
-
 ## Tech Stack
 
 - PHP 8.4
@@ -166,71 +144,6 @@ composer run dev
 - Driver: `driver@example.com` / `password`
 - Warehouse staff: `warehouse_staff@example.com` / `password`
 
-## Key URLs
-
-- Home: `http://127.0.0.1:8005/`
-- Login: `http://127.0.0.1:8005/login`
-- Register: `http://127.0.0.1:8005/register`
-- Plans: `http://127.0.0.1:8005/plans`
-- Docs: `http://127.0.0.1:8005/docs`
-
-Admin operation boards:
-- Products: `http://127.0.0.1:8005/ops/products`
-- Drivers: `http://127.0.0.1:8005/ops/drivers`
-- Warehouse staff: `http://127.0.0.1:8005/ops/warehouse-staff`
-- Delivery zones: `http://127.0.0.1:8005/ops/delivery-zones`
-
-## Testing
-
-Run all tests:
-
-```bash
-php artisan test --compact
-```
-
-Run specific test:
-
-```bash
-php artisan test --compact tests/Feature/AdminOperationsFlowTest.php
-```
-
-## Build
-
-```bash
-npm run build
-```
-
-## Media Asset Naming Convention
-
-Use this folder:
-- `docs/readme-media/`
-
-Suggested asset names:
-- `cover-dashboard-light.png`
-- `demo-full-flow.gif`
-- `demo-subscription-payment.gif`
-- `demo-admin-ops.gif`
-- `demo-product-image-update.gif`
-- `screenshot-home.png`
-- `screenshot-plans.png`
-- `screenshot-dashboard.png`
-- `screenshot-ops-products.png`
-- `screenshot-ops-drivers.png`
-- `screenshot-ops-warehouse.png`
-
-## Troubleshooting
-
-### Vite manifest error
-
-```bash
-npm run build
-```
-
-or keep dev server running:
-
-```bash
-npm run dev
-```
 
 ### DB connection refused
 
@@ -248,6 +161,3 @@ docker compose ps
 php artisan storage:link
 ```
 
-### SQLite driver error in tests
-
-Install PDO SQLite extension or use PostgreSQL test DB configuration.
