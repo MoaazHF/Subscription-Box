@@ -25,6 +25,12 @@ Core capabilities:
 
 ## Screenshots
 
+### Public Experience
+![Home Page]
+![Light Mode](public/Home[LightMode].png)
+![Dark Mode](public/Home[DarkMode].png)
+
+
 ## Tech Stack
 
 - PHP 8.4
@@ -144,7 +150,6 @@ composer run dev
 - Driver: `driver@example.com` / `password`
 - Warehouse staff: `warehouse_staff@example.com` / `password`
 
-
 ### DB connection refused
 
 - verify PostgreSQL is running
@@ -160,4 +165,3 @@ docker compose ps
 ```bash
 php artisan storage:link
 ```
-
