@@ -12,7 +12,8 @@ class BoxProvisioningService
 {
     public function __construct(
         private WeightService $weightService,
-        private DeliveryProvisioningService $deliveryProvisioningService
+        private DeliveryProvisioningService $deliveryProvisioningService,
+        private StockAllocationService $stockAllocationService
     ) {}
 
     public function provisionCurrentBox(Subscription $subscription): void
@@ -50,6 +51,8 @@ class BoxProvisioningService
 
         DB::transaction(function () use ($box, $starterItems): void {
             foreach ($starterItems as $item) {
+                $this->stockAllocationService->reserve($item);
+
                 $box->items()->attach($item->id, [
                     'id' => (string) Str::uuid(),
                     'quantity' => 1,

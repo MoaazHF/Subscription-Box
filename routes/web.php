@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountSecurityController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AdminClaimController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoxController;
@@ -16,12 +17,14 @@ use App\Http\Controllers\DriverManagementController;
 use App\Http\Controllers\GiftSubscriptionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Ops\BundleController as AdminBundleController;
 use App\Http\Controllers\Ops\ProductController as AdminProductController;
 use App\Http\Controllers\Ops\SubscriptionManagementController;
 use App\Http\Controllers\Ops\UserManagementController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PromoCodeController;
 use App\Http\Controllers\ReferralController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RetentionOfferController;
 use App\Http\Controllers\RewardController;
 use App\Http\Controllers\SocialPostController;
@@ -68,6 +71,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/boxes/{box}/customize', [BoxCustomizationController::class, 'show'])->name('boxes.customize');
         Route::post('/boxes/{box}/swap', [BoxCustomizationController::class, 'swap'])->name('boxes.swap');
         Route::post('/boxes/{box}/add', [BoxCustomizationController::class, 'add'])->name('boxes.add');
+        Route::post('/boxes/{box}/apply-bundle', [BoxCustomizationController::class, 'applyBundle'])->name('boxes.apply-bundle');
         Route::delete('/boxes/{box}/items/{boxItem}', [BoxCustomizationController::class, 'remove'])->name('boxes.remove');
 
         Route::get('/deliveries', [DeliveryController::class, 'index'])->name('deliveries.index');
@@ -123,6 +127,11 @@ Route::middleware('auth')->group(function () {
             Route::put('/ops/products/{product}', [AdminProductController::class, 'update'])->name('products.update');
             Route::delete('/ops/products/{product}', [AdminProductController::class, 'destroy'])->name('products.destroy');
 
+            Route::get('/ops/bundles', [AdminBundleController::class, 'index'])->name('bundles.index');
+            Route::post('/ops/bundles', [AdminBundleController::class, 'store'])->name('bundles.store');
+            Route::put('/ops/bundles/{bundle}', [AdminBundleController::class, 'update'])->name('bundles.update');
+            Route::delete('/ops/bundles/{bundle}', [AdminBundleController::class, 'destroy'])->name('bundles.destroy');
+
             Route::get('/ops/users', [UserManagementController::class, 'index'])->name('admin-users.index');
             Route::post('/ops/users', [UserManagementController::class, 'store'])->name('admin-users.store');
             Route::patch('/ops/users/{user}', [UserManagementController::class, 'update'])->name('admin-users.update');
@@ -142,6 +151,13 @@ Route::middleware('auth')->group(function () {
             Route::get('/ops/delivery-zones', [DeliveryZoneController::class, 'index'])->name('delivery-zones.index');
             Route::post('/ops/delivery-zones', [DeliveryZoneController::class, 'store'])->name('delivery-zones.store');
             Route::patch('/ops/delivery-zones/{deliveryZone}/toggle', [DeliveryZoneController::class, 'toggleServiceability'])->name('delivery-zones.toggle');
+
+            Route::get('/ops/claims', [AdminClaimController::class, 'index'])->name('admin-claims.index');
+            Route::patch('/ops/claims/{claim}/resolve', [AdminClaimController::class, 'resolve'])->name('admin-claims.resolve');
+            Route::patch('/ops/claims/{claim}/reject', [AdminClaimController::class, 'reject'])->name('admin-claims.reject');
+
+            Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+            Route::get('/reports/{type}/csv', [ReportController::class, 'exportCsv'])->name('reports.export-csv');
         });
     });
 });

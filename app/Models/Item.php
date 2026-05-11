@@ -64,4 +64,11 @@ class Item extends Model
     {
         return $this->hasMany(BoxItem::class);
     }
+
+    public function bundles(): BelongsToMany
+    {
+        return $this->belongsToMany(Bundle::class, 'bundle_items')
+            ->withPivot(['id', 'quantity'])
+            ->withTimestamps();
+    }
 }

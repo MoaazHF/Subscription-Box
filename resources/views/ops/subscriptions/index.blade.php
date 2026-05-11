@@ -78,6 +78,28 @@
                     <h2 class="air-title">Update or delete records.</h2>
                 </div>
 
+                <form method="GET" action="{{ route('admin-subscriptions.index') }}" class="grid gap-3 sm:grid-cols-5">
+                    <input name="q" type="text" class="air-input" placeholder="Search subscriber" value="{{ $filters['q'] ?? '' }}">
+                    <select name="status" class="air-select">
+                        <option value="">All statuses</option>
+                        @foreach (['active', 'paused', 'cancelled', 'suspended', 'gift'] as $statusValue)
+                            <option value="{{ $statusValue }}" @selected(($filters['status'] ?? '') === $statusValue)>{{ ucfirst($statusValue) }}</option>
+                        @endforeach
+                    </select>
+                    <select name="plan_id" class="air-select">
+                        <option value="">All plans</option>
+                        @foreach ($plans as $plan)
+                            <option value="{{ $plan->id }}" @selected((string) ($filters['plan_id'] ?? '') === (string) $plan->id)>{{ ucfirst($plan->name) }}</option>
+                        @endforeach
+                    </select>
+                    <select name="auto_renew" class="air-select">
+                        <option value="">Auto renew: any</option>
+                        <option value="1" @selected(($filters['auto_renew'] ?? '') === '1')>Enabled</option>
+                        <option value="0" @selected(($filters['auto_renew'] ?? '') === '0')>Disabled</option>
+                    </select>
+                    <button type="submit" class="air-button-secondary">Filter</button>
+                </form>
+
                 <div class="space-y-4">
                     @forelse ($subscriptions as $subscription)
                         <article class="air-grid-card space-y-4">

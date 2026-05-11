@@ -57,6 +57,22 @@
                     <h2 class="air-title">Update or delete existing users.</h2>
                 </div>
 
+                <form method="GET" action="{{ route('admin-users.index') }}" class="grid gap-3 sm:grid-cols-4">
+                    <input name="q" type="text" class="air-input" placeholder="Search name/email/phone" value="{{ $filters['q'] ?? '' }}">
+                    <select name="role_id" class="air-select">
+                        <option value="">All roles</option>
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->id }}" @selected((string) ($filters['role_id'] ?? '') === (string) $role->id)>{{ ucfirst(str_replace('_', ' ', $role->name)) }}</option>
+                        @endforeach
+                    </select>
+                    <select name="must_change_password" class="air-select">
+                        <option value="">Password change: any</option>
+                        <option value="1" @selected(($filters['must_change_password'] ?? '') === '1')>Must change</option>
+                        <option value="0" @selected(($filters['must_change_password'] ?? '') === '0')>No change required</option>
+                    </select>
+                    <button type="submit" class="air-button-secondary">Filter</button>
+                </form>
+
                 <div class="space-y-4">
                     @forelse ($users as $user)
                         <article class="air-grid-card space-y-4">

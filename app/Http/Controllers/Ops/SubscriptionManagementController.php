@@ -22,16 +22,39 @@ class SubscriptionManagementController extends Controller
         private AuditLogService $auditLogService
     ) {}
 
-    public function index(): View
+    public function index(Request $request): View
     {
+        $search = trim((string) $request->string('q'));
+        $status = trim((string) $request->string('status'));
+        $planId = $request->integer('plan_id');
+        $autoRenew = $request->string('auto_renew')->toString();
+
         return view('ops.subscriptions.index', [
-            'subscriptions' => Subscription::query()->with(['user', 'plan', 'address', 'payments'])->latest()->get(),
+            'subscriptions' => Subscription::query()
+                ->with(['user', 'plan', 'address', 'payments'])
+                ->when($search !== '', function ($query) use ($search): void {
+                    $query->whereHas('user', function ($userQuery) use ($search): void {
+                        $userQuery->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    });
+                })
+                ->when($status !== '', fn ($query) => $query->where('status', $status))
+                ->when($planId > 0, fn ($query) => $query->where('plan_id', $planId))
+                ->when($autoRenew !== '', fn ($query) => $query->where('auto_renew', $autoRenew === '1'))
+                ->latest()
+                ->get(),
             'subscribers' => User::query()
                 ->whereHas('role', fn ($query) => $query->where('name', 'subscriber'))
                 ->orderBy('name')
                 ->get(['id', 'name', 'email']),
             'plans' => SubscriptionPlan::query()->where('is_active', true)->orderBy('price_monthly')->get(),
             'addresses' => Address::query()->with('user:id,name,email')->latest()->get(),
+            'filters' => [
+                'q' => $search,
+                'status' => $status,
+                'plan_id' => $planId > 0 ? $planId : null,
+                'auto_renew' => $autoRenew,
+            ],
         ]);
     }
 

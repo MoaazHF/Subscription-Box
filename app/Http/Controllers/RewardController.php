@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\IssueRewardRequest;
 use App\Models\Reward;
 use App\Models\User;
 use App\Services\RewardService;
@@ -20,15 +21,9 @@ class RewardController extends Controller
         ]);
     }
 
-    public function issue(Request $request): RedirectResponse
+    public function issue(IssueRewardRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'user_id' => ['required', 'uuid', 'exists:users,id'],
-            'type' => ['required', 'string', 'in:account_credit,free_box,loyalty_points,anniversary_item'],
-            'amount' => ['nullable', 'numeric', 'min:0'],
-            'points' => ['nullable', 'integer', 'min:0'],
-            'description' => ['nullable', 'string', 'max:255'],
-        ]);
+        $validated = $request->validated();
 
         $user = User::query()->findOrFail($validated['user_id']);
         $this->rewardService->issue($user, $validated);

@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class BoxItem extends Model
+class BoxItem extends BaseModel
 {
     public $incrementing = false;
 
@@ -15,7 +14,9 @@ class BoxItem extends Model
         'id',
         'box_id',
         'item_id',
+        'bundle_id',
         'quantity',
+        'is_swapped',
         'is_addon',
         'is_surprise',
         'added_at',
@@ -26,6 +27,7 @@ class BoxItem extends Model
         return [
             'is_addon' => 'boolean',
             'is_surprise' => 'boolean',
+            'is_swapped' => 'boolean',
             'added_at' => 'datetime',
             'quantity' => 'integer',
         ];
@@ -41,5 +43,10 @@ class BoxItem extends Model
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function bundle(): BelongsTo
+    {
+        return $this->belongsTo(Bundle::class);
     }
 }
