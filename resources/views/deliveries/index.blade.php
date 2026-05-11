@@ -27,7 +27,7 @@
                 @forelse ($deliveries as $delivery)
                     @php($progressPercent = $delivery->progressPercent())
                     <article class="air-grid-card">
-                        <div class="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+                        <div class="grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch">
                             <div class="space-y-3">
                                 <div class="flex flex-wrap items-center gap-2">
                                     <p class="text-lg font-semibold tracking-[-0.01em] text-ink">{{ $delivery->tracking_number ?? 'Tracking pending' }}</p>
@@ -61,8 +61,32 @@
                                 @endif
                             </div>
 
-                            <div class="flex items-center justify-start lg:justify-end">
-                                <a href="{{ route('deliveries.show', $delivery) }}" class="air-button-primary">View delivery</a>
+                            <div class="group relative overflow-hidden rounded-[28px] border border-hairline/80 bg-white p-5 shadow-[0_20px_50px_-34px_rgba(17,24,39,0.4)]">
+                                <div class="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-rausch/12 blur-2xl transition-transform duration-500 group-hover:scale-110"></div>
+
+                                <div class="relative flex items-center justify-between gap-3">
+                                    <span class="air-chip">Box journey</span>
+                                    <span class="air-chip-dark">{{ $delivery->box?->period_month }}/{{ $delivery->box?->period_year }}</span>
+                                </div>
+
+                                <div class="relative mt-5">
+                                    <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-mute">Current box</p>
+                                    <p class="mt-2 text-lg font-semibold tracking-[-0.01em] text-ink">{{ $delivery->box?->theme ?? 'Standard box' }}</p>
+                                </div>
+
+                                <div class="relative mt-5 space-y-2">
+                                    <div class="flex items-center justify-between text-xs font-semibold">
+                                        <span class="uppercase tracking-[0.14em] text-mute">Delivery progress</span>
+                                        <span class="text-ink">{{ $progressPercent }}%</span>
+                                    </div>
+                                    <div class="h-2 rounded-full bg-cloud">
+                                        <div class="h-2 rounded-full bg-rausch transition-all duration-500" style="width: {{ $progressPercent }}%;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="relative mt-5">
+                                    <a href="{{ route('deliveries.show', $delivery) }}" class="air-button-primary w-full text-center">View delivery</a>
+                                </div>
                             </div>
                         </div>
                     </article>
