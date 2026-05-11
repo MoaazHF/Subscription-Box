@@ -21,10 +21,26 @@ class DeliveryStateTransitionService
 
     /** @var array<int, string> */
     private const DRIVER_ALLOWED_TARGETS = [
+        Delivery::PICKING,
+        Delivery::PACKED,
+        Delivery::SHIPPED,
         Delivery::OUT_FOR_DELIVERY,
         Delivery::DELIVERED,
         Delivery::UNDELIVERABLE,
     ];
+
+    public function statusFromDriverProgressStep(int $progressStep): string
+    {
+        $status = Delivery::statusFromDriverProgressStep($progressStep);
+
+        if (! $status) {
+            throw ValidationException::withMessages([
+                'progress_step' => 'Unsupported driver progress step provided.',
+            ]);
+        }
+
+        return $status;
+    }
 
     public function assertCanTransition(Delivery $delivery, string $newStatus, bool $isDriverContext = false): void
     {

@@ -25,6 +25,7 @@
 
             <div class="mt-8 space-y-4">
                 @forelse ($deliveries as $delivery)
+                    @php($progressPercent = $delivery->progressPercent())
                     <article class="air-grid-card">
                         <div class="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
                             <div class="space-y-3">
@@ -42,6 +43,16 @@
                                     <div>
                                         <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Address</p>
                                         <p class="mt-2 text-sm font-semibold text-ink">{{ $delivery->address?->street ?? 'No address assigned' }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Progress</p>
+                                        <p class="text-xs font-semibold text-ink">{{ $progressPercent }}%</p>
+                                    </div>
+                                    <div class="h-2 rounded-full bg-cloud">
+                                        <div class="h-2 rounded-full bg-rausch transition-all duration-300" style="width: {{ $progressPercent }}%;"></div>
                                     </div>
                                 </div>
 

@@ -41,7 +41,8 @@ class DriverController extends Controller
         $driver = $request->user()->driver;
         abort_unless($driver && $delivery->driver_id === $driver->id, 403);
 
-        $status = $request->validated('status');
+        $payload = $request->validated();
+        $status = $payload['status'] ?? $this->deliveryStateTransitionService->statusFromDriverProgressStep((int) $payload['progress_step']);
 
         $this->deliveryStateTransitionService->apply($delivery, $status, [], true);
 

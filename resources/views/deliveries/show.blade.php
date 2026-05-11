@@ -14,10 +14,21 @@
 
         <section class="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
             <div class="space-y-6">
+                @php($progressPercent = $delivery->progressPercent())
                 <div class="air-panel">
                     <div class="flex flex-wrap items-center gap-2">
                         <span class="air-chip-dark">{{ ucfirst(str_replace('_', ' ', $delivery->status)) }}</span>
                         <span class="air-chip">{{ $delivery->box?->theme ?? 'Standard box' }}</span>
+                    </div>
+
+                    <div class="mt-5 space-y-2">
+                        <div class="flex items-center justify-between gap-3">
+                            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Live progress</p>
+                            <p class="text-xs font-semibold text-ink">{{ $progressPercent }}%</p>
+                        </div>
+                        <div class="h-2 rounded-full bg-cloud">
+                            <div class="h-2 rounded-full bg-rausch transition-all duration-300" style="width: {{ $progressPercent }}%;"></div>
+                        </div>
                     </div>
 
                     <div class="mt-6 grid gap-4 sm:grid-cols-2">

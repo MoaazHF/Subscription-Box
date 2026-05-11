@@ -46,6 +46,29 @@ class Delivery extends Model
         self::UNDELIVERABLE => 0,
     ];
 
+    /** @var array<int, string> */
+    public const DRIVER_PROGRESS_STATUS_BY_STEP = [
+        0 => self::PENDING,
+        1 => self::PICKING,
+        2 => self::PACKED,
+        3 => self::SHIPPED,
+        4 => self::OUT_FOR_DELIVERY,
+        5 => self::DELIVERED,
+    ];
+
+    public const MAX_DRIVER_PROGRESS_STEP = 5;
+
+    /** @var array<string, int> */
+    public const PROGRESS_PERCENT_BY_STATUS = [
+        self::PENDING => 0,
+        self::PICKING => 25,
+        self::PACKED => 50,
+        self::SHIPPED => 70,
+        self::OUT_FOR_DELIVERY => 85,
+        self::DELIVERED => 100,
+        self::UNDELIVERABLE => 85,
+    ];
+
     protected $keyType = 'string';
 
     public $incrementing = false;
@@ -109,5 +132,24 @@ class Delivery extends Model
         $this->loadMissing('address');
 
         return $this->address?->user_id === $user->id;
+    }
+
+    public static function statusFromDriverProgressStep(int $step): ?string
+    {
+        return self::DRIVER_PROGRESS_STATUS_BY_STEP[$step] ?? null;
+    }
+
+    public function driverProgressStep(): int
+    {
+        if ($this->status === self::UNDELIVERABLE) {
+            return 4;
+        }
+
+        return (int) array_search($this->status, self::DRIVER_PROGRESS_STATUS_BY_STEP, true);
+    }
+
+    public function progressPercent(): int
+    {
+        return self::PROGRESS_PERCENT_BY_STATUS[$this->status] ?? 0;
     }
 }
