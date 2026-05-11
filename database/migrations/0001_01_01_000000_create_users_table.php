@@ -27,7 +27,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('social_posts');
-        Schema::dropIfExists('flash_sales');
         Schema::dropIfExists('gift_subscriptions');
         Schema::dropIfExists('promo_code_usages');
         Schema::dropIfExists('promo_codes');
@@ -471,22 +470,6 @@ return new class extends Migration
             $table->foreign('recipient_user_id')->references('id')->on('users')->nullOnDelete();
             $table->foreign('plan_id')->references('id')->on('subscription_plans');
             $table->foreign('subscription_id')->references('id')->on('subscriptions')->nullOnDelete();
-        });
-
-        Schema::create('flash_sales', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->unsignedSmallInteger('plan_id')->nullable();
-            $table->uuid('created_by')->index();
-            $table->string('name', 150);
-            $table->unsignedSmallInteger('discount_percent');
-            $table->integer('stock_limit')->nullable();
-            $table->integer('claimed_count')->default(0);
-            $table->timestamp('start_at');
-            $table->timestamp('end_at');
-            $table->timestamp('created_at')->useCurrent();
-
-            $table->foreign('plan_id')->references('id')->on('subscription_plans')->nullOnDelete();
-            $table->foreign('created_by')->references('id')->on('users')->cascadeOnDelete();
         });
 
         Schema::create('social_posts', function (Blueprint $table) {

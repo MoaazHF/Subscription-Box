@@ -55,6 +55,10 @@ class TeamOneFlowTest extends TestCase
             'start_date' => now()->toDateString(),
             'auto_renew' => 1,
             'eco_shipping' => 0,
+            'payment_gateway_status' => 'success',
+            'payment_gateway_ref' => 'T1-SUB-REF',
+            'payment_card_last4' => '4242',
+            'payment_gateway_reason' => 'team_one_test',
         ]);
 
         $response->assertRedirect(route('subscriptions.index'));
@@ -67,6 +71,40 @@ class TeamOneFlowTest extends TestCase
         $this->assertDatabaseCount('payments', 1);
         $this->assertDatabaseHas('audit_logs', [
             'action' => 'subscription.created',
+        ]);
+    }
+
+    public function test_subscription_store_requires_payment_gateway_fields(): void
+    {
+        $this->seed();
+
+        $user = User::query()->where('email', 'test@example.com')->firstOrFail();
+        $plan = SubscriptionPlan::query()->where('name', 'standard')->firstOrFail();
+
+        $address = Address::create([
+            'user_id' => $user->id,
+            'street' => '40 Validation Road',
+            'city' => 'Cairo',
+            'region' => 'Cairo',
+            'country' => 'EG',
+            'postal_code' => '44331',
+            'is_default' => true,
+        ]);
+
+        $response = $this->actingAs($user)->from(route('subscriptions.index'))->post(route('subscriptions.store'), [
+            'plan_id' => $plan->id,
+            'address_id' => $address->id,
+            'start_date' => now()->toDateString(),
+            'auto_renew' => 1,
+            'eco_shipping' => 0,
+        ]);
+
+        $response->assertRedirect(route('subscriptions.index'));
+        $response->assertSessionHasErrors([
+            'payment_gateway_status',
+            'payment_gateway_ref',
+            'payment_card_last4',
+            'payment_gateway_reason',
         ]);
     }
 

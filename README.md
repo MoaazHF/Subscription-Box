@@ -15,7 +15,7 @@ Core capabilities:
 - Box generation and customization workflows
 - Delivery tracking, claims handling, and operations visibility
 - Admin control panels for products, drivers, warehouse staff, and delivery zones
-- Growth modules: referrals, rewards, promo codes, gift subscriptions, flash sales, social posts
+- Growth modules: referrals, rewards, promo codes, gift subscriptions, social posts
 
 ## Product Demo
 
@@ -163,7 +163,7 @@ composer run dev
 - Subscriber: `test@example.com` / `password`
 - Admin: `admin@example.com` / `password`
 - Driver: `driver@example.com` / `password`
-- Warehouse staff: `warehouse@example.com` / `password`
+- Warehouse staff: `warehouse_staff@example.com` / `password`
 
 ## Key URLs
 

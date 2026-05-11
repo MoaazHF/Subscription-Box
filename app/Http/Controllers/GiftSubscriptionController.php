@@ -34,11 +34,17 @@ class GiftSubscriptionController extends Controller
 
     public function activate(ActivateGiftSubscriptionRequest $request): RedirectResponse
     {
-        $gift = GiftSubscription::query()
-            ->where('activation_code', strtoupper($request->validated('activation_code')))
+        $activationCode = strtoupper($request->validated('activation_code'));
+
+        $giftSubscription = GiftSubscription::query()
+            ->where('activation_code', $activationCode)
             ->firstOrFail();
 
-        $this->giftSubscriptionService->activate($gift, $request->user(), $request->validated('address_id'));
+        $this->giftSubscriptionService->activate(
+            $giftSubscription,
+            $request->user(),
+            $request->validated('address_id')
+        );
 
         return back()->with('status', 'Gift subscription activated.');
     }

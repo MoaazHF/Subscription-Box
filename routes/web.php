@@ -13,7 +13,6 @@ use App\Http\Controllers\DeliveryZoneController;
 use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\DriverManagementController;
-use App\Http\Controllers\FlashSaleController;
 use App\Http\Controllers\GiftSubscriptionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
@@ -99,10 +98,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/gift-subscriptions', [GiftSubscriptionController::class, 'index'])->name('gift-subscriptions.index');
         Route::post('/gift-subscriptions/purchase', [GiftSubscriptionController::class, 'purchase'])->name('gift-subscriptions.purchase');
         Route::post('/gift-subscriptions/activate', [GiftSubscriptionController::class, 'activate'])->name('gift-subscriptions.activate');
-
-        Route::get('/flash-sales', [FlashSaleController::class, 'index'])->name('flash-sales.index');
-        Route::post('/flash-sales', [FlashSaleController::class, 'store'])->middleware('role:admin')->name('flash-sales.store');
-        Route::post('/flash-sales/{flashSale}/claim', [FlashSaleController::class, 'claim'])->name('flash-sales.claim');
 
         Route::get('/social-posts', [SocialPostController::class, 'index'])->name('social-posts.index');
         Route::post('/social-posts', [SocialPostController::class, 'store'])->name('social-posts.store');

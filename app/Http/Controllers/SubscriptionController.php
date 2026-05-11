@@ -32,16 +32,18 @@ class SubscriptionController extends Controller
 
     public function store(StoreSubscriptionRequest $request): RedirectResponse
     {
-        if ($request->user()->isAdmin()) {
+        $user = $request->user();
+
+        if ($user->isAdmin()) {
             return redirect()->route('admin-subscriptions.index')
                 ->with('error', 'Admins must manage subscriptions from the operations panel.');
         }
 
-        $existingSubscription = $request->user()->subscriptions()
+        $hasManageableSubscription = $user->subscriptions()
             ->whereIn('status', ['active', 'paused'])
             ->exists();
 
-        if ($existingSubscription) {
+        if ($hasManageableSubscription) {
             return redirect()->route('subscriptions.index')
                 ->with('error', 'You already have a subscription to manage.')
                 ->with('failure_popup', [
@@ -56,7 +58,7 @@ class SubscriptionController extends Controller
             ->findOrFail($request->validated('plan_id'));
 
         $subscription = $this->subscriptionService->createForUser(
-            $request->user(),
+            $user,
             $plan,
             $request->validated(),
             $request->ip()

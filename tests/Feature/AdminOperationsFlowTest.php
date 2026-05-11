@@ -138,6 +138,10 @@ class AdminOperationsFlowTest extends TestCase
             'start_date' => now()->toDateString(),
             'auto_renew' => 1,
             'eco_shipping' => 0,
+            'payment_gateway_status' => 'success',
+            'payment_gateway_ref' => 'OPS-SUB-REF',
+            'payment_card_last4' => '4242',
+            'payment_gateway_reason' => 'admin_operations_test',
         ])->assertRedirect(route('subscriptions.index'));
 
         $delivery = Delivery::query()
@@ -145,7 +149,13 @@ class AdminOperationsFlowTest extends TestCase
             ->whereNull('driver_id')
             ->firstOrFail();
 
-        $driverProfile = $driver->driver()->firstOrFail();
+        $driverProfile = $driver->driver()->firstOrCreate(
+            ['user_id' => $driver->id],
+            [
+                'vehicle_number' => 'AUTO-DRIVER',
+                'is_active' => true,
+            ]
+        );
 
         $this->actingAs($admin)
             ->get(route('drivers.index'))

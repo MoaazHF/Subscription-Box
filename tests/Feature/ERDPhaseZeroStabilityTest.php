@@ -81,6 +81,10 @@ class ERDPhaseZeroStabilityTest extends TestCase
             'start_date' => now()->toDateString(),
             'auto_renew' => 1,
             'eco_shipping' => 0,
+            'payment_gateway_status' => 'success',
+            'payment_gateway_ref' => 'ERD-CLAIM-REF',
+            'payment_card_last4' => '4242',
+            'payment_gateway_reason' => 'erd_claim_test',
         ])->assertRedirect(route('subscriptions.index'));
 
         $delivery = Delivery::query()->where('address_id', $address->id)->firstOrFail();
@@ -106,7 +110,7 @@ class ERDPhaseZeroStabilityTest extends TestCase
         $driverRoleId = Role::query()->where('name', Role::DRIVER)->value('id');
         $driverUser = User::factory()->create([
             'role_id' => $driverRoleId,
-            'email' => 'driver@example.com',
+            'email' => 'erd-driver@example.com',
         ]);
 
         $plan = SubscriptionPlan::query()->where('name', 'standard')->firstOrFail();
@@ -126,6 +130,10 @@ class ERDPhaseZeroStabilityTest extends TestCase
             'start_date' => now()->toDateString(),
             'auto_renew' => 1,
             'eco_shipping' => 0,
+            'payment_gateway_status' => 'success',
+            'payment_gateway_ref' => 'ERD-DRIVER-REF',
+            'payment_card_last4' => '4242',
+            'payment_gateway_reason' => 'erd_driver_test',
         ])->assertRedirect(route('subscriptions.index'));
 
         $driverUser->driver()->create([

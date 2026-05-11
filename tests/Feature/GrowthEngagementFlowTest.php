@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Address;
-use App\Models\FlashSale;
 use App\Models\GiftSubscription;
 use App\Models\Role;
 use App\Models\Subscription;
@@ -94,25 +93,10 @@ class GrowthEngagementFlowTest extends TestCase
             'status' => 'active',
             'recipient_user_id' => $recipient->id,
         ]);
-
-        $this->actingAs($admin)->post(route('flash-sales.store'), [
-            'plan_id' => $plan->id,
-            'name' => 'Weekend Rush',
-            'discount_percent' => 15,
-            'stock_limit' => 10,
-            'start_at' => now()->subHour()->toDateTimeString(),
-            'end_at' => now()->addDay()->toDateTimeString(),
-        ])->assertSessionHas('status');
-
-        $flashSale = FlashSale::query()->latest('created_at')->firstOrFail();
-
-        $this->actingAs($subscriber)
-            ->post(route('flash-sales.claim', $flashSale))
-            ->assertSessionHas('status');
-
-        $this->assertDatabaseHas('flash_sales', [
-            'id' => $flashSale->id,
-            'claimed_count' => 1,
+        $this->assertDatabaseHas('subscriptions', [
+            'user_id' => $recipient->id,
+            'address_id' => $recipientAddress->id,
+            'status' => 'active',
         ]);
 
         $subscription = Subscription::query()->where('user_id', $subscriber->id)->first();
@@ -124,6 +108,10 @@ class GrowthEngagementFlowTest extends TestCase
                 'start_date' => now()->toDateString(),
                 'auto_renew' => 1,
                 'eco_shipping' => 0,
+                'payment_gateway_status' => 'success',
+                'payment_gateway_ref' => 'GROWTH-SUB-REF',
+                'payment_card_last4' => '4242',
+                'payment_gateway_reason' => 'growth_test',
             ]);
 
             $subscription = Subscription::query()->where('user_id', $subscriber->id)->firstOrFail();

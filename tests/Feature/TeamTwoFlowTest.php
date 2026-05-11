@@ -36,6 +36,10 @@ class TeamTwoFlowTest extends TestCase
             'start_date' => now()->toDateString(),
             'auto_renew' => 1,
             'eco_shipping' => 0,
+            'payment_gateway_status' => 'success',
+            'payment_gateway_ref' => 'T2-SUB-REF',
+            'payment_card_last4' => '4242',
+            'payment_gateway_reason' => 'team_two_test',
         ])->assertRedirect(route('subscriptions.index'));
 
         $subscription = Subscription::query()

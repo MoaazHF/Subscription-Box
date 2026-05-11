@@ -107,26 +107,6 @@ class DatabaseSeeder extends Seeder
             ]
         );
         User::firstOrCreate(
-            ['email' => 'driver@example.com'],
-            [
-                'role_id' => DB::table('roles')->where('name', Role::DRIVER)->value('id') ?? 3,
-                'name' => 'driver User',
-                'phone' => null,
-                'email_verified_at' => now(),
-                'password' => Hash::make('password'),
-            ]
-        );
-        User::firstOrCreate(
-            ['email' => 'warehouse_staff@example.com'],
-            [
-                'role_id' => DB::table('roles')->where('name', Role::WAREHOUSE_STAFF)->value('id') ?? 2,
-                'name' => 'warehouse_staff User',
-                'phone' => null,
-                'email_verified_at' => now(),
-                'password' => Hash::make('password'),
-            ]
-        );
-        User::firstOrCreate(
             ['email' => 'warehouse_staff@example.com'],
             [
                 'role_id' => DB::table('roles')->where('name', Role::WAREHOUSE_STAFF)->value('id') ?? 2,

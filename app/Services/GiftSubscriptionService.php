@@ -42,12 +42,7 @@ class GiftSubscriptionService
             $subscription = $this->subscriptionService->createForUser(
                 $recipient,
                 $giftSubscription->plan,
-                [
-                    'address_id' => $addressId,
-                    'start_date' => now()->toDateString(),
-                    'auto_renew' => false,
-                    'eco_shipping' => false,
-                ]
+                $this->buildActivationPayload($addressId),
             );
 
             $giftSubscription->update([
@@ -59,5 +54,31 @@ class GiftSubscriptionService
         });
 
         return $giftSubscription->fresh();
+    }
+
+    /**
+     * @return array{
+     *     address_id:string,
+     *     start_date:string,
+     *     auto_renew:bool,
+     *     eco_shipping:bool,
+     *     payment_gateway_status:string,
+     *     payment_gateway_ref:string,
+     *     payment_card_last4:string,
+     *     payment_gateway_reason:string
+     * }
+     */
+    private function buildActivationPayload(string $addressId): array
+    {
+        return [
+            'address_id' => $addressId,
+            'start_date' => now()->toDateString(),
+            'auto_renew' => false,
+            'eco_shipping' => false,
+            'payment_gateway_status' => 'success',
+            'payment_gateway_ref' => 'GIFT-'.Str::upper(Str::random(8)),
+            'payment_card_last4' => '0000',
+            'payment_gateway_reason' => 'gift_activation',
+        ];
     }
 }
