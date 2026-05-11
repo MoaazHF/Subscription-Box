@@ -14,10 +14,21 @@
 
         <section class="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
             <div class="space-y-6">
+                @php($progressPercent = $delivery->progressPercent())
                 <div class="air-panel">
                     <div class="flex flex-wrap items-center gap-2">
                         <span class="air-chip-dark">{{ ucfirst(str_replace('_', ' ', $delivery->status)) }}</span>
                         <span class="air-chip">{{ $delivery->box?->theme ?? 'Standard box' }}</span>
+                    </div>
+
+                    <div class="mt-5 space-y-2">
+                        <div class="flex items-center justify-between gap-3">
+                            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Live progress</p>
+                            <p class="text-xs font-semibold text-ink">{{ $progressPercent }}%</p>
+                        </div>
+                        <div class="h-2 rounded-full bg-cloud">
+                            <div class="h-2 rounded-full bg-rausch transition-all duration-300" style="width: {{ $progressPercent }}%;"></div>
+                        </div>
                     </div>
 
                     <div class="mt-6 grid gap-4 sm:grid-cols-2">
@@ -58,14 +69,48 @@
                             </div>
                         </div>
 
-                        <div class="air-photo flex min-h-[240px] flex-col justify-between bg-[radial-gradient(circle_at_top_right,_rgba(255,56,92,0.18),_transparent_34%),linear-gradient(180deg,_#ffffff_0%,_#f7f7f7_100%)] p-6">
-                            <div class="flex items-center justify-between gap-3">
-                                <span class="air-chip">Box context</span>
-                                <span class="air-chip">{{ $delivery->box?->period_month }}/{{ $delivery->box?->period_year }}</span>
+                        <div class="group relative min-h-[240px] overflow-hidden rounded-[28px] border border-hairline/80 bg-white p-6 shadow-[0_28px_54px_-36px_rgba(17,24,39,0.45)]">
+                            <div class="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-rausch/12 blur-2xl transition-transform duration-500 group-hover:scale-110"></div>
+                            <div class="pointer-events-none absolute -bottom-20 -left-14 h-40 w-40 rounded-full bg-ink/5 blur-2xl"></div>
+
+                            <div class="relative flex items-center justify-between gap-3">
+                                <span class="air-chip">Box journey</span>
+                                <span class="air-chip-dark">{{ $delivery->box?->period_month }}/{{ $delivery->box?->period_year }}</span>
                             </div>
-                            <div>
-                                <p class="text-2xl font-semibold tracking-[-0.02em] text-ink">{{ $delivery->box?->theme ?? 'Standard box' }}</p>
-                                <p class="mt-3 text-sm leading-7 text-ash">Delivery and box records stay linked, so support teams can trace shipping progress back to the exact subscription period.</p>
+
+                            <div class="relative mt-6">
+                                <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-mute">Current theme</p>
+                                <p class="mt-2 text-2xl font-semibold tracking-[-0.02em] text-ink">{{ $delivery->box?->theme ?? 'Standard box' }}</p>
+                                <p class="mt-3 text-sm leading-7 text-ash">Shipment, box cycle, and support history stay linked in one operational timeline.</p>
+                            </div>
+
+                            <div class="relative mt-6 grid gap-3 sm:grid-cols-2">
+                                <div class="rounded-2xl border border-hairline bg-canvas px-4 py-3">
+                                    <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-mute">Box weight</p>
+                                    <p class="mt-1 text-sm font-semibold text-ink">
+                                        {{ $delivery->box?->total_weight_g ? number_format($delivery->box->total_weight_g / 1000, 2).' kg' : 'N/A' }}
+                                    </p>
+                                </div>
+                                @php($planName = \Illuminate\Support\Str::lower((string) ($delivery->box?->subscription?->plan?->name ?? '')))
+                                @php($planToneClasses = match ($planName) {
+                                    'basic' => 'border-[#b08d57]/40 bg-[#f6ecde] text-[#7d5b2f]',
+                                    'premium' => 'border-[#d4af37]/40 bg-[#fff4c9] text-[#8a6700]',
+                                    default => 'border-slate-300/70 bg-slate-100 text-slate-700',
+                                })
+                                <div class="rounded-2xl border px-4 py-3 {{ $planToneClasses }}">
+                                    <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-mute">Subscription plan</p>
+                                    <p class="mt-1 text-sm font-semibold">{{ ucfirst($delivery->box?->subscription?->plan?->name ?? 'N/A') }}</p>
+                                </div>
+                            </div>
+
+                            <div class="relative mt-6 space-y-2">
+                                <div class="flex items-center justify-between text-xs font-semibold">
+                                    <span class="uppercase tracking-[0.14em] text-mute">Journey progress</span>
+                                    <span class="text-ink">{{ $progressPercent }}%</span>
+                                </div>
+                                <div class="h-2 rounded-full bg-cloud">
+                                    <div class="h-2 rounded-full bg-rausch transition-all duration-500" style="width: {{ $progressPercent }}%;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>

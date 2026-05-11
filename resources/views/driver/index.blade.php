@@ -16,6 +16,8 @@
 
         <div class="grid gap-6">
             @forelse($deliveries as $delivery)
+                @php($progressPercent = $delivery->progressPercent())
+                @php($progressStep = $delivery->driverProgressStep())
                 <div class="air-panel">
                     <div class="flex flex-wrap items-start justify-between gap-4">
                         <div>
@@ -39,25 +41,47 @@
                         </div>
                     @endif
 
-                    <div class="mt-6 flex gap-3 border-t border-hairline pt-6">
-                        @if($delivery->status !== 'out_for_delivery')
-                            <form action="{{ route('driver.deliveries.status', $delivery->id) }}" method="POST">
-                                @csrf @method('PATCH')
-                                <input type="hidden" name="status" value="out_for_delivery">
-                                <button type="submit" class="air-button-secondary">Mark Out for Delivery</button>
-                            </form>
-                        @endif
+                    <div class="mt-6 border-t border-hairline pt-6">
+                        <div>
+                            <div class="flex items-center justify-between gap-3">
+                                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Driver progress</p>
+                                <p class="text-xs font-semibold text-ink">{{ $progressPercent }}%</p>
+                            </div>
+                            <div class="mt-2 h-2 rounded-full bg-cloud">
+                                <div class="h-2 rounded-full bg-rausch transition-all duration-300" style="width: {{ $progressPercent }}%;"></div>
+                            </div>
+                        </div>
 
-                        <form action="{{ route('driver.deliveries.status', $delivery->id) }}" method="POST">
-                            @csrf @method('PATCH')
-                            <input type="hidden" name="status" value="delivered">
-                            <button type="submit" class="air-button-primary">Mark Delivered</button>
-                        </form>
+                        <form action="{{ route('driver.deliveries.status', $delivery->id) }}" method="POST" class="mt-5 space-y-4">
+                            @csrf
+                            @method('PATCH')
 
-                        <form action="{{ route('driver.deliveries.status', $delivery->id) }}" method="POST">
-                            @csrf @method('PATCH')
-                            <input type="hidden" name="status" value="failed">
-                            <button type="submit" class="air-button-secondary !border-danger/30 !text-danger hover:!bg-danger/5">Report Issue</button>
+                            <div class="space-y-2">
+                                <label for="progress_step_{{ $delivery->id }}" class="text-sm font-semibold text-ink">Update journey stage</label>
+                                <input
+                                    id="progress_step_{{ $delivery->id }}"
+                                    type="range"
+                                    name="progress_step"
+                                    min="0"
+                                    max="{{ \App\Models\Delivery::MAX_DRIVER_PROGRESS_STEP }}"
+                                    step="1"
+                                    value="{{ old('progress_step', $progressStep) }}"
+                                    class="w-full accent-rausch"
+                                >
+                                <div class="grid grid-cols-3 gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-mute sm:grid-cols-6">
+                                    <span>Pending</span>
+                                    <span>Picking</span>
+                                    <span>Packed</span>
+                                    <span>Shipped</span>
+                                    <span>On route</span>
+                                    <span>Delivered</span>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap gap-3">
+                                <button type="submit" class="air-button-primary">Save progress</button>
+                                <button type="submit" name="status" value="undeliverable" class="air-button-secondary !border-danger/30 !text-danger hover:!bg-danger/5">Report issue</button>
+                            </div>
                         </form>
                     </div>
                 </div>

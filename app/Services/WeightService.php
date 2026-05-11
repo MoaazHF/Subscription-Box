@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Box;
 use App\Models\Item;
+use Illuminate\Support\Facades\DB;
 
 class WeightService
 {
@@ -28,7 +29,12 @@ class WeightService
      */
     public function recalculate(Box $box): void
     {
-        $totalWeight = $box->items->sum('weight_g');
+        $totalWeight = (int) DB::table('box_items')
+            ->join('items', 'items.id', '=', 'box_items.item_id')
+            ->where('box_items.box_id', $box->id)
+            ->selectRaw('COALESCE(SUM(items.weight_g * box_items.quantity), 0) as total_weight')
+            ->value('total_weight');
+
         $tier = $this->getTier($totalWeight);
 
         $box->total_weight_g = $totalWeight;

@@ -84,6 +84,11 @@ class Box extends Model
         return $this->hasMany(SocialPost::class);
     }
 
+    public function boxItems(): HasMany
+    {
+        return $this->hasMany(BoxItem::class);
+    }
+
     public function ownedBy(User $user): bool
     {
         $this->loadMissing('subscription');

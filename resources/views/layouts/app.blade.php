@@ -110,6 +110,9 @@
                                 <a href="{{ route('drivers.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('drivers.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Drivers</a>
                                 <a href="{{ route('warehouse-staff.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('warehouse-staff.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Warehouse Staff</a>
                                 <a href="{{ route('delivery-zones.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('delivery-zones.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Delivery Zones</a>
+                                <a href="{{ route('bundles.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('bundles.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Bundles</a>
+                                <a href="{{ route('admin-claims.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('admin-claims.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Claims</a>
+                                <a href="{{ route('reports.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('reports.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Reports</a>
                             @endif
                         </div>
                     </div>

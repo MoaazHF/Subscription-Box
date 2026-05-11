@@ -18,14 +18,30 @@ class UserManagementController extends Controller
         private AuditLogService $auditLogService
     ) {}
 
-    public function index(): View
+    public function index(Request $request): View
     {
+        $search = trim((string) $request->string('q'));
+        $roleId = $request->integer('role_id');
+        $mustChangePassword = $request->string('must_change_password')->toString();
+
         return view('ops.users.index', [
             'users' => User::query()
                 ->with('role')
+                ->when($search !== '', function ($query) use ($search): void {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%");
+                })
+                ->when($roleId > 0, fn ($query) => $query->where('role_id', $roleId))
+                ->when($mustChangePassword !== '', fn ($query) => $query->where('must_change_password', $mustChangePassword === '1'))
                 ->latest('created_at')
                 ->get(['id', 'role_id', 'name', 'phone', 'email', 'must_change_password', 'created_at']),
             'roles' => Role::query()->orderBy('id')->get(['id', 'name']),
+            'filters' => [
+                'q' => $search,
+                'role_id' => $roleId > 0 ? $roleId : null,
+                'must_change_password' => $mustChangePassword,
+            ],
         ]);
     }
 

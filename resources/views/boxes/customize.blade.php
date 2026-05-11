@@ -129,6 +129,20 @@
                                 <button type="submit" class="air-button-secondary w-full text-xs py-2" @disabled($isLocked)>Add as extra</button>
                             </form>
                         </div>
+                        <div class="air-stat">
+                            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-mute">Bundle selector</p>
+                            <form action="{{ route('boxes.apply-bundle', $box->id) }}" method="POST" class="mt-3">
+                                @csrf
+                                <select name="bundle_id" class="air-select mb-3 text-xs py-2 px-3" @disabled($isLocked)>
+                                    @forelse ($availableBundles as $bundle)
+                                        <option value="{{ $bundle->id }}">{{ $bundle->name }} ({{ $bundle->bundle_items_count }} items)</option>
+                                    @empty
+                                        <option value="">No active bundles available</option>
+                                    @endforelse
+                                </select>
+                                <button type="submit" class="air-button-secondary w-full text-xs py-2" @disabled($isLocked || $availableBundles->isEmpty())>Apply bundle</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </aside>

@@ -13,37 +13,42 @@ class BoxCustomizationService
 {
     public function __construct(
         private WeightService $weightService,
-        private ThemeRotationService $themeRotationService
+        private ThemeRotationService $themeRotationService,
+        private StockAllocationService $stockAllocationService
     ) {}
 
-    /**
-     * Swap an item in the box with a new item, adhering to weight and lock rules.
-     */
-    public function swap(Box $box, BoxItem $outItem, Item $newItem, User $user): array
-    {
-        // 1. F15 Lock check
+    public function swap(
+        Box $box,
+        BoxItem $outItem,
+        Item $newItem,
+        User $user,
+        bool $confirmRotation = false,
+        bool $confirmAllergen = false
+    ): array {
         if ($box->status === 'locked' || ($box->lock_date && $box->lock_date->isPast())) {
             throw new Exception('This box is locked and cannot be customized.');
         }
 
-        // 1b. Duplicate check (F23)
+        if ($outItem->item_id === $newItem->id) {
+            throw new Exception('Swap target item must be different from the removed item.');
+        }
+
         $box->loadMissing('items');
+
         if ($box->items->where('id', '!=', $outItem->item_id)->contains('id', $newItem->id)) {
             throw new Exception('This item is already in your box. Duplicates are not allowed.');
         }
 
-        // 2. F13 Weight check
-        $removingItem = DB::table('items')->where('id', $outItem->item_id)->first();
-        // Since we need an Item model for wouldExceedLimit:
-        $removingItemModel = Item::find($outItem->item_id);
+        $removingItem = Item::query()->find($outItem->item_id);
 
-        if ($this->weightService->wouldExceedLimit($box, $newItem, $removingItemModel)) {
+        if (! $removingItem) {
+            throw new Exception('Removed item no longer exists.');
+        }
+
+        if ($this->weightService->wouldExceedLimit($box, $newItem, $removingItem)) {
             throw new Exception('Swapping this item would exceed the 3000g maximum weight limit.');
         }
 
-        // 3a. Theme rotation check (F22)
-        $request = request();
-        $confirmRotation = $request->boolean('confirm_rotation');
         if ($this->themeRotationService->wasInPreviousBox($box, $newItem->id) && ! $confirmRotation) {
             return [
                 'status' => 'warning',
@@ -51,9 +56,6 @@ class BoxCustomizationService
                 'message' => 'You received this item as a surprise in your previous box. Are you sure you want it again?',
             ];
         }
-
-        // 3b. Allergen conflict check
-        $confirmAllergen = $request->boolean('confirm_allergen');
 
         $hasConflict = DB::table('user_allergens')
             ->join('item_allergens', 'user_allergens.allergen_tag_id', '=', 'item_allergens.allergen_tag_id')
@@ -69,18 +71,18 @@ class BoxCustomizationService
             ];
         }
 
-        // 4. DB Transaction
-        DB::transaction(function () use ($outItem, $newItem, $box) {
-            DB::table('box_items')->where('id', $outItem->id)->update([
+        DB::transaction(function () use ($outItem, $newItem, $box, $removingItem): void {
+            $this->stockAllocationService->reserve($newItem, max(1, $outItem->quantity));
+            $this->stockAllocationService->release($removingItem, max(1, $outItem->quantity));
+
+            $outItem->update([
                 'is_swapped' => true,
                 'item_id' => $newItem->id,
+                'bundle_id' => null,
                 'updated_at' => now(),
             ]);
 
-            // Refresh the box items relation so recalculate uses the updated data
             $box->load('items');
-
-            // 5. Call WeightService::recalculate()
             $this->weightService->recalculate($box);
         });
 
@@ -90,29 +92,22 @@ class BoxCustomizationService
         ];
     }
 
-    /**
-     * Add an item to the box as an add-on.
-     */
-    public function add(Box $box, Item $newItem, User $user): array
+    public function add(Box $box, Item $newItem, User $user, bool $confirmAllergen = false): array
     {
-        // 1. F15 Lock check
         if ($box->status === 'locked' || ($box->lock_date && $box->lock_date->isPast())) {
             throw new Exception('This box is locked and cannot be customized.');
         }
 
-        // 1b. Duplicate check
         $box->loadMissing('items');
+
         if ($box->items->contains('id', $newItem->id)) {
             throw new Exception('This item is already in your box. Duplicates are not allowed.');
         }
 
-        // 2. Weight check
         if ($this->weightService->wouldExceedLimit($box, $newItem)) {
             throw new Exception('Adding this item would exceed the 3000g maximum weight limit.');
         }
 
-        // 3. Allergen conflict check
-        $confirmAllergen = request()->boolean('confirm_allergen');
         $hasConflict = DB::table('user_allergens')
             ->join('item_allergens', 'user_allergens.allergen_tag_id', '=', 'item_allergens.allergen_tag_id')
             ->where('user_allergens.user_id', $user->id)
@@ -127,12 +122,15 @@ class BoxCustomizationService
             ];
         }
 
-        // 4. DB Transaction
-        DB::transaction(function () use ($newItem, $box) {
+        DB::transaction(function () use ($newItem, $box): void {
+            $this->stockAllocationService->reserve($newItem);
+
             BoxItem::create([
                 'box_id' => $box->id,
                 'item_id' => $newItem->id,
+                'quantity' => 1,
                 'is_addon' => true,
+                'is_swapped' => false,
                 'added_at' => now(),
             ]);
 
@@ -144,5 +142,18 @@ class BoxCustomizationService
             'status' => 'success',
             'message' => 'Add-on item added successfully!',
         ];
+    }
+
+    public function remove(Box $box, BoxItem $boxItem): void
+    {
+        $item = Item::query()->findOrFail($boxItem->item_id);
+
+        DB::transaction(function () use ($box, $boxItem, $item): void {
+            $this->stockAllocationService->release($item, max(1, $boxItem->quantity));
+            $boxItem->delete();
+
+            $box->load('items');
+            $this->weightService->recalculate($box);
+        });
     }
 }

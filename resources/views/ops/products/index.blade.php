@@ -76,6 +76,27 @@
                     <h2 class="air-title">Manage existing products.</h2>
                 </div>
 
+                <form method="GET" action="{{ route('products.index') }}" class="grid gap-3 sm:grid-cols-5">
+                    <input name="q" type="text" class="air-input" placeholder="Search name/supplier/country" value="{{ $filters['q'] ?? '' }}">
+                    <select name="size_category" class="air-select">
+                        <option value="">All sizes</option>
+                        <option value="small" @selected(($filters['size_category'] ?? '') === 'small')>Small</option>
+                        <option value="medium" @selected(($filters['size_category'] ?? '') === 'medium')>Medium</option>
+                        <option value="large" @selected(($filters['size_category'] ?? '') === 'large')>Large</option>
+                    </select>
+                    <select name="stock_state" class="air-select">
+                        <option value="">All stock states</option>
+                        <option value="in_stock" @selected(($filters['stock_state'] ?? '') === 'in_stock')>In stock</option>
+                        <option value="out_of_stock" @selected(($filters['stock_state'] ?? '') === 'out_of_stock')>Out of stock</option>
+                    </select>
+                    <select name="is_addon" class="air-select">
+                        <option value="">Addon: any</option>
+                        <option value="1" @selected(($filters['is_addon'] ?? '') === '1')>Addon</option>
+                        <option value="0" @selected(($filters['is_addon'] ?? '') === '0')>Not addon</option>
+                    </select>
+                    <button type="submit" class="air-button-secondary">Filter</button>
+                </form>
+
                 <div class="space-y-5">
                     @forelse ($products as $product)
                         <article class="air-grid-card space-y-4">

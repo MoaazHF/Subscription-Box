@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateDeliveryStatusRequest;
 use App\Models\Delivery;
+use App\Services\DeliveryStateTransitionService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,6 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DeliveryController extends Controller
 {
+    public function __construct(private DeliveryStateTransitionService $deliveryStateTransitionService) {}
+
     public function index(Request $request): View
     {
         $deliveries = Delivery::query()
@@ -32,7 +35,7 @@ class DeliveryController extends Controller
     {
         $this->ensureAccess($request, $delivery);
 
-        $delivery->load(['box.subscription.user', 'address', 'claims']);
+        $delivery->load(['box.subscription.plan', 'box.subscription.user', 'address', 'claims.resolvedBy']);
 
         return view('deliveries.show', [
             'delivery' => $delivery,
@@ -44,17 +47,8 @@ class DeliveryController extends Controller
         abort_unless($request->user()->isAdmin(), Response::HTTP_FORBIDDEN);
 
         $payload = $request->validated();
-        $status = $payload['status'];
 
-        $delivery->update([
-            'status' => $status,
-            'tracking_number' => $payload['tracking_number'] ?? $delivery->tracking_number,
-            'estimated_delivery' => $payload['estimated_delivery'] ?? $delivery->estimated_delivery,
-            'delivery_instructions' => $payload['delivery_instructions'] ?? $delivery->delivery_instructions,
-            'eco_dispatch' => (bool) ($payload['eco_dispatch'] ?? $delivery->eco_dispatch),
-            'stops_remaining' => Delivery::STOPS_BY_STATUS[$status],
-            'actual_delivery' => $status === Delivery::DELIVERED ? now() : null,
-        ]);
+        $this->deliveryStateTransitionService->apply($delivery, $payload['status'], $payload);
 
         return redirect()
             ->route('deliveries.show', $delivery)

@@ -33,7 +33,7 @@ class AdminProductCrudTest extends TestCase
             'origin_country' => 'EG',
             'sourcing_notes' => 'Handled by QA',
             'is_addon' => 1,
-            'image' => UploadedFile::fake()->image('product.png'),
+            'image' => UploadedFile::fake()->create('product.png', 120, 'image/png'),
         ]);
 
         $createResponse->assertSessionHas('status');
@@ -55,7 +55,7 @@ class AdminProductCrudTest extends TestCase
             'origin_country' => 'US',
             'sourcing_notes' => 'Updated note',
             'is_addon' => 0,
-            'image' => UploadedFile::fake()->image('updated-product.png'),
+            'image' => UploadedFile::fake()->create('updated-product.png', 140, 'image/png'),
         ]);
 
         $updateResponse->assertSessionHas('status');

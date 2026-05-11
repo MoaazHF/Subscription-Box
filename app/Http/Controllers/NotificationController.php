@@ -24,7 +24,7 @@ class NotificationController extends Controller
         abort_unless($request->user()->isAdmin() || $notification->user_id === $request->user()->id, 403);
 
         $notification->update([
-            'status' => 'sent',
+            'status' => Notification::SENT,
             'sent_at' => now(),
         ]);
 

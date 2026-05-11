@@ -9,13 +9,13 @@ class NotificationQueueService
     public function processQueued(): int
     {
         $notifications = Notification::query()
-            ->where('status', 'queued')
+            ->where('status', Notification::QUEUED)
             ->limit(100)
             ->get();
 
         foreach ($notifications as $notification) {
             $notification->update([
-                'status' => 'sent',
+                'status' => Notification::SENT,
                 'sent_at' => now(),
             ]);
         }

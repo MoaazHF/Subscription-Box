@@ -19,6 +19,7 @@ class Claim extends BaseModel
         'resolved_by',
         'type',
         'description',
+        'resolution_notes',
         'photo_url',
         'status',
         'submitted_at',

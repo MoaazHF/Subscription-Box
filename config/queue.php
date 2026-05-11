@@ -126,4 +126,6 @@ return [
         'table' => 'failed_jobs',
     ],
 
+    'notifications_max_retries' => (int) env('NOTIFICATIONS_MAX_RETRIES', 3),
+
 ];

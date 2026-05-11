@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Delivery;
 use App\Models\Notification;
+use Illuminate\Support\Str;
 
 class NotificationService
 {
@@ -20,7 +21,8 @@ class NotificationService
             'event_type' => 'delivery_update',
             'subject' => 'Delivery Update: '.ucfirst($statusText),
             'body' => "Your subscription box delivery is now marked as {$statusText}.",
-            'status' => 'queued',
+            'status' => Notification::QUEUED,
+            'idempotency_key' => Str::uuid()->toString(),
         ]);
     }
 }

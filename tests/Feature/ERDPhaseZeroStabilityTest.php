@@ -165,4 +165,55 @@ class ERDPhaseZeroStabilityTest extends TestCase
             'status' => 'queued',
         ]);
     }
+
+    public function test_assigned_pending_delivery_is_visible_on_driver_dashboard(): void
+    {
+        $this->seed();
+
+        $subscriber = User::query()->where('email', 'test@example.com')->firstOrFail();
+        $driver = User::query()->where('email', 'driver@example.com')->firstOrFail();
+        $plan = SubscriptionPlan::query()->where('name', 'standard')->firstOrFail();
+
+        $address = Address::create([
+            'user_id' => $subscriber->id,
+            'street' => '77 Pending Driver Street',
+            'city' => 'Cairo',
+            'region' => 'Cairo',
+            'country' => 'EG',
+            'postal_code' => '11177',
+            'is_default' => true,
+        ]);
+
+        $this->actingAs($subscriber)->post(route('subscriptions.store'), [
+            'plan_id' => $plan->id,
+            'address_id' => $address->id,
+            'start_date' => now()->toDateString(),
+            'auto_renew' => 1,
+            'eco_shipping' => 0,
+            'payment_gateway_status' => 'success',
+            'payment_gateway_ref' => 'ERD-PENDING-DRIVER-REF',
+            'payment_card_last4' => '4242',
+            'payment_gateway_reason' => 'erd_pending_driver_test',
+        ])->assertRedirect(route('subscriptions.index'));
+
+        $delivery = Delivery::query()->where('address_id', $address->id)->firstOrFail();
+
+        $driverProfile = $driver->driver()->firstOrCreate(
+            ['user_id' => $driver->id],
+            [
+                'vehicle_number' => 'ERD-PENDING-DRIVER',
+                'is_active' => true,
+            ]
+        );
+
+        $delivery->update([
+            'driver_id' => $driverProfile->id,
+            'status' => Delivery::PENDING,
+        ]);
+
+        $this->actingAs($driver)
+            ->get(route('driver.index'))
+            ->assertOk()
+            ->assertSee('77 Pending Driver Street');
+    }
 }

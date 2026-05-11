@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\NotificationQueueService;
+use App\Services\NotificationDispatchService;
 use Illuminate\Console\Command;
 
 class ProcessQueuedNotifications extends Command
@@ -11,11 +11,11 @@ class ProcessQueuedNotifications extends Command
 
     protected $description = 'Process queued notifications and mark them as sent';
 
-    public function handle(NotificationQueueService $notificationQueueService): int
+    public function handle(NotificationDispatchService $notificationDispatchService): int
     {
-        $processedCount = $notificationQueueService->processQueued();
+        $processedCount = $notificationDispatchService->dispatchQueuedBatch();
 
-        $this->info("Processed {$processedCount} queued notifications.");
+        $this->info("Dispatched {$processedCount} queued notifications.");
 
         return self::SUCCESS;
     }
