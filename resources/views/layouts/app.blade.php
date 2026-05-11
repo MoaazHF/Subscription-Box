@@ -78,6 +78,37 @@
                         </div>
 
                         @auth
+                            <details class="relative" data-notification-popup>
+                                <summary class="relative inline-flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:border-ink/30 hover:bg-cloud">
+                                    <i data-lucide="bell-ring" class="h-5 w-5"></i>
+                                    @if (($headerNotificationCount ?? 0) > 0)
+                                        <span data-notification-count class="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full bg-danger px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
+                                            {{ min($headerNotificationCount, 99) }}
+                                        </span>
+                                    @endif
+                                </summary>
+
+                                <div class="absolute right-0 z-50 mt-3 w-[22rem] overflow-hidden rounded-3xl border border-hairline bg-canvas shadow-[0_28px_60px_-36px_rgba(17,24,39,0.45)]">
+                                    <div class="flex items-center justify-between border-b border-hairline px-5 py-4">
+                                        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-mute">Notifications</p>
+                                        <a href="{{ route('notifications.index') }}" class="text-xs font-semibold text-rausch hover:underline">Open all</a>
+                                    </div>
+                                    <div class="max-h-[320px] overflow-y-auto p-2">
+                                        @forelse ($headerRecentNotifications as $headerNotification)
+                                            <a data-notification-item href="{{ route('notifications.index') }}" class="block rounded-2xl px-3 py-3 transition hover:bg-cloud">
+                                                <p class="text-sm font-semibold text-ink">{{ $headerNotification->subject ?? ucfirst(str_replace('_', ' ', $headerNotification->event_type ?? 'Notification')) }}</p>
+                                                <div class="mt-1 flex items-center justify-between gap-3">
+                                                    <span class="text-xs text-ash">{{ $headerNotification->created_at?->diffForHumans() }}</span>
+                                                    <span class="rounded-full border border-hairline bg-canvas px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-ash">{{ $headerNotification->status }}</span>
+                                                </div>
+                                            </a>
+                                        @empty
+                                            <div class="px-3 py-8 text-center text-sm text-ash">No notifications yet.</div>
+                                        @endforelse
+                                    </div>
+                                </div>
+                            </details>
+
                             <span class="hidden items-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-2 text-ink md:inline-flex"><i data-lucide="user-round" class="h-4 w-4"></i>{{ auth()->user()->name }}</span>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -100,7 +131,14 @@
                                 <a href="{{ route('plans.index') }}" class="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('plans.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}"><i data-lucide="layers-3" class="h-4 w-4"></i>Plans</a>
                                 <a href="{{ route('addresses.index') }}" class="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('addresses.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}"><i data-lucide="map-pin-house" class="h-4 w-4"></i>Addresses</a>
                                 <a href="{{ route('payments.index') }}" class="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('payments.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}"><i data-lucide="credit-card" class="h-4 w-4"></i>Payments</a>
-                                <a href="{{ route('notifications.index') }}" class="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('notifications.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}"><i data-lucide="bell-ring" class="h-4 w-4"></i>Notifications</a>
+                                <a href="{{ route('notifications.index') }}" class="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('notifications.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">
+                                    <i data-lucide="bell-ring" class="h-4 w-4"></i>Notifications
+                                    @if (($headerNotificationCount ?? 0) > 0)
+                                        <span class="inline-flex min-w-5 items-center justify-center rounded-full bg-danger px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
+                                            {{ min($headerNotificationCount, 99) }}
+                                        </span>
+                                    @endif
+                                </a>
                             @endif
                             @if (Route::has('audit-logs.index') && auth()->user()->isAdmin())
                                 <a href="{{ route('audit-logs.index') }}" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('audit-logs.*') ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ink hover:bg-cloud' }}">Audit logs</a>
@@ -225,6 +263,23 @@
             if (window.lucide) {
                 window.lucide.createIcons();
             }
+
+            document.querySelectorAll('[data-notification-popup]').forEach(function (popup) {
+                const summary = popup.querySelector('summary');
+
+                document.addEventListener('click', function (event) {
+                    if (!popup.contains(event.target)) {
+                        popup.removeAttribute('open');
+                    }
+                });
+
+                document.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape') {
+                        popup.removeAttribute('open');
+                        summary.blur();
+                    }
+                });
+            });
         });
     </script>
     @stack('scripts')
