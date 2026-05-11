@@ -103,7 +103,7 @@
                             <div class="flex flex-wrap items-start justify-between gap-4">
                                 <div class="flex items-center gap-4">
                                     @if ($product->image_url)
-                                        <img src="{{ asset('storage/'.$product->image_url) }}" alt="{{ $product->name }}" class="h-16 w-16 rounded-2xl border border-hairline object-cover">
+                                        <img src="{{ route('media.show', ['path' => $product->image_url]) }}" alt="{{ $product->name }}" class="h-16 w-16 rounded-2xl border border-hairline object-cover">
                                     @else
                                         <div class="flex h-16 w-16 items-center justify-center rounded-2xl border border-hairline bg-cloud text-xs font-semibold text-ash">No image</div>
                                     @endif
@@ -164,7 +164,7 @@
 
                                     @if ($product->image_url)
                                         <div class="air-panel-soft flex flex-wrap items-center gap-3 rounded-2xl p-3">
-                                            <img src="{{ asset('storage/'.$product->image_url) }}" alt="{{ $product->name }} current image" class="h-16 w-16 rounded-xl border border-hairline object-cover">
+                                            <img src="{{ route('media.show', ['path' => $product->image_url]) }}" alt="{{ $product->name }} current image" class="h-16 w-16 rounded-xl border border-hairline object-cover">
                                             <label class="inline-flex items-center gap-3 text-sm font-medium text-ink">
                                                 <input type="checkbox" name="remove_image" value="1" class="h-4 w-4 rounded border-hairline text-rausch focus:ring-rausch">
                                                 Remove current image if no replacement is uploaded

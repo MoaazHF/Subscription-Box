@@ -6,17 +6,15 @@ use App\Http\Requests\StoreClaimRequest;
 use App\Models\Claim;
 use App\Models\Delivery;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 
 class ClaimController extends Controller
 {
     public function store(StoreClaimRequest $request, Delivery $delivery): RedirectResponse
     {
-        $photoUrl = null;
+        $photoPath = null;
 
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('claims', 'public');
-            $photoUrl = Storage::url($path);
+            $photoPath = $request->file('photo')->store('claims', 'public');
         }
 
         Claim::query()->create([
@@ -25,7 +23,7 @@ class ClaimController extends Controller
             'item_id' => $request->string('item_id')->toString() ?: null,
             'type' => $request->string('type')->toString(),
             'description' => $request->string('description')->toString(),
-            'photo_url' => $photoUrl,
+            'photo_url' => $photoPath,
             'status' => 'pending',
             'submitted_at' => now(),
         ]);

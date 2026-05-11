@@ -139,8 +139,9 @@
                                     </div>
                                     <p class="text-sm text-ink leading-7">{{ $claim->description }}</p>
                                     @if($claim->photo_url)
+                                        @php($claimPhotoPath = str_contains((string) $claim->photo_url, '/storage/') ? (string) \Illuminate\Support\Str::of((string) $claim->photo_url)->after('/storage/') : (string) $claim->photo_url)
                                         <div class="mt-4">
-                                            <a href="{{ $claim->photo_url }}" target="_blank" class="text-sm text-rausch hover:underline font-semibold">View Photo Evidence &rarr;</a>
+                                            <a href="{{ route('media.show', ['path' => $claimPhotoPath]) }}" target="_blank" class="text-sm text-rausch hover:underline font-semibold">View Photo Evidence &rarr;</a>
                                         </div>
                                     @endif
                                 </div>
