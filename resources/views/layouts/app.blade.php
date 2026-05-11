@@ -149,7 +149,7 @@
             @yield('content')
         </main>
 
-        <footer class="mt-14 border-t border-hairline bg-[linear-gradient(180deg,#ffffff_0%,#f5f8ff_100%)]">
+        <footer class="mt-14 border-t border-hairline bg-[linear-gradient(180deg,#ffffff_0%,#f5f8ff_100%)] dark:bg-[linear-gradient(180deg,#0f172a_0%,#101a2f_100%)]">
             <div class="air-shell py-12">
                 <div class="grid gap-10 lg:grid-cols-[1.3fr_repeat(4,minmax(0,1fr))]">
                     <div class="space-y-5">
@@ -162,10 +162,10 @@
                         </a>
                         <p class="max-w-sm text-sm leading-7 text-ash">Enterprise subscription operations for billing, fulfillment, dispatch management, and support workflows in one system.</p>
                         <div class="flex flex-wrap items-center gap-2">
-                            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:border-ink/30 hover:bg-cloud" aria-label="LinkedIn"><i data-lucide="linkedin" class="h-4 w-4"></i></a>
-                            <a href="https://www.x.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:border-ink/30 hover:bg-cloud" aria-label="X"><i data-lucide="twitter" class="h-4 w-4"></i></a>
-                            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:border-ink/30 hover:bg-cloud" aria-label="Instagram"><i data-lucide="instagram" class="h-4 w-4"></i></a>
-                            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:border-ink/30 hover:bg-cloud" aria-label="YouTube"><i data-lucide="youtube" class="h-4 w-4"></i></a>
+                            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:border-ink/30 hover:bg-cloud dark:hover:bg-white/10" aria-label="LinkedIn"><i data-lucide="linkedin" class="h-4 w-4"></i></a>
+                            <a href="https://www.x.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:border-ink/30 hover:bg-cloud dark:hover:bg-white/10" aria-label="X"><i data-lucide="twitter" class="h-4 w-4"></i></a>
+                            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:border-ink/30 hover:bg-cloud dark:hover:bg-white/10" aria-label="Instagram"><i data-lucide="instagram" class="h-4 w-4"></i></a>
+                            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-hairline bg-canvas text-ink transition hover:border-ink/30 hover:bg-cloud dark:hover:bg-white/10" aria-label="YouTube"><i data-lucide="youtube" class="h-4 w-4"></i></a>
                         </div>
                     </div>
 

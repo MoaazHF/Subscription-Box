@@ -43,10 +43,10 @@
 
                         <div class="grid gap-5 lg:grid-cols-2">
                             @foreach ($tab['topics'] as $topic)
-                                <article id="{{ $topic['id'] }}" class="rounded-[24px] border border-hairline bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] p-6 scroll-mt-32">
+                                <article id="{{ $topic['id'] }}" class="rounded-[24px] border border-hairline bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] p-6 scroll-mt-32 dark:bg-[linear-gradient(180deg,#111b2d_0%,#0f172a_100%)]">
                                     <div class="flex items-start justify-between gap-4">
                                         <h3 class="text-xl font-bold tracking-[-0.02em] text-ink">{{ $topic['title'] }}</h3>
-                                        <span class="rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold text-ink">Live</span>
+                                        <span class="rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-semibold text-ink dark:bg-white/10">Live</span>
                                     </div>
                                     <p class="mt-3 text-sm leading-7 text-ash">{{ $topic['summary'] }}</p>
                                     <p class="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-rausch">{{ $topic['metadata'] }}</p>
