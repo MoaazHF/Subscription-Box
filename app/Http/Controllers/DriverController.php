@@ -23,7 +23,13 @@ class DriverController extends Controller
         $deliveries = Delivery::query()
             ->with(['address', 'box.subscription.user'])
             ->where('driver_id', $driver->id)
-            ->whereIn('status', [Delivery::SHIPPED, Delivery::OUT_FOR_DELIVERY, Delivery::PICKING, Delivery::PACKED])
+            ->whereIn('status', [
+                Delivery::PENDING,
+                Delivery::PICKING,
+                Delivery::PACKED,
+                Delivery::SHIPPED,
+                Delivery::OUT_FOR_DELIVERY,
+            ])
             ->orderBy('estimated_delivery', 'asc')
             ->get();
 

@@ -56,7 +56,7 @@
 
                         <form action="{{ route('driver.deliveries.status', $delivery->id) }}" method="POST">
                             @csrf @method('PATCH')
-                            <input type="hidden" name="status" value="failed">
+                            <input type="hidden" name="status" value="undeliverable">
                             <button type="submit" class="air-button-secondary !border-danger/30 !text-danger hover:!bg-danger/5">Report Issue</button>
                         </form>
                     </div>
