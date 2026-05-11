@@ -17,7 +17,13 @@
                 @php($progressPercent = $delivery->progressPercent())
                 <div class="air-panel">
                     <div class="flex flex-wrap items-center gap-2">
-                        <span class="air-chip-dark">{{ ucfirst(str_replace('_', ' ', $delivery->status)) }}</span>
+                        @php($isUndeliverable = $delivery->status === \App\Models\Delivery::UNDELIVERABLE)
+                        <span class="air-chip-dark {{ $isUndeliverable ? '!border-danger/30 !bg-danger/10 !text-danger' : '' }}">
+                            @if ($isUndeliverable)
+                                &#9888; Fault ·
+                            @endif
+                            {{ ucfirst(str_replace('_', ' ', $delivery->status)) }}
+                        </span>
                         <span class="air-chip">{{ $delivery->box?->theme ?? 'Standard box' }}</span>
                     </div>
 
