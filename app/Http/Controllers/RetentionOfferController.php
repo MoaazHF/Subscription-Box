@@ -29,7 +29,7 @@ class RetentionOfferController extends Controller
 
     public function store(StoreRetentionOfferRequest $request, Subscription $subscription): RedirectResponse
     {
-        abort_unless($request->user()->isAdmin() || $subscription->user_id === $request->user()->id, 403);
+        $this->authorizeSubscriptionAccess($request, $subscription->user_id);
 
         $this->retentionOfferService->present($subscription, $request->validated());
 
@@ -39,10 +39,15 @@ class RetentionOfferController extends Controller
     public function update(UpdateRetentionOfferRequest $request, RetentionOffer $retentionOffer): RedirectResponse
     {
         $ownerId = $retentionOffer->subscription()->value('user_id');
-        abort_unless($request->user()->isAdmin() || $ownerId === $request->user()->id, 403);
+        $this->authorizeSubscriptionAccess($request, $ownerId);
 
         $this->retentionOfferService->updateDecision($retentionOffer, (bool) $request->validated('accepted'));
 
         return back()->with('status', 'Retention offer updated.');
+    }
+
+    private function authorizeSubscriptionAccess(Request $request, ?string $ownerId): void
+    {
+        abort_unless($request->user()->isAdmin() || $ownerId === $request->user()->id, 403);
     }
 }

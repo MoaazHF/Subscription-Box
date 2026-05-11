@@ -12,6 +12,7 @@ use App\Services\AuditLogService;
 use App\Services\OperationsManagementService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class DriverManagementController extends Controller
 {
@@ -63,26 +64,27 @@ class DriverManagementController extends Controller
         return back()->with('status', 'Driver profile saved.');
     }
 
-    public function toggle(Driver $driver): RedirectResponse
+    public function toggle(Request $request, Driver $driver): RedirectResponse
     {
         $driver->update(['is_active' => ! $driver->is_active]);
 
-        $this->auditLogService->record(request()->user(), 'driver.toggled_active', $driver, [
+        $this->auditLogService->record($request->user(), 'driver.toggled_active', $driver, [
             'is_active' => $driver->is_active,
-        ], request()->ip());
+        ], $request->ip());
 
         return back()->with('status', 'Driver active state updated.');
     }
 
-    public function assignDelivery(AssignDriverDeliveryRequest $request, Driver $driver): RedirectResponse
+    public function assignDelivery(Request $request, AssignDriverDeliveryRequest $assignDriverDeliveryRequest, Driver $driver): RedirectResponse
     {
-        $delivery = Delivery::query()->findOrFail($request->validated('delivery_id'));
+        $payload = $assignDriverDeliveryRequest->validated();
+        $delivery = Delivery::query()->findOrFail($payload['delivery_id']);
 
         $assignedDelivery = $this->operationsManagementService->assignDelivery($driver, $delivery);
 
-        $this->auditLogService->record(request()->user(), 'delivery.assigned_driver', $assignedDelivery, [
+        $this->auditLogService->record($request->user(), 'delivery.assigned_driver', $assignedDelivery, [
             'driver_id' => $driver->id,
-        ], request()->ip());
+        ], $request->ip());
 
         return back()->with('status', 'Delivery assigned to driver successfully.');
     }

@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSubscriptionRequest;
 use App\Http\Requests\UpdateSubscriptionPlanRequest;
+use App\Models\Payment;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
+use App\Models\User;
 use App\Services\SubscriptionService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class SubscriptionController extends Controller
 {
@@ -35,53 +38,30 @@ class SubscriptionController extends Controller
         $user = $request->user();
 
         if ($user->isAdmin()) {
-            return redirect()->route('admin-subscriptions.index')
-                ->with('error', 'Admins must manage subscriptions from the operations panel.');
+            return $this->adminStoreRedirect();
         }
 
-        $hasManageableSubscription = $user->subscriptions()
-            ->whereIn('status', ['active', 'paused'])
-            ->exists();
-
-        if ($hasManageableSubscription) {
-            return redirect()->route('subscriptions.index')
-                ->with('error', 'You already have a subscription to manage.')
-                ->with('failure_popup', [
-                    'title' => 'Action blocked',
-                    'message' => 'You already have an active or paused subscription.',
-                    'details' => 'Manage the current subscription before starting a new one.',
-                ]);
+        if ($this->hasManageableSubscription($user)) {
+            return $this->manageableSubscriptionRedirect();
         }
 
-        $plan = SubscriptionPlan::query()
-            ->where('is_active', true)
-            ->findOrFail($request->validated('plan_id'));
+        $payload = $request->validated();
+        $plan = $this->findActivePlan((int) $payload['plan_id']);
 
         $subscription = $this->subscriptionService->createForUser(
             $user,
             $plan,
-            $request->validated(),
+            $payload,
             $request->ip()
         );
 
-        $latestPayment = $subscription->payments->sortByDesc('created_at')->first();
+        $latestPayment = $this->latestPayment($subscription);
 
         if ($latestPayment && $latestPayment->status === 'failed') {
-            return redirect()->route('subscriptions.index')
-                ->with('error', 'Payment declined. Transaction was saved and subscription is suspended.')
-                ->with('failure_popup', [
-                    'title' => 'Payment failed',
-                    'message' => 'Transaction was declined.',
-                    'details' => 'Amount: $'.number_format((float) $latestPayment->amount, 2).' · Ref: '.$latestPayment->gateway_ref,
-                ]);
+            return $this->paymentFailureRedirect($latestPayment);
         }
 
-        return redirect()->route('subscriptions.index')
-            ->with('status', 'Subscription started.')
-            ->with('payment_success', [
-                'amount' => number_format((float) $latestPayment?->amount, 2),
-                'reference' => $latestPayment?->gateway_ref,
-            ]);
+        return $this->paymentSuccessRedirect($latestPayment);
     }
 
     public function pause(Request $request, Subscription $subscription): RedirectResponse
@@ -124,5 +104,65 @@ class SubscriptionController extends Controller
         }
 
         abort_unless($subscription->user_id === $request->user()->id, 403);
+    }
+
+    private function adminStoreRedirect(): RedirectResponse
+    {
+        return redirect()->route('admin-subscriptions.index')
+            ->with('error', 'Admins must manage subscriptions from the operations panel.');
+    }
+
+    private function manageableSubscriptionRedirect(): RedirectResponse
+    {
+        return redirect()->route('subscriptions.index')
+            ->with('error', 'You already have a subscription to manage.')
+            ->with('failure_popup', [
+                'title' => 'Action blocked',
+                'message' => 'You already have an active or paused subscription.',
+                'details' => 'Manage the current subscription before starting a new one.',
+            ]);
+    }
+
+    private function hasManageableSubscription(User $user): bool
+    {
+        return $user->subscriptions()
+            ->whereIn('status', ['active', 'paused'])
+            ->exists();
+    }
+
+    private function findActivePlan(int $planId): SubscriptionPlan
+    {
+        return SubscriptionPlan::query()
+            ->where('is_active', true)
+            ->findOrFail($planId);
+    }
+
+    private function latestPayment(Subscription $subscription): ?Payment
+    {
+        /** @var Collection<int, Payment> $payments */
+        $payments = $subscription->payments;
+
+        return $payments->sortByDesc('created_at')->first();
+    }
+
+    private function paymentFailureRedirect(Payment $latestPayment): RedirectResponse
+    {
+        return redirect()->route('subscriptions.index')
+            ->with('error', 'Payment declined. Transaction was saved and subscription is suspended.')
+            ->with('failure_popup', [
+                'title' => 'Payment failed',
+                'message' => 'Transaction was declined.',
+                'details' => 'Amount: $'.number_format((float) $latestPayment->amount, 2).' · Ref: '.$latestPayment->gateway_ref,
+            ]);
+    }
+
+    private function paymentSuccessRedirect(?Payment $latestPayment): RedirectResponse
+    {
+        return redirect()->route('subscriptions.index')
+            ->with('status', 'Subscription started.')
+            ->with('payment_success', [
+                'amount' => number_format((float) $latestPayment?->amount, 2),
+                'reference' => $latestPayment?->gateway_ref,
+            ]);
     }
 }

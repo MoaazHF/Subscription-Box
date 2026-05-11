@@ -27,7 +27,7 @@ class BoxCustomizationController extends Controller
     {
         $box->load(['items', 'subscription']);
 
-        abort_unless($request->user()->isAdmin() || $box->ownedBy($request->user()), Response::HTTP_FORBIDDEN);
+        $this->authorizeBoxAccess($request, $box);
 
         $availableItems = Item::query()->where('stock_qty', '>', 0)->orderBy('name')->get();
 
@@ -56,12 +56,12 @@ class BoxCustomizationController extends Controller
     public function swap(SwapItemRequest $request, Box $box): RedirectResponse
     {
         $box->load('subscription');
-        abort_unless($request->user()->isAdmin() || $box->ownedBy($request->user()), Response::HTTP_FORBIDDEN);
+        $this->authorizeBoxAccess($request, $box);
 
-        $outItem = BoxItem::query()->findOrFail($request->validated('remove_box_item_id'));
-        $newItem = Item::query()->findOrFail($request->validated('new_item_id'));
-
-        abort_unless($outItem->box_id === $box->id, Response::HTTP_FORBIDDEN);
+        $payload = $request->validated();
+        $outItem = BoxItem::query()->findOrFail($payload['remove_box_item_id']);
+        $newItem = Item::query()->findOrFail($payload['new_item_id']);
+        $this->ensureBoxItemBelongsToBox(boxItem: $outItem, box: $box);
 
         try {
             $result = $this->customizationService->swap(
@@ -69,33 +69,27 @@ class BoxCustomizationController extends Controller
                 $outItem,
                 $newItem,
                 $request->user(),
-                (bool) ($request->validated('confirm_rotation') ?? false),
-                (bool) ($request->validated('confirm_allergen') ?? false),
+                (bool) ($payload['confirm_rotation'] ?? false),
+                (bool) ($payload['confirm_allergen'] ?? false),
             );
 
             if ($result['status'] === 'warning') {
-                return back()->with('swap_warning', [
-                    'type' => $result['type'],
-                    'message' => $result['message'],
-                    'remove_box_item_id' => $outItem->id,
-                    'new_item_id' => $newItem->id,
-                    'new_item_name' => $newItem->name,
-                ]);
+                return back()->with('swap_warning', $this->buildSwapWarningPayload($result, $outItem, $newItem));
             }
 
             return back()->with('success', $result['message']);
         } catch (\Throwable $exception) {
-            return back()->with('error', $exception->getMessage());
+            return $this->errorRedirect($exception);
         }
     }
 
     public function remove(Request $request, Box $box, BoxItem $boxItem): RedirectResponse
     {
         $box->load('subscription');
-        abort_unless($request->user()->isAdmin() || $box->ownedBy($request->user()), Response::HTTP_FORBIDDEN);
-        abort_unless($boxItem->box_id === $box->id, Response::HTTP_FORBIDDEN);
+        $this->authorizeBoxAccess($request, $box);
+        $this->ensureBoxItemBelongsToBox($boxItem, $box);
 
-        if ($box->status === 'locked' || ($box->lock_date && $box->lock_date->isPast())) {
+        if ($this->isBoxLocked($box)) {
             return back()->with('error', 'Box is locked and cannot be modified.');
         }
 
@@ -104,44 +98,40 @@ class BoxCustomizationController extends Controller
 
             return back()->with('success', 'Item removed successfully.');
         } catch (\Throwable $exception) {
-            return back()->with('error', $exception->getMessage());
+            return $this->errorRedirect($exception);
         }
     }
 
     public function add(AddBoxItemRequest $request, Box $box): RedirectResponse
     {
         $box->load('subscription');
-        abort_unless($request->user()->isAdmin() || $box->ownedBy($request->user()), Response::HTTP_FORBIDDEN);
+        $this->authorizeBoxAccess($request, $box);
+        $payload = $request->validated();
 
-        $newItem = Item::query()->findOrFail($request->validated('new_item_id'));
+        $newItem = Item::query()->findOrFail($payload['new_item_id']);
 
         try {
             $result = $this->customizationService->add(
                 $box,
                 $newItem,
                 $request->user(),
-                (bool) ($request->validated('confirm_allergen') ?? false)
+                (bool) ($payload['confirm_allergen'] ?? false)
             );
 
             if ($result['status'] === 'warning') {
-                return back()->with('add_warning', [
-                    'type' => $result['type'],
-                    'message' => $result['message'],
-                    'new_item_id' => $newItem->id,
-                    'new_item_name' => $newItem->name,
-                ]);
+                return back()->with('add_warning', $this->buildAddWarningPayload($result, $newItem));
             }
 
             return back()->with('success', $result['message']);
         } catch (\Throwable $exception) {
-            return back()->with('error', $exception->getMessage());
+            return $this->errorRedirect($exception);
         }
     }
 
     public function applyBundle(ApplyBundleToBoxRequest $request, Box $box): RedirectResponse
     {
         $box->load('subscription');
-        abort_unless($request->user()->isAdmin() || $box->ownedBy($request->user()), Response::HTTP_FORBIDDEN);
+        $this->authorizeBoxAccess($request, $box);
 
         $bundle = Bundle::query()->where('is_active', true)->findOrFail($request->validated('bundle_id'));
 
@@ -150,7 +140,56 @@ class BoxCustomizationController extends Controller
 
             return back()->with('success', "Bundle applied successfully with {$itemCount} items.");
         } catch (\Throwable $exception) {
-            return back()->with('error', $exception->getMessage());
+            return $this->errorRedirect($exception);
         }
+    }
+
+    private function authorizeBoxAccess(Request $request, Box $box): void
+    {
+        abort_unless($request->user()->isAdmin() || $box->ownedBy($request->user()), Response::HTTP_FORBIDDEN);
+    }
+
+    private function ensureBoxItemBelongsToBox(BoxItem $boxItem, Box $box): void
+    {
+        abort_unless($boxItem->box_id === $box->id, Response::HTTP_FORBIDDEN);
+    }
+
+    private function isBoxLocked(Box $box): bool
+    {
+        return $box->status === 'locked' || ($box->lock_date && $box->lock_date->isPast());
+    }
+
+    /**
+     * @param  array{status:string,type:string,message:string}  $result
+     * @return array{type:string,message:string,remove_box_item_id:string,new_item_id:string,new_item_name:string}
+     */
+    private function buildSwapWarningPayload(array $result, BoxItem $outItem, Item $newItem): array
+    {
+        return [
+            'type' => $result['type'],
+            'message' => $result['message'],
+            'remove_box_item_id' => $outItem->id,
+            'new_item_id' => $newItem->id,
+            'new_item_name' => $newItem->name,
+        ];
+    }
+
+    /**
+     * @param  array{status:string,type:string,message:string}  $result
+     * @return array{type:string,message:string,new_item_id:string,new_item_name:string}
+     */
+    private function buildAddWarningPayload(array $result, Item $newItem): array
+    {
+        return [
+            'type' => $result['type'],
+            'message' => $result['message'],
+            'new_item_id' => $newItem->id,
+            'new_item_name' => $newItem->name,
+        ];
+    }
+
+    private function errorRedirect(\Throwable $exception): RedirectResponse
+    {
+        return back()->with('error', $exception->getMessage());
     }
 }
