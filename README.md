@@ -26,8 +26,9 @@ Core capabilities:
 ## Screenshots
 
 ### Public Experience
-![Home Page](docs/readme-media/screenshot-home.png)
-<!-- REPLACE: docs/readme-media/screenshot-home.png -->
+![Home Page]()
+![Light Mode](public/Home[LightMode].png)
+![Dark Mode](public/Home[DarkMode].png)
 
 ![Plans Page](docs/readme-media/screenshot-plans.png)
 <!-- REPLACE: docs/readme-media/screenshot-plans.png -->
